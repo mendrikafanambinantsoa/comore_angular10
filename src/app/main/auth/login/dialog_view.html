@@ -1,0 +1,35 @@
+<div class="error-dialog">
+    <div class="dialog-header">
+        <mat-icon class="error-icon">error_outline</mat-icon>
+        <h1 mat-dialog-title>Échec de connexion</h1>
+    </div>
+    
+    <div mat-dialog-content class="dialog-content">
+        <p class="error-message">
+            Les informations d'identification que vous avez saisies sont incorrectes.
+        </p>
+        
+        <div class="error-details">
+            <p><strong>Vérifiez que :</strong></p>
+            <ul>
+                <li>Votre adresse email est correcte</li>
+                <li>Votre mot de passe ne contient pas d'erreurs de frappe</li>
+                <li>La touche Majuscule (Caps Lock) n'est pas activée</li>
+            </ul>
+        </div>
+
+        <div class="help-section">
+            <p class="help-text">
+                <mat-icon class="help-icon">info</mat-icon>
+                Mot de passe oublié ? Contactez votre administrateur système.
+            </p>
+        </div>
+    </div>
+    
+    <div mat-dialog-actions align="end" class="dialog-actions">
+        <button mat-raised-button mat-dialog-close color="primary" class="retry-button">
+            <mat-icon>refresh</mat-icon>
+            Réessayer
+        </button>
+    </div>
+</div>

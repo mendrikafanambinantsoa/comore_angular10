@@ -1,0 +1,205 @@
+<div class="page-layout simple fullwidth" fxLayout="column">
+  <div class="header primary p-4 h-24" fxLayout="row" fxLayoutAlign="start center">
+    <div fxLayout="column" fxLayoutAlign="center start">
+      <div fxLayout="row" fxLayoutAlign="start center" style="margin-top: 0px !important; padding-top: 0px !important;">
+        <mat-icon class="s-18" style="color: #0eaf3b">home</mat-icon>
+        <mat-icon class="s-18" style="color: #0eaf3b">chevron_right</mat-icon>
+        <span style="color: #0eaf3b">Importation</span>
+        <mat-icon class="s-18" style="color: #0eaf3b">chevron_right</mat-icon>
+        <span style="color: #0eaf3b">Menage</span>
+        <mat-icon class="s-18" style="color: #0eaf3b">chevron_right</mat-icon>
+        <span style="color: #0eaf3b">inscription menage</span>
+      </div>
+    </div>
+  </div>
+  <div class="content">
+    <div class="tab-content p-2">
+      <mat-tab-group>
+        <!-- debut importation menage  -->
+        <mat-tab label="IMPORTATION MENAGE VIA FICHIER EXCEL">
+          <div class="column" style="margin-left: 5px">
+            <form [formGroup]="form_import_inscription_menage">
+              <!-- <div fxLayout="row" fxLayoutGap="5px">
+                <mat-form-field fxFlex="100" class="pr-4">
+                  <mat-label>Indemnité journalière</mat-label>
+                  <input matInput formControlName="indemnite" [(ngModel)]="import_inscription_menage.indemnite" readonly>
+                  <mat-error>Indemnité journalière obligatoire</mat-error>
+                </mat-form-field>
+              </div> -->
+              <div fxLayout="row" fxLayoutGap="5px">
+                <input type="file" name="fichier" id="fichier_chef_menage">
+                <button mat-raised-button class="button_vert" style="margin-left: 5px;">
+                  <mat-label> IMPORTER </mat-label>
+                </button>
+              </div>
+            </form>
+          </div>
+          <div class="mat-card mat-elevation-z4 m-4">
+            <div class="package-type h-44 primary-50 header primary" fxLayout="row"
+              fxLayoutAlign="space-between center">
+              <div class="p-12">
+                <!-- <span class="border-right mr-2" style="color: #0eaf3b;">Actions</span> -->
+              </div>
+              <div class="p-12">
+                <!-- <span class="border-right mr-2" style="color: #0eaf3b;">CONSULTANT</span> -->
+              </div>
+              <div class="p-12">
+                <input type="text" style="
+                          padding: 8px;
+                          margin: 15px auto;
+                          width: 100%;
+                          color: #353a48;
+                          border: 1px solid #babdc5;
+                      " placeholder="Rechercher..." [(ngModel)]="search_menage" />
+              </div>
+            </div>
+            <div>
+              <ngx-datatable class="material" [rows]="all_menage | filter: search_menage" [columnMode]="'force'"
+                [headerHeight]="48" [footerHeight]="56" [rowHeight]="'auto'" [scrollbarH]="true" [reorderable]=""
+                [selectionType]="'checkbox'" [limit]="10" [selected]="" [selectionType]="'single'"
+                (select)="on_select_menage($event)">
+                <ngx-datatable-column name="Ile" prop="ile" resizeable="true">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.ile }}
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Prefecture" prop="prefecture" resizeable="true">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.prefecture }}
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Commune" prop="commune" resizeable="true">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.commune }}
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Village" prop="village" resizeable="true">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.village }}
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Zone" prop="zone" resizeable="true">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.zone }}
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="N° recepisse" prop="numero_recepisse" resizeable="true">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.numero_recepisse }}
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Chef ménage" prop="nom_chef_menage" resizeable="true">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.nom_chef_menage }}
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Membre inscrire" prop="membre_venu_inscrire" resizeable="true">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.membre_venu_inscrire }}
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Adresse" prop="adresse" resizeable="true">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.adresse }}
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Score" prop="scores" resizeable="true">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.scores }}
+                  </ng-template>
+                </ngx-datatable-column>
+              </ngx-datatable>
+            </div>
+          </div>
+        </mat-tab>
+        <!--  importation menage  -->
+
+        <!--  debut membre menage  -->
+        <mat-tab label="MEMBRE MENAGE" [disabled]="activer_onglet_membre">
+          <div class="column" style="margin-left: 5px">
+            <b> Menage : {{selected_item_menage.identifiant_menage}} Chef ménage :
+              {{selected_item_menage.nom_chef_menage}} </b>
+          </div>
+          <div class="mat-card mat-elevation-z4 m-4">
+            <div class="package-type h-44 primary-50 header primary" fxLayout="row"
+              fxLayoutAlign="space-between center">
+              <div class="p-12">
+                <!-- <span class="border-right mr-2" style="color: #0eaf3b;">Actions</span> -->
+              </div>
+              <div class="p-12">
+                <!-- <span class="border-right mr-2" style="color: #0eaf3b;">CONSULTANT</span> -->
+              </div>
+              <div class="p-12">
+                <input type="text" style="
+                          padding: 8px;
+                          margin: 15px auto;
+                          width: 100%;
+                          color: #353a48;
+                          border: 1px solid #babdc5;
+                      " placeholder="Rechercher..." [(ngModel)]="search_membre_menage" />
+              </div>
+            </div>
+            <div>
+              <ngx-datatable class="material" [rows]="all_membre_menage | filter: search_membre_menage" [columnMode]="'force'"
+                [headerHeight]="48" [footerHeight]="56" [rowHeight]="'auto'" [scrollbarH]="true" [reorderable]=""
+                [selectionType]="'checkbox'" [limit]="10" [selected]="" [selectionType]="'single'"
+                (select)="on_select_membre_menage($event)">
+                <ngx-datatable-column name="N°" prop="numero_individu" resizeable="true">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.numero_individu }}
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Nom et prénom" prop="nom" resizeable="true">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.nom }} {{ row.prenom }} 
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Date de naissance" prop="date_naissance" resizeable="true">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.date_naissance  | date:'dd/MM/yyyy' }}
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Sexe" prop="sexe" resizeable="true">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.sexe }}
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Type ménage" prop="type_menage" resizeable="true">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.type_menage }}
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Lien / chef" prop="lien_chef_menage" resizeable="true">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.lien_chef_menage }}
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Fréq école" prop="frequente_ecole" resizeable="true">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.frequente_ecole }}
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Niveau" prop="niveau_scolaire" resizeable="true">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.niveau_scolaire }}
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Travail" prop="exerce_travail" resizeable="true">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.exerce_travail }}
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Employeur" prop="type_employeur" resizeable="true">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.type_employeur }}
+                  </ng-template>
+                </ngx-datatable-column>
+              </ngx-datatable>
+            </div>
+          </div>
+        </mat-tab>
+        <!--  fin membre menage  -->
+      </mat-tab-group>
+    </div>
+  </div>
+</div>

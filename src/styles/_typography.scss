@@ -1,0 +1,13 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    color: var(--text-main);
+}
+
+h1, h2, h3 {
+    font-weight: 600;
+}
+
+p {
+    color: var(--text-muted);
+    line-height: 1.6;
+}

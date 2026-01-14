@@ -1,0 +1,106 @@
+<div *ngIf="config" class="page-layout carded fullwidth tabbed">
+  <div class="header primary p-4 h-24" fxLayout="row" fxLayoutAlign="start center">
+      <div fxLayout="column" fxLayoutAlign="center start">
+          <div fxLayout="row" fxLayoutAlign="start center"
+              style="margin-top: 0px !important; padding-top: 0px !important">
+              <mat-icon class="s-18" style="color: #0eaf3b">home</mat-icon>
+              <mat-icon class="s-18" style="color: #0eaf3b">chevron_right</mat-icon>
+              <span style="color: #0eaf3b">Gérer MDP {{ config.type }}</span>
+          </div>
+      </div>
+  </div>
+  <div class="content-card">
+    <div class="content">
+      <div class="tab-navigation">
+        <button mat-button (click)="previousTab()">←precedant</button>
+        <button mat-button (click)="nextTab()">siuvant→</button>
+      </div>
+      <mat-tab-group #tabGroup>
+        <!---debut Mémoire descriptive du projet --->
+        <mat-tab label="MEMOIRE DESCRIPTIVE DU PROJET">
+          MEMOIRE DESCRIPTIVE DU PROJET
+        </mat-tab>
+        <!---fin Mémoire descriptive du projet --->
+  
+  
+        <!---debut Communautés --->
+        <mat-tab label="COMMUNAUTES">
+  
+        </mat-tab>
+        <!---fin Communautés --->
+  
+  
+        <!---debut Délai --->
+        <!-- <mat-tab label="DELAI">
+        </mat-tab> -->
+        <!---fin Délai --->
+  
+  
+        <!---debut Type du micro-Projet --->
+        <mat-tab label="TYPE DU MICRO-PROJET">
+        </mat-tab>
+        <!---fin Type du micro-Projet --->
+  
+  
+        <!---debut Description des activités --->
+        <mat-tab label="DESCRIPTION DES ACTIVITES">
+        </mat-tab>
+        <!---fin Description des activités --->
+  
+  
+        <!---debut Formation --->
+        <!-- <mat-tab label="FORNATION">
+        </mat-tab> -->
+        <!---fin Formation --->
+  
+  
+        <!---debut Liste des matériels et intrants --->
+        <mat-tab label="LISTE DES MATERIELS ET INTRANTS | ACTIVITE :">
+        </mat-tab>
+        <!---fin Liste des matériels et intrants --->
+  
+  
+        <!---debut Indicateurs --->
+        <mat-tab label="INDICATEURS | ACTIVITE">
+        </mat-tab>
+        <!---fin Indicateurs --->
+  
+  
+        <!---debut Cycle du sous projet et planning d’exécution --->
+        <mat-tab label="CYCLE DU SOUS PROJET ET PLANNING D'EXECUTION">
+        </mat-tab>
+        <!---fin Cycle du sous projet et planning d’exécution --->
+  
+  
+        <!---debut Résultats attendus --->
+        <mat-tab label="RESULTATS ATTENDUS | ACTIVITE :">
+        </mat-tab>
+        <!---fin Résultats attendus --->
+  
+  
+        <!---debut Suivi des indicateurs --->
+        <mat-tab label="SUIVI DES INDICATEURS">
+        </mat-tab>
+        <!---fin Suivi des indicateurs --->
+  
+  
+        <!---debut Estimation des dépenses --->
+        <mat-tab label="ESTIMATION DES DEPENSES">
+        </mat-tab>
+        <!---fin Estimation des dépenses --->
+  
+        <!---debut Rentabilité financière AGR production de tomate --->
+        <mat-tab label="RENTABILITE FINANCIERE AGR PRODUCTION DE TOMATE">
+        </mat-tab>
+        <!---fin Rentabilité financière AGR production de tomate --->
+  
+  
+        <!---debut Récapitulatif des estimations des dépenses  --->
+        <mat-tab label="RECAPITULATIF DES ESTIMATIONS DES DEPENSES">
+        </mat-tab>
+        <!---fin Récapitulatif des estimations des dépenses  --->
+    </mat-tab-group>
+    </div>
+  </div>
+  
+</div>

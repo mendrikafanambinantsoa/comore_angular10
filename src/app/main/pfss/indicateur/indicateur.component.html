@@ -1,0 +1,100 @@
+<div class="page-layout simple fullwidth" fxLayout="column">
+  <!--Breadcrumb-->
+  <div class="header primary p-4 h-24" fxLayout="row" fxLayoutAlign="start center">
+    <div fxLayout="column" fxLayoutAlign="center start">
+      <div fxLayout="row" fxLayoutAlign="start center" style="margin-top: 0px !important; padding-top: 0px !important">
+        <mat-icon class="s-18" style="color: #0eaf3b">home</mat-icon>
+        <mat-icon class="s-18" style="color: #0eaf3b">chevron_right</mat-icon>
+        <span style="color: #0eaf3b">Tableau de bord</span>
+        <mat-icon class="s-18" style="color: #0eaf3b">chevron_right</mat-icon>
+        <span style="color: #0eaf3b">Indicateur</span>
+      </div>
+    </div>
+  </div>
+  <!--Content-->
+  <div class="content">
+    <div class="tab-content p-2">
+      <div class="mat-card mat-elevation-z4 m-4">
+        <div class="package-type h-44 primary-50 header primary" fxLayout="row" fxLayoutAlign="space-between center">
+          <!--action button-->
+          <div class="p-12">
+            <span class="border-right mr-2" style="color: #0eaf3b">Actions</span>
+            <button mat-button mat-icon-button color="fuse-navy" class="m-4" (click)="toggleForm()">
+              <mat-icon>add_circle_outline</mat-icon>
+            </button>
+            <button mat-button mat-icon-button color="fuse-navy" class="m-4" *ngIf="button_edit_delete"
+              (click)="toggleForm(true)">
+              <mat-icon>edit_outline</mat-icon>
+            </button>
+            <button mat-button mat-icon-button color="fuse-navy" *ngIf="button_edit_delete"
+              (click)="deleteIndicateur()">
+              <mat-icon>delete_outline</mat-icon>
+            </button>
+            <button mat-button mat-raised-button color="fuse-navy">
+              <mat-icon slot="start">get_app</mat-icon>
+              <label>EXPORTER EN EXCEL</label>
+            </button>
+          </div>
+          <!--action button-->
+          <!--Titre-->
+          <div class="p-12">
+            <span class="border-right mr-2" style="color: #0eaf3b; text-transform: uppercase">Liste des
+              indicateurs</span>
+          </div>
+          <!--Titre-->
+          <!--Search bar-->
+          <div class="p-12">
+            <fieldset class="field-container" appearance="outline">
+              <input type="text" placeholder="Rechercher" class="field"  [(ngModel)]="search"/>
+              <div class="icons-container">
+                <mat-icon class="icon-search"></mat-icon>
+                <div class="icon-close">
+                  <div class="x-up"></div>
+                  <div class="x-down"></div>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+          <!--Search bar-->
+        </div>
+        <!--datatable heaer-->
+        <div class="column">
+          <div class="p-12" *ngIf="show_hide_form" fxLayoutAlign="center">
+            <form [formGroup]="indicateur_form">
+              <mat-form-field appearance="fill" class="m-12">
+                <mat-label> Description </mat-label>
+                <input matInput type="text" formControlName="description" />
+                <mat-error>
+                  Veillez resseigner ce champ
+                </mat-error>
+              </mat-form-field>
+              <div fxLayoutAlign="center">
+                <button mat-raised-button color="accent" (click)="
+                                        is_edit_mode
+                                            ? updateIndicateur()
+                                            : createIndicateur()
+                                    " style="margin-right: 10px" [disabled]="indicateur_form.invalid">
+                  {{
+                  is_edit_mode
+                  ? "Modifier"
+                  : "Enregistrer"
+                  }}
+                </button>
+                <button mat-raised-button color="primary" (click)="toggleForm()">
+                  Annuler
+                </button>
+              </div>
+            </form>
+          </div>
+          <ngx-datatable class="material" [columnMode]="'force'" [rows]="indicateur_data$ | async | filter : search" [headerHeight]="48"
+            [footerHeight]="50" [rowHeight]="'auto'" limit="10" [reorderable]="true"
+            [columns]="indicateur_datatable_row" [selected]="selected" (select)="onSelectIndicateur($event)"
+            [selectionType]="'single'">
+          </ngx-datatable>
+          <mat-progress-bar mode="indeterminate" *ngIf="!isLoading$"></mat-progress-bar>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--Content-->
+</div>

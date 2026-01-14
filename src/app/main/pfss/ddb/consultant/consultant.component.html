@@ -1,0 +1,219 @@
+<div class="page-layout simple fullwidth" fxLayout="column">
+    <div class="header primary p-4 h-24" fxLayout="row" fxLayoutAlign="start center">
+        <div fxLayout="column" fxLayoutAlign="center start">
+            <div fxLayout="row" fxLayoutAlign="start center"
+                style="margin-top: 0px !important; padding-top: 0px !important;">
+                <mat-icon class="s-18" style="color: #0eaf3b;">home</mat-icon>
+                <mat-icon class="s-18" style="color: #0eaf3b;">chevron_right</mat-icon>
+                <span style="color: #0eaf3b;">Données de base</span>
+                <mat-icon class="s-18" style="color: #0eaf3b;">chevron_right</mat-icon>
+                <span style="color: #0eaf3b;">Consultant</span>
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <div class="tab-content p-2">
+            <div class="mat-card mat-elevation-z4 m-4">
+                <div class="package-type primary h-44" fxLayout="row" fxLayoutAlign="space-between center">
+                    <div class="p-12 coleur_vert">
+                        <span class="border-right" style="color: #0eaf3b;">Actions</span>
+                        <button mat-button mat-icon-button color="fuse-navy" (click)="ajouter()">
+                            <mat-icon matTooltip="Ajouter" class="coleur_vert">add_circle_outline</mat-icon>
+                        </button>
+                        <button mat-button mat-icon-button color="fuse-navy" *ngIf="afficher_btn_Modifier_consultant"
+                            (click)="modifier()">
+                            <mat-icon matTooltip="Modifier" class="coleur_vert">edit</mat-icon>
+                        </button>
+                        <button mat-button mat-icon-button color="fuse-navy" *ngIf="afficher_btn_supprimer_consultant"
+                            (click)="supprimerConsultant()">
+                            <mat-icon matTooltip="Supprimer" class="coleur_vert">delete</mat-icon>
+                        </button>
+                        <!-- <button mat-button mat-icon-button color="fuse-navy" aria-label="Supprimer" -->
+                        <!--     (click)="save_in_base(0)"> -->
+                        <!--     <mat-icon class="coleur_vert">save</mat-icon> -->
+                        <!-- </button> -->
+                        <button mat-button mat-icon-button color="fuse-navy" aria-label="Annuler"
+                            *ngIf="afficher_btn_annuler_consultant" (click)="annuler()">
+                            <mat-icon class="coleur_vert">cancel</mat-icon>
+                        </button>
+                    </div>
+                    <div class="p-12">
+                        <span class="border-right mr-2" style="color: #0eaf3b;">CONSULTANT</span>
+                    </div>
+                    <div class="p-12">
+                        <input type="text"
+                            style="padding:8px;margin:15px auto;width:100%;color:#353A48; border: 1px solid #babdc5;"
+                            placeholder="Rechercher..." />
+                    </div>
+                </div>
+                <div>
+                    <form [formGroup]="form_ajout_consultant" fxlayout="row" *ngIf="afficher_form_ajout_consultant">
+                        <div fxLayout="row wrap" fxLayoutAlign="start start">
+                            <mat-form-field fxFlex="15" class="pr-4">
+                                <mat-label>Ile</mat-label>
+                                <mat-select formControlName="ile_id" [(ngModel)]="consultant.ile_id"
+                                    (selectionChange)="filtre_region()">
+                                    <mat-option *ngFor="let ile of all_ile" [value]="ile.id">
+                                        {{ ile.Ile }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <mat-form-field fxFlex="15" class="pr-4">
+                                <mat-label>Préfecture</mat-label>
+                                <mat-select formControlName="id_region" [(ngModel)]="consultant.id_region"
+                                    [disabled]="!consultant.ile_id" (selectionChange)="filtre_commune()">
+                                    <mat-option *ngFor="let region of all_region" [value]="region.id">
+                                        {{ region.Region }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <mat-form-field fxFlex="15" class="pr-4">
+                                <mat-label>Commune</mat-label>
+                                <mat-select formControlName="id_commune" [(ngModel)]="consultant.id_commune"
+                                    [disabled]="!consultant.id_region" (selectionChange)="filtre_village();">
+                                    <mat-option *ngFor="let commune of all_commune" [value]="commune.id">
+                                        {{ commune.Commune }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <mat-form-field fxFlex="15" class="pr-4">
+                                <mat-label>Village</mat-label>
+                                <mat-select formControlName="id_village" [(ngModel)]="consultant.id_village"
+                                    [disabled]="!consultant.id_commune">
+                                    <mat-option *ngFor="let village of all_village" [value]="village.id">
+                                        {{ village.Village }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                <mat-label>Code</mat-label>
+                                <input matInput formControlName="code" [(ngModel)]="consultant.code">
+                                <mat-error>Type plainte obligatoire!</mat-error>
+                            </mat-form-field>
+                            <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                <mat-label>Nom consultant</mat-label>
+                                <input matInput formControlName="nom_consultant"
+                                    [(ngModel)]="consultant.nom_consultant">
+                                <mat-error>Activité ciblage obligatoire!</mat-error>
+                            </mat-form-field>
+                            <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                <mat-label>Raison social</mat-label>
+                                <input matInput formControlName="raison_social" [(ngModel)]="consultant.raison_social">
+                                <mat-error>Type plainte obligatoire!</mat-error>
+                            </mat-form-field>
+                            <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                <mat-label>Contact</mat-label>
+                                <input matInput formControlName="contact" [(ngModel)]="consultant.contact">
+                                <mat-error>Type plainte obligatoire!</mat-error>
+                            </mat-form-field>
+                            <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                <mat-label>Fonction du contact</mat-label>
+                                <input matInput formControlName="fonction_contact"
+                                    [(ngModel)]="consultant.fonction_contact">
+                                <mat-error>Activité ciblage obligatoire!</mat-error>
+                            </mat-form-field>
+                            <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                <mat-label>Téléphone du contact</mat-label>
+                                <input matInput formControlName="telephone_contact"
+                                    [(ngModel)]="consultant.telephone_contact">
+                                <mat-error>Type plainte obligatoire!</mat-error>
+                            </mat-form-field>
+                            <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                <mat-label>Addresse</mat-label>
+                                <input matInput formControlName="adresse" [(ngModel)]="consultant.adresse">
+                                <mat-error>Activité ciblage obligatoire!</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div fxLayoutAlign="center">
+                            <button mat-raised-button color="primary" style="margin-right: 10px"
+                                [disabled]="form_ajout_consultant.invalid" (click)="enregistrerConsultant(consultant)">
+                                <mat-label> Enregistrer </mat-label>
+                            </button>
+                            <button mat-raised-button color="primary" (click)="fermerFormConsultant()">
+                                <mat-label> Annuler </mat-label>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div>
+                    <ngx-datatable class="material" [rows]="all_consultant" [columnMode]="'force'" [headerHeight]="48"
+                        [footerHeight]="56" [rowHeight]="'auto'" [scrollbarH]="true" [reorderable]=""
+                        [selectionType]="'checkbox'" [limit]="10" [selectionType]="'single'"
+                        (select)="onSelectConsultant($event)">
+                        <ngx-datatable-column name="Ile">
+                            <ng-template ngx-datatable-cell-template let-row="row">
+                                {{ row.ile.Ile}}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Code">
+                            <ng-template ngx-datatable-cell-template let-row="row">
+                                {{ row.code }}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Nom consultant">
+                            <ng-template ngx-datatable-cell-template let-row="row">
+                                {{ row.nom_consultant }}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Raison social">
+                            <ng-template ngx-datatable-cell-template let-row="row">
+                                {{ row.raison_social }}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Personne à contacter">
+                            <ng-template ngx-datatable-cell-template let-row="row">
+                                {{ row.contact }}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Fonction du contact">
+                            <ng-template ngx-datatable-cell-template let-row="row">
+                                {{ row.fonction_contact }}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Téléphone du contact">
+                            <ng-template ngx-datatable-cell-template let-row="row">
+                                {{ row.telephone_contact }}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Adresse">
+                            <ng-template ngx-datatable-cell-template let-row="row">
+                                {{ row.adresse }}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Préfécture">
+                            <ng-template ngx-datatable-cell-template let-row="row">
+                                {{ row.region.Region }}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Commune">
+                            <ng-template ngx-datatable-cell-template let-row="row">
+                                {{ row.commune.Commune }}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Village">
+                            <ng-template ngx-datatable-cell-template let-row="row">
+                                {{ row.village.Village }}
+                            </ng-template>
+                        </ngx-datatable-column>
+                    </ngx-datatable>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- DIALOG POUR LES CONSULTANTS -->
+<ng-template #supprimer_consultant>
+    <mat-dialog-content>
+        <div matDialogTitle>
+            Etes-vous sûr de supprimer cet enregistrement?
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button mat-button matDialogClose color="primary" (click)="closeDialog()">
+            ANNULER
+        </button>
+        <button mat-button matDialogClose color="primary" (click)="confirm_supprimer_consultant()">
+            OK
+        </button>
+    </mat-dialog-actions>
+</ng-template>

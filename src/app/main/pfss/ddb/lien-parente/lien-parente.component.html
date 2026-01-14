@@ -1,0 +1,113 @@
+<div class="page-layout simple fullwidth" fxLayout="column">
+  <div class="header primary p-4 h-24" fxLayout="row" fxLayoutAlign="start center">
+    <div fxLayout="column" fxLayoutAlign="center start">
+      <div fxLayout="row" fxLayoutAlign="start center" style="margin-top: 0px !important; padding-top: 0px !important;">
+        <mat-icon class="s-18" style="color: #0eaf3b;">home</mat-icon>
+        <mat-icon class="s-18" style="color: #0eaf3b;">chevron_right</mat-icon>
+        <span style="color: #0eaf3b;">Administration</span>
+        <mat-icon class="s-18" style="color: #0eaf3b;">chevron_right</mat-icon>
+        <span style="color: #0eaf3b;">Donnees de base</span>
+        <mat-icon class="s-18" style="color: #0eaf3b;">chevron_right</mat-icon>
+        <span style="color: #0eaf3b;">Lien de parenté</span>
+      </div>
+    </div>
+  </div>
+  <div class="content">
+    <div class="tab-content p-2">
+      <div class="mat-card mat-elevation-z4 m-4">
+        <div class="package-type h-44 primary-50 header primary" fxLayout="row" fxLayoutAlign="space-between center">
+          <!--Button-->
+          <div class="p-12">
+            <span class="border-right mr-2" style="color: #0eaf3b;">Lien de parenté</span>
+            <button mat-button mat-icon-button color="fuse-navy" class="m-4" (click)="ajoutNouveauDescription()">
+              <mat-icon>add_circle_outline</mat-icon>
+            </button>
+            <button mat-button mat-icon-button color="fuse-navy" (click)="modifierDescription()" class="m-4" *ngIf="buttonModifier">
+              <mat-icon>edit_outline</mat-icon>
+            </button>
+            <button mat-button mat-icon-button color="fuse-navy" (click)="supprimerDescription()" *ngIf="buttonSupprimer">
+              <mat-icon>delete_outline</mat-icon>
+            </button>
+            <button mat-button mat-raised-button color="fuse-navy">
+              <mat-icon>get_app</mat-icon>
+              <label>EXPORTER EN EXCEL</label>
+            </button>
+          </div>
+          <!--Button-->
+          <!--Titre-->
+          <div class="p-12">
+            <span class="border-right mr-2" style="color: #0eaf3b;">LIEN DE PARENTE</span>
+          </div>
+          <!--Titre-->
+          <!--Search bar-->
+          <div class="p-12">
+            <fieldset class="field-container" appearance="outline">
+              <input type="text" placeholder="Rechercher" class="field" [(ngModel)]="search" />
+              <div class="icons-container">
+                <mat-icon class="icon-search"></mat-icon>
+                <div class="icon-close" (click)="search = ''">
+                  <div class="x-up"></div>
+                  <div class="x-down"></div>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+          <!--Search bar-->
+        </div>
+        <div class="column">
+          <!--Formulaire-->
+          <div class="p-4" fxLayoutAlign="center" *ngIf="formulaireLienDeParente">
+            <form [formGroup]="FormulaireLienDeParente">
+              <mat-form-field appearance="fill" class="m-4">
+                <mat-label>
+                  Description
+                </mat-label>
+                <input matInput formControlName="description" type="text" [(ngModel)]="description.description">
+                <mat-error>
+                  Veillez resseigner ce champ
+                </mat-error>
+              </mat-form-field>
+              <div fxLayoutAlign="center">
+                <button mat-raised-button color="accent" style="margin-right: 10px;"
+                (click)="ajoutDescription(description, 0)" [disabled]="FormulaireLienDeParente.invalid">
+                  <mat-label>
+                    Enregistrer
+                  </mat-label>
+                </button>
+                <button mat-raised-button color="primary" (click)="annuler()">
+                  <mat-label>
+                    Annuler
+                  </mat-label>
+                </button>
+              </div>
+            </form>
+          </div>
+          <!--Formulaire-->
+          <!--Datatable-->
+          <ngx-datatable class="material" [columnMode]="'force'" [headerHeight]="48" [footerHeight]="50"
+            [rowHeight]="'auto'" limit="10" [selected]="selected" [selectionType]="'single'"
+            [rows]="row_description | filter: search" [limit]="10" [reorderable]="true" (select)="onSelectDescription($event)">
+            <ngx-datatable-column name="Description">
+              <ng-template let-row="row">
+                {{row.description}}
+              </ng-template>
+            </ngx-datatable-column>
+          </ngx-datatable>
+          <!--Datatable-->
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-template #suppressionDialog>
+    <!-- <h2 matDialogTitle>Etes-vous sûr de supprimer cet enregistrement ?</h2> -->
+    <mat-dialog-content>
+      <div matDialogTitle>
+        Voulez vous vraiement supprimer cet enregistrement?
+      </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-button matDialogClose color="primary" (click)="confirmationSuppression()">Ok</button>
+      <button mat-button matDialogClose color="primary" (click)="closeDialog()">Fermer</button>
+    </mat-dialog-actions>
+  </ng-template>
+</div>

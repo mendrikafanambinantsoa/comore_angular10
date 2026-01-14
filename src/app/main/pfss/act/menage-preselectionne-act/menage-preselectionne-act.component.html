@@ -1,0 +1,907 @@
+<div *ngIf="config" class="page-layout simple fullwidth" fxLayout="column">
+    <div class="header primary p-4 h-24" fxLayout="row" fxLayoutAlign="start center">
+        <div fxLayout="column" fxLayoutAlign="center start">
+            <div fxLayout="row" fxLayoutAlign="start center"
+                style="margin-top: 0px !important; padding-top: 0px !important">
+                <mat-icon class="s-18" style="color: #0eaf3b">home</mat-icon>
+                <mat-icon class="s-18" style="color: #0eaf3b">chevron_right</mat-icon>
+                <span style="color: #0eaf3b">Traitement</span>
+                <mat-icon class="s-18" style="color: #0eaf3b">chevron_right</mat-icon>
+                <span style="color: #0eaf3b">Ménage {{config.message_plus}} </span>
+            </div>
+        </div>
+    </div>
+    <mat-tab-group>
+        <mat-tab label="MÉNAGE PRÉSÉLECTIONNÉ : {{ config.sous_projet }} ">
+            <div class="tab-content p-2">
+                <div style="margin-left: 5px; margin-top: 5px">
+                    <button button mat-raised-button class="button_vert" *ngIf="menage_preselectionne.village_id"
+                        (click)="ajouter_menage()">
+                        NOUVEAU
+                    </button>
+                    <button button mat-raised-button class="button_modifier" style="margin-left: 5px"
+                        *ngIf="show_btn_ajout" (click)="modifier()">
+                        MODIFIER
+                    </button>
+                    <button button mat-raised-button class="button_bleu" style="margin-left: 5px" *ngIf="show_btn_ajout"
+                        (click)="modifier_statut('INSCRIT')">
+                        RETOUR LISTE INSCRIT
+                    </button>
+                    <button button mat-raised-button class="button_vert_claire" style="margin-left: 5px"
+                        *ngIf="show_btn_ajout" (click)="modifier_statut('BENEFICIAIRE')">
+                        FAIRE BENEFICIER
+                    </button>
+                    <button button mat-raised-button class="button_supprimer" style="margin-left: 5px"
+                        *ngIf="show_btn_ajout" (click)="supprimer(menage_preselectionne, 1)">
+                        SUPPRIMER
+                    </button>
+                    <button button mat-raised-button color="primary" style="margin-left: 5px"
+                        *ngIf="menage_preselectionne.village_id" (click)="export_excel()">
+                        EXPORTER EN EXCEL
+                    </button>
+                </div>
+                <div style="margin-left: 5px; margin-top: 5px">
+                    <form [formGroup]="form_filtre_par_village">
+                        <mat-form-field fxFlex="15" class="pr-4">
+                            <mat-label>Ile</mat-label>
+                            <mat-select formControlName="id_ile" [(ngModel)]="menage_preselectionne.id_ile"
+                                (selectionChange)="filtre_region()">
+                                <mat-option *ngFor="let ile of all_ile" [value]="ile.id">
+                                    {{ ile.Ile }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="15" class="pr-4">
+                            <mat-label>Préfecture</mat-label>
+                            <mat-select formControlName="id_region" [(ngModel)]="menage_preselectionne.id_region"
+                                [disabled]="!menage_preselectionne.id_ile" (selectionChange)="filtre_commune()">
+                                <mat-option *ngFor="let region of all_region" [value]="region.id">
+                                    {{ region.Region }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="15" class="pr-4">
+                            <mat-label>Commune</mat-label>
+                            <mat-select formControlName="id_commune" [(ngModel)]="menage_preselectionne.id_commune"
+                                [disabled]="!menage_preselectionne.id_region" (selectionChange)="filtre_village()">
+                                <mat-option *ngFor="let commune of all_commune" [value]="commune.id">
+                                    {{ commune.Commune }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="15" class="pr-4">
+                            <mat-label>Village</mat-label>
+                            <mat-select formControlName="village_id" [(ngModel)]="menage_preselectionne.village_id"
+                                [disabled]="!menage_preselectionne.id_commune">
+                                <mat-option *ngFor="let village of all_village" [value]="village.id">
+                                    {{ village.Village }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <div fxLayout="row" fxLayoutAlign="center center">
+                            <button mat-raised-button class="button_vert" [disabled]="form_filtre_par_village.invalid"
+                                (click)="filtreMenageByVillage()" style="margin-left: 5px;"
+                                *ngIf="afficher_btn_actualiser">
+                                <mat-label> ACTUALISER </mat-label>
+                            </button>
+                        </div>
+                    </form>
+                    <fieldset *ngIf="affichage_masque">
+                        <form [formGroup]="form_menage_preselectionne">
+                            <span><b>Information chef ménage</b></span>
+                            <div fxLayout="row wrap" fxLayoutAlign="start start">
+                                <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                    <mat-label>Point d'inscription</mat-label>
+                                    <input matInput formControlName="point_d_inscription"
+                                        [(ngModel)]="menage_preselectionne.point_d_inscription">
+                                    <mat-error>Point d'inscription obligatoire!</mat-error>
+                                </mat-form-field>
+                                <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                    <mat-label>Identifiant ménage</mat-label>
+                                    <input matInput formControlName="identifiant_menage"
+                                        [(ngModel)]="menage_preselectionne.identifiant_menage">
+                                    <mat-error>Identifiant ménage obligatoire!</mat-error>
+                                </mat-form-field>
+                                <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                    <mat-label>Numero Enregistrement</mat-label>
+                                    <input matInput formControlName="NumeroEnregistrement"
+                                        [(ngModel)]="menage_preselectionne.NumeroEnregistrement">
+                                    <mat-error>Numero Enregistrement obligatoire!</mat-error>
+                                </mat-form-field>
+                                <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                    <mat-label>Chef de ménage</mat-label>
+                                    <input matInput formControlName="nom_chef_menage"
+                                        [(ngModel)]="menage_preselectionne.nom_chef_menage">
+                                    <mat-error>Chef de ménage obligatoire!</mat-error>
+                                </mat-form-field>
+                                <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                    <mat-label>Age chef de ménage</mat-label>
+                                    <input matInput type="number" formControlName="agechefdemenage"
+                                        [(ngModel)]="menage_preselectionne.agechefdemenage">
+                                    <mat-error>Age chef de ménage obligatoire!</mat-error>
+                                </mat-form-field>
+                                <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                    <mat-label>Sexe</mat-label>
+                                    <mat-select formControlName="sexe" [(ngModel)]="menage_preselectionne.sexe">
+                                        <mat-option [value]="'M'">Homme</mat-option>
+                                        <mat-option [value]="'F'">Femme</mat-option>
+                                    </mat-select>
+                                    <mat-error>Sexe obligatoire!</mat-error>
+                                </mat-form-field>
+                                <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                    <mat-label>Situation matrimoniale</mat-label>
+                                    <mat-select formControlName="situation_matrimoniale"
+                                        [(ngModel)]="menage_preselectionne.situation_matrimoniale">
+                                        <mat-option [value]="">&nbsp;</mat-option>
+                                        <mat-option [value]="'1'">célibataire</mat-option>
+                                        <mat-option [value]="'2'">marié(e)</mat-option>
+                                        <mat-option [value]="'3'">veuf(ve)</mat-option>
+                                        <mat-option [value]="'4'">divorcé(e)</mat-option>
+                                    </mat-select>
+                                    <mat-error>Situation matrimoniale obligatoire!</mat-error>
+                                </mat-form-field>
+                                <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                    <mat-label>Addresse</mat-label>
+                                    <input matInput formControlName="adresse"
+                                        [(ngModel)]="menage_preselectionne.adresse">
+                                    <mat-error>Addresse obligatoire!</mat-error>
+                                </mat-form-field>
+                                <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                    <mat-label>Numero NIN</mat-label>
+                                    <input matInput formControlName="NumeroCIN" [(ngModel)]="menage_preselectionne.nin">
+                                    <mat-error>Numero NIN obligatoire!</mat-error>
+                                </mat-form-field>
+                                <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                    <mat-label>Numero Carte éléctorale</mat-label>
+                                    <input matInput formControlName="NumeroCarteElectorale"
+                                        [(ngModel)]="menage_preselectionne.NumeroCarteElectorale">
+                                    <mat-error>Numero Carte éléctorale obligatoire!</mat-error>
+                                </mat-form-field>
+                                <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                    <mat-label>Chef fréquente école</mat-label>
+                                    <mat-select formControlName="chef_frequente_ecole"
+                                        [(ngModel)]="menage_preselectionne.chef_frequente_ecole">
+                                        <mat-option>&nbsp;</mat-option>
+                                        <mat-option [value]="'1'">Oui</mat-option>
+                                        <mat-option [value]="'2'">Non</mat-option>
+                                    </mat-select>
+                                    <mat-error>Chef fréquente école obligatoire!</mat-error>
+                                </mat-form-field>
+                                <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                    <mat-label>Niveau instruction Chef</mat-label>
+                                    <mat-select formControlName="niveau_instruction_chef"
+                                        [(ngModel)]="menage_preselectionne.niveau_instruction_chef">
+                                        <mat-option [value]="'0'">&nbsp;</mat-option>
+                                        <mat-option [value]="'1'">Primaire</mat-option>
+                                        <mat-option [value]="'2'">Secondaire</mat-option>
+                                        <mat-option [value]="'3'">Université</mat-option>
+                                    </mat-select>
+                                    <mat-error>Niveau instruction Chef obligatoire!</mat-error>
+                                </mat-form-field>
+                                <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                    <mat-label>chef ménage travail ?</mat-label>
+                                    <mat-select formControlName="chef_menage_travail"
+                                        [(ngModel)]="menage_preselectionne.chef_menage_travail">
+                                        <mat-option>&nbsp;</mat-option>
+                                        <mat-option [value]="'1'">Oui</mat-option>
+                                        <mat-option [value]="'2'">Non</mat-option>
+                                    </mat-select>
+                                    <mat-error>chef ménage travail ? obligatoire!</mat-error>
+                                </mat-form-field>
+                                <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                    <mat-label>Activité chef ménage</mat-label>
+                                    <input matInput formControlName="activite_chef_menage"
+                                        [(ngModel)]="menage_preselectionne.activite_chef_menage">
+                                    <mat-error>Activité chef ménage obligatoire!</mat-error>
+                                </mat-form-field>
+                                <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                    <mat-label>Téléphone chef ménage</mat-label>
+                                    <input matInput formControlName="telephone_chef_menage"
+                                        [(ngModel)]="menage_preselectionne.telephone1">
+                                    <mat-error>Téléphone chef ménage obligatoire!</mat-error>
+                                </mat-form-field>
+                                <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                    <mat-label>Milieu</mat-label>
+                                    <mat-select formControlName="milieu" [(ngModel)]="menage_preselectionne.milieu">
+                                        <mat-option>&nbsp;</mat-option>
+                                        <mat-option [value]="'1'">1- Urbain</mat-option>
+                                        <mat-option [value]="'2'">2- Rural</mat-option>
+                                    </mat-select>
+                                    <mat-error>Milieu obligatoire!</mat-error>
+                                </mat-form-field>
+                                <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                    <mat-label>Quartier</mat-label>
+                                    <input matInput formControlName="quartier"
+                                        [(ngModel)]="menage_preselectionne.quartier">
+                                    <mat-error>Quartier obligatoire!</mat-error>
+                                </mat-form-field>
+                                <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                    <mat-label>Nom de l'enquêteur</mat-label>
+                                    <input matInput formControlName="PersonneInscription"
+                                        [(ngModel)]="menage_preselectionne.PersonneInscription">
+                                    <mat-error>Nom de l'enquêteur obligatoire!</mat-error>
+                                </mat-form-field>
+                                <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                    <mat-label>Ménage Apte/Inapte</mat-label>
+                                    <mat-select formControlName="inapte" [(ngModel)]="menage_preselectionne.inapte">
+                                        <mat-option [value]="'0'">Apte</mat-option>
+                                        <mat-option [value]="'1'">Inapte</mat-option>
+                                    </mat-select>
+                                    <mat-error>Ménage Apte/Inapte obligatoire!</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <mat-divider
+                                style="height: 20px; border-top: 2px solid black; font-weight: bold;"></mat-divider>
+                            <span><b>Information conjoint(e)</b></span>
+                            <div fxLayout="row wrap" fxLayoutAlign="start start">
+                                <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                    <mat-label>Nom conjoint(e)</mat-label>
+                                    <input matInput formControlName="nom_conjoint"
+                                        [(ngModel)]="menage_preselectionne.nom_conjoint">
+                                    <mat-error>Nom conjoint(e) obligatoire!</mat-error>
+                                </mat-form-field>
+                                <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                    <mat-label>Age conjoint</mat-label>
+                                    <input matInput type="number" formControlName="age_conjoint"
+                                        [(ngModel)]="menage_preselectionne.age_conjoint">
+                                    <mat-error>Age conjoint obligatoire!</mat-error>
+                                </mat-form-field>
+                                <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                    <mat-label>Sexe Conjoint(e)</mat-label>
+                                    <mat-select formControlName="sexe_conjoint"
+                                        [(ngModel)]="menage_preselectionne.sexe_conjoint">
+                                        <mat-option [value]="'M'">Homme</mat-option>
+                                        <mat-option [value]="'F'">Femme</mat-option>
+                                    </mat-select>
+                                    <mat-error>Sexe Conjoint(e) obligatoire!</mat-error>
+                                </mat-form-field>
+                                <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                    <mat-label>Numero NIN</mat-label>
+                                    <input matInput formControlName="nin_conjoint"
+                                        [(ngModel)]="menage_preselectionne.nin_conjoint">
+                                    <mat-error>Numero NIN obligatoire!</mat-error>
+                                </mat-form-field>
+                                <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                    <mat-label>Numero Carte éléctorale</mat-label>
+                                    <input matInput formControlName="carte_electorale_conjoint"
+                                        [(ngModel)]="menage_preselectionne.carte_electorale_conjoint">
+                                    <mat-error>Numero Carte éléctorale obligatoire!</mat-error>
+                                </mat-form-field>
+                                <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                    <mat-label>Conjoint(e) fréquente école</mat-label>
+                                    <mat-select formControlName="conjoint_frequente_ecole"
+                                        [(ngModel)]="menage_preselectionne.conjoint_frequente_ecole">
+                                        <mat-option [value]="''">&nbsp;</mat-option>
+                                        <mat-option [value]="'1'">Oui</mat-option>
+                                        <mat-option [value]="'2'">Non</mat-option>
+                                    </mat-select>
+                                    <mat-error>Conjoint(e) fréquente école obligatoire!</mat-error>
+                                </mat-form-field>
+                                <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                    <mat-label>Niveau instruction conjoint(e)</mat-label>
+                                    <mat-select formControlName="niveau_instruction_conjoint"
+                                        [(ngModel)]="menage_preselectionne.niveau_instruction_conjoint">
+                                        <mat-option [value]="'0'">&nbsp;</mat-option>
+                                        <mat-option [value]="'1'">Primaire</mat-option>
+                                        <mat-option [value]="'2'">Secondaire</mat-option>
+                                        <mat-option [value]="'3'">Université</mat-option>
+                                    </mat-select>
+                                    <mat-error>Niveau instruction conjoint(e) obligatoire!</mat-error>
+                                </mat-form-field>
+                                <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                    <mat-label>Conjoint(e) travail ?</mat-label>
+                                    <mat-select formControlName="conjoint_travail"
+                                        [(ngModel)]="menage_preselectionne.conjoint_travail">
+                                        <mat-option [value]="''">&nbsp;</mat-option>
+                                        <mat-option [value]="'1'">Oui</mat-option>
+                                        <mat-option [value]="'0'">Non</mat-option>
+                                    </mat-select>
+                                    <mat-error>Conjoint(e) travail ? obligatoire!</mat-error>
+                                </mat-form-field>
+                                <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                    <mat-label>Activité conjoint(e)</mat-label>
+                                    <input matInput formControlName="activite_conjoint"
+                                        [(ngModel)]="menage_preselectionne.activite_conjoint">
+                                    <mat-error>Activité conjoint(e) obligatoire!</mat-error>
+                                </mat-form-field>
+                                <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                    <mat-label>Téléphone conjoint(e)</mat-label>
+                                    <input matInput formControlName="telephone_conjoint"
+                                        [(ngModel)]="menage_preselectionne.telephone2">
+                                    <mat-error>Téléphone conjoint(e) obligatoire!</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <!-- information travailleur -->
+                            <mat-divider style="height: 20px; border-top: 2px solid black; font-weight: bold;"
+                                style="display: none;"></mat-divider>
+                            <span style="display: none;"><b>Information
+                                    {{this.config.placeholder_nom_travailleur}}</b></span>
+                            <div style="display: none;">
+                                <!-- alana ilay div ambony rehefa ho activena ilay formulaire -->
+                                <div fxLayout="row wrap" fxLayoutAlign="start start">
+                                    <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                        <mat-label>{{this.config.placeholder_nom_travailleur}}</mat-label>
+                                        <input matInput formControlName="NomTravailleur"
+                                            [(ngModel)]="menage_preselectionne.NomTravailleur">
+                                        <mat-error>{{this.config.placeholder_nom_travailleur}} obligatoire!</mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                        <mat-label>Date naissance</mat-label>
+                                        <input matInput formControlName="datedenaissancetravailleur"
+                                            [(ngModel)]="menage_preselectionne.datedenaissancetravailleur">
+                                        <mat-error>Date naissance obligatoire!</mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                        <mat-label>Age</mat-label>
+                                        <input matInput type="number" formControlName="agetravailleur"
+                                            [(ngModel)]="menage_preselectionne.agetravailleur">
+                                        <mat-error>Age obligatoire!</mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                        <mat-label>Sexe</mat-label>
+                                        <mat-select formControlName="SexeTravailleur"
+                                            [(ngModel)]="menage_preselectionne.SexeTravailleur">
+                                            <mat-option [value]="">&nbsp;</mat-option>
+                                            <mat-option [value]="'M'">Homme</mat-option>
+                                            <mat-option [value]="'F'">Femme</mat-option>
+                                        </mat-select>
+                                        <mat-error>Sexe obligatoire!</mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                        <mat-label>Lien parental</mat-label>
+                                        <mat-select formControlName="lien_travailleur"
+                                            [(ngModel)]="menage_preselectionne.lien_travailleur">
+                                            <mat-option *ngFor="let lien of all_lienparental" [value]="lien.id">
+                                                {{ lien.description }}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error>Lien parental obligatoire!</mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                        <mat-label>NIN {{this.config.placeholder_nom_travailleur}}</mat-label>
+                                        <input matInput formControlName="numerocintravailleur"
+                                            [(ngModel)]="menage_preselectionne.numerocintravailleur">
+                                        <mat-error>NIN {{this.config.placeholder_nom_travailleur}}
+                                            obligatoire!</mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                        <mat-label>C.E {{this.config.placeholder_nom_travailleur}}</mat-label>
+                                        <input matInput formControlName="numerocarteelectoraletravailleur"
+                                            [(ngModel)]="menage_preselectionne.numerocarteelectoraletravailleur">
+                                        <mat-error>C.E {{this.config.placeholder_nom_travailleur}}
+                                            obligatoire!</mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                        <mat-label>Téléphone</mat-label>
+                                        <input matInput formControlName="telephone_travailleur"
+                                            [(ngModel)]="menage_preselectionne.telephone_travailleur">
+                                        <mat-error>Tél {{this.config.placeholder_nom_travailleur}}
+                                            obligatoire!</mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div fxLayout="row wrap" fxLayoutAlign="start start" style="display: none;">
+                                    <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                        <mat-label>{{this.config.placeholder_nom_suppleant}}</mat-label>
+                                        <input matInput formControlName="NomTravailleurSuppliant"
+                                            [(ngModel)]="menage_preselectionne.NomTravailleurSuppliant">
+                                        <mat-error>{{this.config.placeholder_nom_suppleant}} obligatoire!</mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                        <mat-label>Date naissance</mat-label>
+                                        <input matInput formControlName="datedenaissancesuppliant"
+                                            [(ngModel)]="menage_preselectionne.datedenaissancesuppliant">
+                                        <mat-error>Date naissance obligatoire!</mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                        <mat-label>Age</mat-label>
+                                        <input matInput type="number" formControlName="agesuppliant"
+                                            [(ngModel)]="menage_preselectionne.agesuppliant">
+                                        <mat-error>Age obligatoire!</mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                        <mat-label>Sexe</mat-label>
+                                        <mat-select formControlName="SexeTravailleurSuppliant"
+                                            [(ngModel)]="menage_preselectionne.SexeTravailleurSuppliant">
+                                            <mat-option [value]="">&nbsp;</mat-option>
+                                            <mat-option [value]="'M'">Homme</mat-option>
+                                            <mat-option [value]="'F'">Femme</mat-option>
+                                        </mat-select>
+                                        <mat-error>Sexe {{this.config.placeholder_nom_suppleant}}
+                                            obligatoire!</mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                        <mat-label>Lien parental</mat-label>
+                                        <mat-select formControlName="lien_suppleant"
+                                            [(ngModel)]="menage_preselectionne.lien_suppleant">
+                                            <mat-option *ngFor="let lien of all_lienparental" [value]="lien.id">
+                                                {{ lien.description }}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error>Lien parental obligatoire!</mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                        <mat-label>NIN {{this.config.placeholder_nom_suppleant}}</mat-label>
+                                        <input matInput formControlName="numerocinsuppliant"
+                                            [(ngModel)]="menage_preselectionne.numerocinsuppliant">
+                                        <mat-error>NIN {{this.config.placeholder_nom_suppleant}}
+                                            obligatoire!</mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                        <mat-label>C.E {{this.config.placeholder_nom_suppleant}}</mat-label>
+                                        <input matInput formControlName="numerocarteelectoralesuppliant"
+                                            [(ngModel)]="menage_preselectionne.numerocarteelectoralesuppliant">
+                                        <mat-error>C.E {{this.config.placeholder_nom_suppleant}}
+                                            obligatoire!</mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                        <mat-label>Téléphone</mat-label>
+                                        <input matInput formControlName="telephone_suppleant"
+                                            [(ngModel)]="menage_preselectionne.telephone_suppleant">
+                                        <mat-error>Tél {{this.config.placeholder_nom_suppleant}}
+                                            obligatoire!</mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div fxLayoutAlign="center">
+                                <button mat-raised-button color="primary" style="margin-right: 10px"
+                                    (click)="save_menage_preselectionne(menage_preselectionne, 0)"
+                                    [disabled]="form_menage_preselectionne.invalid">
+                                    <mat-label> ENREGISTRER </mat-label>
+                                </button>
+                                <button mat-raised-button color="primary" (click)="hideAffichageMasque()">
+                                    <mat-label> ANNULER </mat-label>
+                                </button>
+                            </div>
+                        </form>
+                    </fieldset>
+                </div>
+                <div class="mat-card mat-elevation-z4 m-4">
+                    <div class="package-type h-44 primary-50 header primary" fxLayout="row"
+                        fxLayoutAlign="space-between center">
+                        <div class="p-12">
+                            <!-- <span class="border-right mr-2" style="color: #0eaf3b;">Actions</span> -->
+                        </div>
+                        <div class="p-12">
+                            <!-- <span class="border-right mr-2" style="color: #0eaf3b;">CONSULTANT</span> -->
+                        </div>
+                        <div class="p-12">
+                            <input type="text" style="
+                          padding: 8px;
+                          margin: 15px auto;
+                          width: 100%;
+                          color: #353a48;
+                          border: 1px solid #babdc5;
+                      " placeholder="Rechercher..." [(ngModel)]="search_menage" />
+                        </div>
+                    </div>
+                    <!--Datatable-->
+                    <ngx-datatable class="material" [columnMode]="'force'" [headerHeight]="48" [footerHeight]="50"
+                        [rowHeight]="'auto'" limit="10" [selectionType]="'single'"
+                        [rows]="all_menages | filter: search_menage" [limit]="10"
+                        (select)="on_select_menage_preselectionne($event)" [selectionType]="'single'" [limit]="10">
+                        <ngx-datatable-column name="N° récepissé">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                {{ row.numero_recepisse }}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Chef Ménage">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                {{ row.nom_chef_menage }}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Sexe">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                {{ row.sexe }}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <!-- <ngx-datatable-column name="Date naissance">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                {{ row.date_naissance }}
+              </ng-template>
+            </ngx-datatable-column> -->
+                        <ngx-datatable-column name="NIN">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                {{ row.nin }}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Adresse">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                {{ row.adresse }}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Télephone 1">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                {{ row.telephone1 }}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Inscr">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                {{ affichage_etat_statut(row.inscrit) }}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Presél">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                {{ affichage_etat_statut(row.preselectionne) }}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Bénéf">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                {{ affichage_etat_statut(row.beneficiaire) }}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Etat envoie">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                {{ affichage_etat_envoie(row.id_serveur_centrale) }}
+                            </ng-template>
+                        </ngx-datatable-column>
+                    </ngx-datatable>
+                </div>
+            </div>
+        </mat-tab>
+        <!-- [disabled]="desactiver_onglets" -->
+        <mat-tab label="INFORMATIONS SUR LES MÉNAGES" [disabled]="desactiver_onglets">
+            <div class="tab-content p-2">
+                <div>
+                    <span style="margin-left: 5px;"><b>Menage : {{menage_information.numero_recepisse}} Chef ménage :
+                            {{menage_information.nom_chef_menage}}</b></span>
+                </div>
+                <form [formGroup]="form_information_menage">
+                    <div fxLayout="row wrap" fxLayoutAlign="start start">
+                        <mat-form-field fxFlex="calc(15% - 16px)" class="pr-4">
+                            <mat-label style="font-size: 12px;">Taille du ménage</mat-label>
+                            <input matInput formControlName="taille_menage"
+                                [(ngModel)]="menage_information.taille_menage">
+                            <mat-error>Taille du ménage obligatoire!</mat-error>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="calc(15% - 16px)" class="pr-4">
+                            <mat-label style="font-size: 12px;">Personnes +70 ans</mat-label>
+                            <input matInput formControlName="nombre_personne_plus_70ans"
+                                [(ngModel)]="menage_information.nombre_personne_plus_70ans">
+                            <mat-error>Personnes +70 ans obligatoire!</mat-error>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="calc(15% - 16px)" class="pr-4">
+                            <mat-label style="font-size: 12px;">Jeune 18-35ans</mat-label>
+                            <input matInput formControlName="nombre_jeune_18_35ans"
+                                [(ngModel)]="menage_information.nombre_jeune_18_35ans">
+                            <mat-error>Jeune 18-35ans obligatoire!</mat-error>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="calc(15% - 16px)" class="pr-4">
+                            <mat-label style="font-size: 12px;">Enf -15ans</mat-label>
+                            <input matInput formControlName="nombre_enfant_moins_15ans"
+                                [(ngModel)]="menage_information.nombre_enfant_moins_15ans">
+                            <mat-error>Enf -15ans obligatoire!</mat-error>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                            <mat-label style="font-size: 12px;">6-14 ans non scolarisé</mat-label>
+                            <input matInput formControlName="nombre_enfant_6_14ans_non_scolarises"
+                                [(ngModel)]="menage_information.nombre_enfant_6_14ans_non_scolarises">
+                            <mat-error>6-14 ans non scolarisé obligatoire!</mat-error>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="calc(15% - 16px)" class="pr-4">
+                            <mat-label style="font-size: 12px;">Enfant-5 ans</mat-label>
+                            <input matInput formControlName="nombre_enfant_moins_5ans"
+                                [(ngModel)]="menage_information.nombre_enfant_moins_5ans">
+                            <mat-error>Enfant-5 ans obligatoire!</mat-error>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="calc(18% - 16px)" class="pr-4">
+                            <mat-label style="font-size: 12px;">Adulte travaille sect formel</mat-label>
+                            <input matInput formControlName="nombre_adulte_travaille_secteur_formel"
+                                [(ngModel)]="menage_information.nombre_adulte_travaille_secteur_formel">
+                            <mat-error>Adulte travaille sect formel obligatoire!</mat-error>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="calc(15% - 16px)" class="pr-4">
+                            <mat-label style="font-size: 12px;">Personnes handicapées</mat-label>
+                            <input matInput formControlName="nombre_handicap"
+                                [(ngModel)]="menage_information.nombre_handicap">
+                            <mat-error>Personnes handicapées obligatoire!</mat-error>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="calc(25% - 16px)" class="pr-4">
+                            <mat-label style="font-size: 12px;">Membres à l’étranger qui aide finance</mat-label>
+                            <input matInput formControlName="membre_vivant_etranger_qui_aide_financierement"
+                                [(ngModel)]="menage_information.membre_vivant_etranger_qui_aide_financierement">
+                            <mat-error>Membres à l’étranger qui aide finance obligatoire!</mat-error>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                            <mat-label style="font-size: 12px;">Pers envoie argent régulier</mat-label>
+                            <mat-select formControlName="personne_qui_envoi_argent_regulier"
+                                [(ngModel)]="menage_information.personne_qui_envoi_argent_regulier">
+                                <mat-option> &nbsp;</mat-option>
+                                <mat-option [value]="'Oui'">Oui</mat-option>
+                                <mat-option [value]="'Non'">Non</mat-option>
+                            </mat-select>
+                            <mat-error>Pers envoie argent régulier obligatoire!</mat-error>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                            <mat-label style="font-size: 12px;">Chef ménage Femme</mat-label>
+                            <mat-select formControlName="chef_menage_femme"
+                                [(ngModel)]="menage_information.chef_menage_femme">
+                                <mat-option>&nbsp;</mat-option>
+                                <mat-option [value]="'1'">Oui</mat-option>
+                                <mat-option [value]="'0'">Non</mat-option>
+                            </mat-select>
+                            <mat-error>Chef ménage Femme obligatoire!</mat-error>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                            <mat-label style="font-size: 12px;">Chef ménage au + primaire</mat-label>
+                            <mat-select formControlName="chef_menage_au_plus_primaire"
+                                [(ngModel)]="menage_information.chef_menage_au_plus_primaire">
+                                <mat-option>&nbsp;</mat-option>
+                                <mat-option [value]="'1'">Oui</mat-option>
+                                <mat-option [value]="'0'">Non</mat-option>
+                            </mat-select>
+                            <mat-error>Chef ménage au + primaire obligatoire!</mat-error>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                            <mat-label style="font-size: 12px;">Maison non dure</mat-label>
+                            <mat-select formControlName="maison_non_dure"
+                                [(ngModel)]="menage_information.maison_non_dure">
+                                <mat-option>
+                                    &nbsp;
+                                </mat-option>
+                                <mat-option [value]="'1'">
+                                    Oui
+                                </mat-option>
+                                <mat-option [value]="'0'">
+                                    Non
+                                </mat-option>
+                            </mat-select>
+                            <mat-error>Maison non dure obligatoire!</mat-error>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                            <mat-label style="font-size: 12px;">Non accès à l’électricité</mat-label>
+                            <mat-select formControlName="non_acces_electricite"
+                                [(ngModel)]="menage_information.non_acces_electricite">
+                                <mat-option>
+                                    &nbsp;
+                                </mat-option>
+                                <mat-option [value]="'1'">
+                                    Oui
+                                </mat-option>
+                                <mat-option [value]="'0'">
+                                    Non
+                                </mat-option>
+                            </mat-select>
+                            <mat-error>Non accès à l’électricité obligatoire!</mat-error>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                            <mat-label style="font-size: 12px;">Non accès au robinet</mat-label>
+                            <mat-select formControlName="non_acces_robinet"
+                                [(ngModel)]="menage_information.non_acces_robinet">
+                                <mat-option>
+                                    &nbsp;
+                                </mat-option>
+                                <mat-option [value]="'1'">
+                                    Oui
+                                </mat-option>
+                                <mat-option [value]="'0'">
+                                    Non
+                                </mat-option>
+                            </mat-select>
+                            <mat-error>Non accès au robinet obligatoire!</mat-error>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="calc(15% - 16px)" class="pr-4">
+                            <mat-label style="font-size: 12px;">Membre salarié</mat-label>
+                            <mat-select formControlName="membre_salarie"
+                                [(ngModel)]="menage_information.membre_salarie">
+                                <mat-option>
+                                    &nbsp;
+                                </mat-option>
+                                <mat-option [value]="'1'">
+                                    Oui
+                                </mat-option>
+                                <mat-option [value]="'0'">
+                                    Non
+                                </mat-option>
+                            </mat-select>
+                            <mat-error>Membre salarié obligatoire!</mat-error>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                            <mat-label style="font-size: 12px;">Antenne parabolique</mat-label>
+                            <mat-select formControlName="antenne_parabolique"
+                                [(ngModel)]="menage_information.antenne_parabolique">
+                                <mat-option>
+                                    &nbsp;
+                                </mat-option>
+                                <mat-option [value]="'1'">
+                                    Oui
+                                </mat-option>
+                                <mat-option [value]="'0'">
+                                    Non
+                                </mat-option>
+                            </mat-select>
+                            <mat-error>Antenne parabolique obligatoire!</mat-error>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                            <mat-label style="font-size: 12px;">Frigo fonctionnel</mat-label>
+                            <mat-select formControlName="frigo_fonctionnel"
+                                [(ngModel)]="menage_information.frigo_fonctionnel">
+                                <mat-option>
+                                    &nbsp;
+                                </mat-option>
+                                <mat-option [value]="'1'">
+                                    Oui
+                                </mat-option>
+                                <mat-option [value]="'0'">
+                                    Non
+                                </mat-option>
+                            </mat-select>
+                            <mat-error>Frigo fonctionnel obligatoire!</mat-error>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                            <mat-label style="font-size: 12px;">Bénéficiaire aide</mat-label>
+                            <mat-select formControlName="beneficiaire_aide"
+                                [(ngModel)]="menage_information.beneficiaire_aide">
+                                <mat-option>
+                                    &nbsp;
+                                </mat-option>
+                                <mat-option [value]="'1'">
+                                    Oui
+                                </mat-option>
+                                <mat-option [value]="'0'">
+                                    Non
+                                </mat-option>
+                            </mat-select>
+                            <mat-error>Bénéficiaire aide obligatoire!</mat-error>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                            <mat-label style="font-size: 12px;">Membre etranger recoit</mat-label>
+                            <input matInput type="number" formControlName="membre_etranger_recoit"
+                                [(ngModel)]="menage_information.membre_etranger_recoit">
+                            <mat-error>Membre etranger recoit obligatoire!</mat-error>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                            <mat-label style="font-size: 12px;">Membre etranger envoi</mat-label>
+                            <mat-select formControlName="membre_etranger_envoie"
+                                [(ngModel)]="menage_information.membre_etranger_envoie">
+                                <mat-option>
+                                    &nbsp;
+                                </mat-option>
+                                <mat-option [value]="'1'">
+                                    Oui
+                                </mat-option>
+                                <mat-option [value]="'0'">
+                                    Non
+                                </mat-option>
+                            </mat-select>
+                            <mat-error>Membre etranger envoi obligatoire!</mat-error>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                            <mat-label style="font-size: 12px;">Propriétaire Logement</mat-label>
+                            <mat-select formControlName="proprietaire_logement"
+                                [(ngModel)]="menage_information.proprietaire_logement">
+                                <mat-option>
+                                    &nbsp;
+                                </mat-option>
+                                <mat-option [value]="'1'">
+                                    Oui
+                                </mat-option>
+                                <mat-option [value]="'0'">
+                                    Non
+                                </mat-option>
+                            </mat-select>
+                            <mat-error>Propriétaire Logement obligatoire!</mat-error>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                            <mat-label style="font-size: 12px;">Inclusion/Exclusion</mat-label>
+                            <mat-select formControlName="inclusion_exclusion"
+                                [(ngModel)]="menage_information.inclusion_exclusion">
+                                <mat-option [value]="'0'">
+                                    &nbsp;
+                                </mat-option>
+                                <mat-option [value]="'1'">
+                                    Exclusion catégorique
+                                </mat-option>
+                                <mat-option [value]="'2'">
+                                    nclusion d'office
+                                </mat-option>
+                            </mat-select>
+                            <mat-error>Inclusion/Exclusion obligatoire!</mat-error>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                            <mat-label style="font-size: 12px;">Cause Inclusion/Exclusion</mat-label>
+                            <input matInput formControlName="cause_inclusion_exclusion"
+                                [(ngModel)]="menage_information.cause_inclusion_exclusion">
+                            <mat-error>Cause Inclusion/Exclusion obligatoire!</mat-error>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="calc(15% - 16px)" class="pr-4">
+                            <mat-label style="font-size: 12px;">Scores</mat-label>
+                            <input matInput formControlName="scores" [(ngModel)]="menage_information.scores">
+                            <mat-error>Scores obligatoire!</mat-error>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                            <mat-label style="font-size: 12px;">Scores après plainte</mat-label>
+                            <input matInput formControlName="scores_apres_plainte"
+                                [(ngModel)]="menage_information.scores_apres_plainte">
+                            <mat-error>Scores après plainte obligatoire!</mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div fxLayout="row wrap" fxLayoutAlign="start start">
+                        <mat-form-field fxFlex="calc(15% - 16px)" class="pr-4">
+                            <mat-label style="font-size: 12px;">GPS</mat-label>
+                            <input matInput formControlName="gps" [(ngModel)]="menage_information.gps">
+                            <mat-error>GPS obligatoire!</mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div fxLayoutAlign="center">
+                        <button mat-raised-button color="primary" style="margin-right: 10px"
+                            (click)="save_information_menage(menage_information, 0)">
+                            <mat-label> Enregistrer </mat-label>
+                        </button>
+                        <!-- <button mat-raised-button color="primary" (click)="fermerModificationMenage()">
+                <mat-label> Annuler </mat-label>
+            </button> -->
+                    </div>
+                </form>
+            </div>
+        </mat-tab>
+    </mat-tab-group>
+</div>
+
+<ng-template #aucun_menage_preselectionne_par_village>
+    <mat-dialog-content>
+        <div matDialogTitle>Aucun ménage preselectionne dans le village</div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button mat-button matDialogClose color="primary" (click)="closeDialog()">
+            Fermer
+        </button>
+    </mat-dialog-actions>
+</ng-template>
+
+<ng-template #suppression_menage_preselectionne>
+    <mat-dialog-content>
+        <div matDialogTitle>
+            Etes-vous sûr de supprimer cet enregistrement ?
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button mat-button matDialogClose color="primary" (click)="closeDialog()">
+            ANNULER
+        </button>
+        <button mat-button matDialogClose color="primary" (click)="confirm_supprimer_menage_preselectionne()">
+            OK
+        </button>
+    </mat-dialog-actions>
+</ng-template>
+<ng-template #choisir_sous_projet>
+    <mat-dialog-content>
+        <div matDialogTitle>
+            Veuillez choisir le sous-projet à affecter à ce ménage !
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button mat-button matDialogClose color="primary" (click)="closeDialog()">
+            OK
+        </button>
+    </mat-dialog-actions>
+</ng-template>
+<ng-template #retour_inscrit>
+    <mat-dialog-content>
+        <div matDialogTitle>
+            Etes-vous sûr de faire retourner sur le liste inscrit ce ménage ?
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button mat-button matDialogClose color="primary" (click)="closeDialog()">
+            ANNULER
+        </button>
+        <button mat-button matDialogClose color="primary" (click)="faire_menage_retour_inscrit()">
+            OK
+        </button>
+    </mat-dialog-actions>
+</ng-template>
+<ng-template #faire_beneficier>
+    <mat-dialog-content>
+        <div matDialogTitle>
+            Etes-vous sûr de faire beneficier ce ménage ?
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button mat-button matDialogClose color="primary" (click)="closeDialog()">
+            ANNULER
+        </button>
+        <button mat-button matDialogClose color="primary" (click)="faire_menage_beneficier()">
+            OK
+        </button>
+    </mat-dialog-actions>
+</ng-template>

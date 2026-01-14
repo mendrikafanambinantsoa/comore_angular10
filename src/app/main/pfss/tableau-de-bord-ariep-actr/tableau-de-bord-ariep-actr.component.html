@@ -1,0 +1,234 @@
+<div class="page-layout simple fullwidth" fxLayout="column">
+  <div class="header primary p-4 h-24" fxLayout="row" fxLayoutAlign="start center">
+    <div fxLayout="column" fxLayoutAlign="center start">
+      <div fxLayout="row" fxLayoutAlign="start center" style="margin-top: 0px !important; padding-top: 0px !important">
+        <mat-icon class="s-18" style="color: #0eaf3b">home</mat-icon>
+        <mat-icon class="s-18" style="color: #0eaf3b">chevron_right</mat-icon>
+        <span style="color: #0eaf3b">Tableau de bord</span>
+        <mat-icon class="s-18" style="color: #0eaf3b">chevron_right</mat-icon>
+        <span style="color: #0eaf3b">{{ title}}</span>
+        <mat-icon class="s-18" style="color: #0eaf3b">chevron_right</mat-icon>
+        <span style="color: #0eaf3b">{{ breadcrumb_title }}</span>
+      </div>
+    </div>
+  </div>
+  <!--content-->
+  <div class="content p-2">
+    <div class="mat-card mat-elevation-z4 m-4">
+      <div class="package-type primary h-44" fxLayout="row" fxLayoutAlign="space-between center" *ngIf="!is_tableau_de_bord">
+        <!--action button-->
+        <div class="p-12" >
+          <span class="border-right mr-2" style="color: #0eaf3b">Actions</span>
+          <button mat-button mat-icon-button color="fuse-navy" class="m-4" (click)="toggleForm()">
+            <mat-icon>add_circle_outline</mat-icon>
+          </button>
+          <button mat-button mat-icon-button color="fuse-navy" class="m-4" *ngIf="button_edit_delete" (click)="toggleForm(true)">
+            <mat-icon>edit_outline</mat-icon>
+          </button>
+          <button mat-button mat-icon-button color="fuse-navy" class="m-4" *ngIf="button_edit_delete" (click)="deleteObjectif()">
+            <mat-icon>delete_outline</mat-icon>
+          </button>
+          <button mat-button mat-raised-button color="fuse-navy">
+            <mat-icon slot="start">get_app</mat-icon>
+            <label>EXPORTER EN EXCEL</label>
+          </button>
+        </div>
+        <!--action button-->
+        <!--titre-->
+        <div class="">
+          <span class="border-right mr-2" style="color: #0eaf3b; text-transform: uppercase">{{ title }}</span>
+        </div>
+        <!--titre-->
+        <!--search bar-->
+        <div class="p-12">
+          <fieldset class="field-container" appearance="outline">
+            <input type="text" placeholder="Rechercher" class="field" [(ngModel)]="search"/>
+            <div class="icons-container">
+              <mat-icon class="icon-search"></mat-icon>
+              <div class="icon-close">
+                <div class="x-up"></div>
+                <div class="x-down"></div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+        <!--search bar-->
+      </div>
+      <!--form and datatable-->
+      <div *ngIf="show_hide_form">
+        <form [formGroup]="objectifForm" fxLayout="column">
+          <div fxLayout="row">
+            <mat-form-field appearance="fill" class="pr-4" fxFlex="50%">
+              <mat-label>Ile</mat-label>
+              <mat-select formControlName="ile_id" (selectionChange)="onSelectIle($event)">
+                <mat-option *ngFor="let item of ileData$ | async" [value]="item.id">
+                  {{ item.Ile }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="pr-4" fxFlex="50%">
+              <mat-label>Indicateur</mat-label>
+              <mat-select formControlName="indicateur_id">
+                <mat-option *ngFor="let item of indicateurTdbData$ | async" [value]="item.id">
+                  {{ item.description }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div fxLayout="row" fxLayoutGap="10px">
+            <mat-form-field fxFlex="calc(20% - 50px)" class="pr-4">
+              <mat-label>Objectif nombre vague 1</mat-label>
+              <input matInput formControlName="objectif_nombre_vague1">
+            </mat-form-field>
+            <mat-form-field fxFlex="calc(20% - 50px)" class="pr-4">
+              <mat-label>Nombre village vague 1</mat-label>
+              <input matInput formControlName="objectif_village_vague1">
+            </mat-form-field>
+            <mat-form-field fxFlex="calc(20% - 50px)" class="pr-4">
+              <mat-label>Objectif nombre vague 2</mat-label>
+              <input matInput formControlName="objectif_nombre_vague2">
+            </mat-form-field>
+            <mat-form-field fxFlex="calc(20% - 50px)" class="pr-4">
+              <mat-label>Nombre village vague 2</mat-label>
+              <input matInput formControlName="objectif_village_vague2">
+            </mat-form-field>
+            <mat-form-field fxFlex="calc(20% - 50px)" class="pr-4">
+              <mat-label>Objectif nombre vague 3</mat-label>
+              <input matInput formControlName="objectif_nombre_vague3">
+            </mat-form-field>
+            <mat-form-field fxFlex="calc(20% - 50px)" class="pr-4">
+              <mat-label>Nombre village vague 3</mat-label>
+              <input matInput formControlName="objectif_village_vague3">
+            </mat-form-field>
+          </div>
+          <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
+            <button mat-raised-button color="accent"
+              (click)="is_edit_mode ? updateObjectif() : createObjectif()"
+            >
+            {{ is_edit_mode ? "Modifier" : "Enregistrer" }}
+            </button>
+            
+            <button mat-raised-button color="primary" (click)="toggleForm()">
+              Annuler
+            </button>
+          </div>
+        </form>
+      </div>
+      <!--form and datatable-->
+      <!--datdtdable ARIEP ACTR MCC-->
+      <ng-container *ngIf="!is_tableau_de_bord">
+        <ngx-datatable class="material" [columnMode]="'force'" [rows]="objectif_data$ | async | filter : search" [headerHeight]="48"
+        [footerHeight]="50" [rowHeight]="'auto'" limit="10" [reorderable]="true"
+        [columns]="objectif_datatable_row" [selected]="selected_objectif" (select)="onSelectObjectif($event)"
+        [selectionType]="'single'">
+        </ngx-datatable>
+        <mat-progress-bar mode="indeterminate" *ngIf="!isLoading$"></mat-progress-bar>
+      </ng-container>
+      <!--datdtdable-->
+      <!--datatable Tableau de bord ARIEP ACTR MCC-->
+      <ng-container *ngIf="is_tableau_de_bord">
+        <mat-tab-group>
+          <mat-tab label="TABLEAU DE BORD {{ type_tdb }} (COMORES)">
+            <fieldset fxFlex="100%" appearance="outline">
+              <legend>Vague 1</legend>
+              <ngx-datatable class="material" [columnMode]="'force'" [rows]="tableau_de_bord_data_global$ | async" [headerHeight]="48"
+              [footerHeight]="50" [rowHeight]="'auto'" limit="10" [reorderable]="true"
+              [columns]="tableau_de_bord_vague_1" [selectionType]="'single'">
+              </ngx-datatable>
+            </fieldset>
+           
+            <fieldset fxFlex="100%" appearance="outline">
+              <legend>Vague 2</legend>
+              <ngx-datatable class="material" [columnMode]="'force'" [rows]="tableau_de_bord_data_global$ | async" [headerHeight]="48"
+              [footerHeight]="50" [rowHeight]="'auto'" limit="10" [reorderable]="true"
+              [columns]="tableau_de_bord_vague_2" [selectionType]="'single'">
+              </ngx-datatable>
+            </fieldset>
+            <fieldset fxFlex="100%" appearance="outline">
+              <legend>Vague 3</legend>
+              <ngx-datatable class="material" [columnMode]="'force'" [rows]="tableau_de_bord_data_global$ | async" [headerHeight]="48"
+              [footerHeight]="50" [rowHeight]="'auto'" limit="10" [reorderable]="true"
+              [columns]="tableau_de_bord_vague_3" [selectionType]="'single'">
+              </ngx-datatable>
+            </fieldset>
+          </mat-tab>
+          <mat-tab label="TABLEAU DE BORD {{ type_tdb }} (NGAZIDJA)">
+            <fieldset fxFlex="100%" appearance="outline">
+              <legend>Vague 1</legend>
+              <ngx-datatable class="material" [columnMode]="'force'" [rows]="tableau_de_bord_ngazidja$ | async" [headerHeight]="48"
+              [footerHeight]="50" [rowHeight]="'auto'" limit="10" [reorderable]="true"
+              [columns]="tableau_de_bord_vague_1" [selectionType]="'single'">
+              </ngx-datatable>
+            </fieldset>
+           
+            <fieldset fxFlex="100%" appearance="outline">
+              <legend>Vague 2</legend>
+              <ngx-datatable class="material" [columnMode]="'force'" [rows]="tableau_de_bord_ngazidja$ | async" [headerHeight]="48"
+              [footerHeight]="50" [rowHeight]="'auto'" limit="10" [reorderable]="true"
+              [columns]="tableau_de_bord_vague_2" [selectionType]="'single'">
+              </ngx-datatable>
+            </fieldset>
+            <fieldset fxFlex="100%" appearance="outline">
+              <legend>Vague 3</legend>
+              <ngx-datatable class="material" [columnMode]="'force'" [rows]="tableau_de_bord_ngazidja$ | async" [headerHeight]="48"
+              [footerHeight]="50" [rowHeight]="'auto'" limit="10" [reorderable]="true"
+              [columns]="tableau_de_bord_vague_3" [selectionType]="'single'">
+              </ngx-datatable>
+            </fieldset>
+          </mat-tab>
+          <mat-tab label="TABLEAU DE BORD {{ type_tdb }} (NDZOUANI)">
+            <fieldset fxFlex="100%" appearance="outline">
+              <legend>Vague 1</legend>
+              <ngx-datatable class="material" [columnMode]="'force'" [rows]="tableau_de_bord_ndzouani$ | async" [headerHeight]="48"
+              [footerHeight]="50" [rowHeight]="'auto'" limit="10" [reorderable]="true"
+              [columns]="tableau_de_bord_vague_1" [selectionType]="'single'">
+              </ngx-datatable>
+            </fieldset>
+           
+            <fieldset fxFlex="100%" appearance="outline">
+              <legend>Vague 2</legend>
+              <ngx-datatable class="material" [columnMode]="'force'" [rows]="tableau_de_bord_ndzouani$ | async" [headerHeight]="48"
+              [footerHeight]="50" [rowHeight]="'auto'" limit="10" [reorderable]="true"
+              [columns]="tableau_de_bord_vague_2" [selectionType]="'single'">
+              </ngx-datatable>
+            </fieldset>
+            <fieldset fxFlex="100%" appearance="outline">
+              <legend>Vague 3</legend>
+              <ngx-datatable class="material" [columnMode]="'force'" [rows]="tableau_de_bord_ndzouani$ | async" [headerHeight]="48"
+              [footerHeight]="50" [rowHeight]="'auto'" limit="10" [reorderable]="true"
+              [columns]="tableau_de_bord_vague_3" [selectionType]="'single'">
+              </ngx-datatable>
+            </fieldset>
+          </mat-tab>
+          <mat-tab label="TABLEAU DE BORD {{ type_tdb }} (MWALI)">
+            <fieldset fxFlex="100%" appearance="outline">
+              <legend>Vague 1</legend>
+              <ngx-datatable class="material" [columnMode]="'force'" [rows]="tableau_de_bord_mwali$ | async" [headerHeight]="48"
+              [footerHeight]="50" [rowHeight]="'auto'" limit="10" [reorderable]="true"
+              [columns]="tableau_de_bord_vague_1" [selectionType]="'single'">
+              </ngx-datatable>
+            </fieldset>
+           
+            <fieldset fxFlex="100%" appearance="outline">
+              <legend>Vague 2</legend>
+              <ngx-datatable class="material" [columnMode]="'force'" [rows]="tableau_de_bord_mwali$ | async" [headerHeight]="48"
+              [footerHeight]="50" [rowHeight]="'auto'" limit="10" [reorderable]="true"
+              [columns]="tableau_de_bord_vague_2" [selectionType]="'single'">
+              </ngx-datatable>
+            </fieldset>
+            <fieldset fxFlex="100%" appearance="outline">
+              <legend>Vague 3</legend>
+              <ngx-datatable class="material" [columnMode]="'force'" [rows]="tableau_de_bord_mwali$ | async" [headerHeight]="48"
+              [footerHeight]="50" [rowHeight]="'auto'" limit="10" [reorderable]="true"
+              [columns]="tableau_de_bord_vague_3" [selectionType]="'single'">
+              </ngx-datatable>
+            </fieldset>
+          </mat-tab>
+        </mat-tab-group>
+            
+      </ng-container>
+      <!--datatable Tableau de bord ARIEP ACTR MCC-->
+    </div>
+  </div>
+  <!--content-->
+</div>

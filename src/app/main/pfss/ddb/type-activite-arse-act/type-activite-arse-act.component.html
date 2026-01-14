@@ -1,0 +1,497 @@
+<div class="page-layout simple fullwidth" fxLayout="column">
+    <div class="header primary p-4 h-24" fxLayout="row" fxLayoutAlign="start center">
+        <div fxLayout="column" fxLayoutAlign="center start">
+            <div fxLayout="row" fxLayoutAlign="start center"
+                style="margin-top: 0px !important; padding-top: 0px !important;">
+                <mat-icon class="s-18" style="color: #0eaf3b;">home</mat-icon>
+                <mat-icon class="s-18" style="color: #0eaf3b;">chevron_right</mat-icon>
+                <span style="color: #0eaf3b;">Données de base</span>
+                <mat-icon class="s-18" style="color: #0eaf3b;">chevron_right</mat-icon>
+                <span style="color: #0eaf3b;">Type de l'activité, ARSE, ACT</span>
+            </div>
+        </div>
+    </div>
+    <mat-tab-group>
+        <!-- debut IDB -->
+        <mat-tab label="IDB">
+            <div class="tab-content p-4">
+                <div fxLayout="row" fxLayoutAlign="space-around stretch">
+                    <!-- debut type activite -->
+                    <div class="mat-card mat-elevation-z4" fxFlex="33">
+                        <div class="package-type h-44 primary-50 header primary" fxLayout="row"
+                            fxLayoutAlign="space-between center">
+                            <div class="p-12 coleur_vert">Type Activité
+                                <button mat-button mat-icon-button color="fuse-navy" aria-label="Ajouter"
+                                (click)="AjouterTypeActivite()"
+                                *ngIf="!this.new_item_type_activite && !this.editing_type_activite[this.index_selected_type_activite]">
+                                    <mat-icon matTooltip="Ajouter" class="coleur_vert">add_circle_outline</mat-icon>
+                                </button>
+                                <button mat-button mat-icon-button color="fuse-navy" aria-label="Modifier"
+                                matTooltip="Modifier" (click)="ModifierTypeActivite()"
+                                *ngIf="item_selected_type_activite.length > 0 && !this.editing_type_activite[this.index_selected_type_activite]">
+                                    <mat-icon matTooltip="Modifier" class="coleur_vert">edit</mat-icon>
+                                </button>
+                                <button mat-button mat-icon-button color="fuse-navy" aria-label="Supprimer"
+                                matTooltip="Supprimer" (click)="supprimerTypeActivite()"
+                                *ngIf="item_selected_type_activite.length > 0 && !this.editing_type_activite[this.index_selected_type_activite]">
+                                    <mat-icon matTooltip="Supprimer" class="coleur_vert">delete</mat-icon>
+                                </button>
+
+
+                                <button mat-button mat-icon-button color="fuse-navy" aria-label="Enregistrer"
+                                *ngIf="this.editing_type_activite[this.index_selected_type_activite]" (click)="save_in_base_type_activite(0)">
+                                    <mat-icon matTooltip="Enregistrer" class="coleur_vert">save</mat-icon>
+                                </button>
+
+                                <button mat-button mat-icon-button color="fuse-navy" aria-label="Annuler"
+                                (click)="annulerTypeActivite()"
+                                *ngIf="item_selected_type_activite.length > 0 && this.editing_type_activite[this.index_selected_type_activite]">
+                                    <mat-icon matTooltip="Annuler" class="coleur_vert">cancel</mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <input type="text"
+                                style="padding:8px;margin:15px auto;width:100%;color:#353A48; border: 1px solid #babdc5;"
+                                placeholder="Rechercher..." [(ngModel)]="search_type_activite"/>
+                        </div>
+                        <div>
+                            <ngx-datatable class="material" [rows]="rows_type_activite | filter: search_type_activite"
+                                [loadingIndicator]="loadingIndicator" [columnMode]="'force'" [headerHeight]="48"
+                                [footerHeight]="56" [rowHeight]="'auto'" [scrollbarH]="true" [reorderable]=""
+                                [selectionType]="'checkbox'" [limit]="10" [selected]="item_selected_type_activite"
+                                [selectionType]="'single'" (select)="onSelectTypeActivite($event)">
+                                <ngx-datatable-column name="Code" prop="code">
+                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value"
+                                        let-row="row">
+                                        <span *ngIf="!editing_type_activite[rowIndex]">{{ value }}</span>
+                                        <input *ngIf="editing_type_activite[rowIndex]" type="text"
+                                            (change)="updateValueTypeActivite($event, 'code', rowIndex)" [value]="value" />
+                                    </ng-template>
+                                </ngx-datatable-column>
+                                <ngx-datatable-column name="Libellé" prop="libelle">
+                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value"
+                                        let-row="row">
+                                        <span *ngIf="!editing_type_activite[rowIndex]">{{ value }}</span>
+                                        <input *ngIf="editing_type_activite[rowIndex]" type="text"
+                                            (change)="updateValueTypeActivite($event, 'libelle', rowIndex)" [value]="value" />
+                                    </ng-template>
+                                </ngx-datatable-column>
+                            </ngx-datatable>
+                        </div>
+                    </div>
+                    <!-- fin type activite -->
+
+                    <!-- debut nature construction -->
+                    <div class="mat-card mat-elevation-z4" fxFlex="33">
+                        <div class="package-type h-44 primary-50 header primary" fxLayout="row"
+                            fxLayoutAlign="space-between center">
+                            <span class="p-12 coleur_vert">Nature construction
+                                <button mat-button mat-icon-button color="fuse-navy" aria-label="Ajouter"
+                                (click)="AjouterNatureConstruction()"
+                                *ngIf="!this.new_item_nature_construction && !this.editing_nature_construction[this.index_selected_nature_construction]">
+                                    <mat-icon matTooltip="Ajouter" class="coleur_vert">add_circle_outline</mat-icon>
+                                </button>
+                                <button mat-button mat-icon-button color="fuse-navy" aria-label="Modifier"
+                                matTooltip="Modifier" (click)="ModifierNatureConstruction()"
+                                *ngIf="item_selected_nature_construction.length > 0 && !this.editing_nature_construction[this.index_selected_nature_construction]">
+                                    <mat-icon matTooltip="Modifier" class="coleur_vert">edit</mat-icon>
+                                </button>
+                                <button mat-button mat-icon-button color="fuse-navy" aria-label="Supprimer"
+                                matTooltip="Supprimer" (click)="supprimerNatureConstruction()"
+                                *ngIf="item_selected_nature_construction.length > 0 && !this.editing_nature_construction[this.index_selected_nature_construction]">
+                                    <mat-icon matTooltip="Supprimer" class="coleur_vert">delete</mat-icon>
+                                </button>
+
+
+                                <button mat-button mat-icon-button color="fuse-navy" aria-label="Enregistrer"
+                                *ngIf="this.editing_nature_construction[this.index_selected_nature_construction]" (click)="save_in_base_nature_construction(0)">
+                                    <mat-icon matTooltip="Enregistrer" class="coleur_vert">save</mat-icon>
+                                </button>
+
+                                <button mat-button mat-icon-button color="fuse-navy" aria-label="Annuler"
+                                (click)="annulerNatureConstruction()"
+                                *ngIf="item_selected_nature_construction.length > 0 && this.editing_nature_construction[this.index_selected_nature_construction]">
+                                    <mat-icon matTooltip="Annuler" class="coleur_vert">cancel</mat-icon>
+                                </button>
+                            </span>
+                        </div>
+                        <div class="p-4">
+                            <input type="text"
+                                style="padding:8px;margin:15px auto;width:100%;color:#353A48; border: 1px solid #babdc5;"
+                                placeholder="Rechercher..." [(ngModel)]="search_nature_construction"/>
+                        </div>
+                        <div>
+                            <ngx-datatable class="material" [rows]="rows_nature_construction | filter: search_nature_construction"
+                                [loadingIndicator]="loadingIndicator" [columnMode]="'force'" [headerHeight]="48"
+                                [footerHeight]="56" [rowHeight]="'auto'" [scrollbarH]="true" [reorderable]=""
+                                [selectionType]="'checkbox'" [limit]="10" [selected]="item_selected_nature_construction"
+                                [selectionType]="'single'" (select)="onSelectNatureConstruction($event)">
+                                <ngx-datatable-column name="Code" prop="code">
+                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value"
+                                        let-row="row">
+                                        <span *ngIf="!editing_nature_construction[rowIndex]">{{ value }}</span>
+                                        <input *ngIf="editing_nature_construction[rowIndex]" type="text"
+                                            (change)="updateValueNatureConstruction($event, 'code', rowIndex)" [value]="value" />
+                                    </ng-template>
+                                </ngx-datatable-column>
+                                <ngx-datatable-column name="Libellé" prop="libelle">
+                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value"
+                                        let-row="row">
+                                        <span *ngIf="!editing_nature_construction[rowIndex]">{{ value }}</span>
+                                        <input *ngIf="editing_nature_construction[rowIndex]" type="text"
+                                            (change)="updateValueNatureConstruction($event, 'libelle', rowIndex)" [value]="value" />
+                                    </ng-template>
+                                </ngx-datatable-column>
+                            </ngx-datatable>
+                        </div>
+                    </div>
+                    <!-- fin nature construction -->
+
+                    <!-- debut quantites construites -->
+                    <div class="mat-card mat-elevation-z4" fxFlex="33">
+                        <div class="package-type h-44 primary-50 header primary" fxLayout="row"
+                            fxLayoutAlign="space-between center">
+                            <span class="p-12 coleur_vert">Quantité construites
+                                <button mat-button mat-icon-button color="fuse-navy" aria-label="Ajouter"
+                                (click)="AjouterQuantiteConstruite()"
+                                *ngIf="!this.new_item_quantite_construite && !this.editing_quantite_construite[this.index_selected_quantite_construite]">
+                                    <mat-icon matTooltip="Ajouter" class="coleur_vert">add_circle_outline</mat-icon>
+                                </button>
+                                <button mat-button mat-icon-button color="fuse-navy" aria-label="Modifier"
+                                matTooltip="Modifier" (click)="ModifierQuantiteConstruite()"
+                                *ngIf="item_selected_quantite_construite.length > 0 && !this.editing_quantite_construite[this.index_selected_quantite_construite]">
+                                    <mat-icon matTooltip="Modifier" class="coleur_vert">edit</mat-icon>
+                                </button>
+                                <button mat-button mat-icon-button color="fuse-navy" aria-label="Supprimer"
+                                matTooltip="Supprimer" (click)="supprimerQuantiteConstruite()"
+                                *ngIf="item_selected_quantite_construite.length > 0 && !this.editing_quantite_construite[this.index_selected_quantite_construite]">
+                                    <mat-icon matTooltip="Supprimer" class="coleur_vert">delete</mat-icon>
+                                </button>
+
+
+                                <button mat-button mat-icon-button color="fuse-navy" aria-label="Enregistrer"
+                                *ngIf="this.editing_quantite_construite[this.index_selected_quantite_construite]" (click)="save_in_base_quantite_construite(0)">
+                                    <mat-icon matTooltip="Enregistrer" class="coleur_vert">save</mat-icon>
+                                </button>
+
+                                <button mat-button mat-icon-button color="fuse-navy" aria-label="Annuler"
+                                (click)="annulerQuantiteConstruite()"
+                                *ngIf="item_selected_quantite_construite.length > 0 && this.editing_quantite_construite[this.index_selected_quantite_construite]">
+                                    <mat-icon matTooltip="Annuler" class="coleur_vert">cancel</mat-icon>
+                                </button>
+                            </span>
+                        </div>
+                        <div class="p-4">
+                            <input type="text"
+                                style="padding:8px;margin:15px auto;width:100%;color:#353A48; border: 1px solid #babdc5;"
+                                placeholder="Rechercher..." [(ngModel)]="search_quantite_construite"/>
+                        </div>
+                        <div>
+                            <ngx-datatable class="material" [rows]="rows_quantite_construite | filter: search_quantite_construite"
+                                [loadingIndicator]="loadingIndicator" [columnMode]="'force'" [headerHeight]="48"
+                                [footerHeight]="56" [rowHeight]="'auto'" [scrollbarH]="true" [reorderable]=""
+                                [selectionType]="'checkbox'" [limit]="10" [selected]="item_selected_quantite_construite"
+                                [selectionType]="'single'" (select)="onSelectQuantiteConstruite($event)">
+                                <ngx-datatable-column name="Code" prop="code">
+                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value"
+                                        let-row="row">
+                                        <span *ngIf="!editing_quantite_construite[rowIndex]">{{ value }}</span>
+                                        <input *ngIf="editing_quantite_construite[rowIndex]" type="text"
+                                            (change)="updateValueQuantiteConstruite($event, 'code', rowIndex)" [value]="value" />
+                                    </ng-template>
+                                </ngx-datatable-column>
+                                <ngx-datatable-column name="Libellé" prop="libelle">
+                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value"
+                                        let-row="row">
+                                        <span *ngIf="!editing_quantite_construite[rowIndex]">{{ value }}</span>
+                                        <input *ngIf="editing_quantite_construite[rowIndex]" type="text"
+                                            (change)="updateValueQuantiteConstruite($event, 'libelle', rowIndex)" [value]="value" />
+                                    </ng-template>
+                                </ngx-datatable-column>
+                            </ngx-datatable>
+                        </div>
+                    </div>
+                </div>
+                <!-- fin quantites construites -->
+            </div>
+        </mat-tab>
+        <!-- fin IDB -->
+
+        <!-- debut ARSE -->
+        <mat-tab label="ARSE">
+            <div class="content p-2">
+                <div class="mat-card mat-elevation-z4  m-4">
+                    <div class="package-type primary h-44" fxLayout="row" fxLayoutAlign="space-between center">
+                        <span class="p-12 coleur_vert">Actions
+                            <!-- <button mat-button (click)="modifier()">Basic</button> -->
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Ajouter"
+                                (click)="AjouterArse()"
+                                *ngIf="!this.new_item_arse && !this.editing_arse[this.index_selected_arse]">
+                                <mat-icon matTooltip="Ajouter" class="coleur_vert">add_circle_outline</mat-icon>
+                            </button>
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Modifier"
+                                matTooltip="Modifier" (click)="ModifierArse()"
+                                *ngIf="item_selected_arse.length > 0 && !this.editing_arse[this.index_selected_arse]">
+                                <mat-icon matTooltip="Modifier" class="coleur_vert">edit</mat-icon>
+                            </button>
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Supprimer"
+                                matTooltip="Supprimer" (click)="supprimerArse()"
+                                *ngIf="item_selected_arse.length > 0 && !this.editing_arse[this.index_selected_arse]">
+                                <mat-icon matTooltip="Supprimer" class="coleur_vert">delete</mat-icon>
+                            </button>
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Enregistrer"
+                                *ngIf="this.editing_arse[this.index_selected_arse]" (click)="save_in_base_arse(0)">
+                                <mat-icon matTooltip="Enregistrer" class="coleur_vert">save</mat-icon>
+                            </button>
+
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Annuler"
+                                (click)="annulerArse()"
+                                *ngIf="item_selected_arse.length > 0 && this.editing_arse[this.index_selected_arse]">
+                                <mat-icon matTooltip="Annuler" class="coleur_vert">cancel</mat-icon>
+                            </button>
+                        </span>
+                        <span class="p-12 coleur_vert title">TYPE ARSE</span>
+                        <span class="p-12"><input type="text"
+                                style="padding:8px;margin:15px auto;width:100%;color:#353A48;"
+                                placeholder="Rechercher..." [(ngModel)]="search_arse" /></span>
+                    </div>
+                    <div>
+                        <div>
+                            <ngx-datatable class="material" [rows]="rows_arse | filter: search_arse"
+                                [loadingIndicator]="loadingIndicator" [columnMode]="'force'" [headerHeight]="48"
+                                [footerHeight]="56" [rowHeight]="'auto'" [scrollbarH]="true" [reorderable]=""
+                                [selectionType]="'checkbox'" [limit]="10" [selected]="item_selected_arse"
+                                [selectionType]="'single'" (select)="onSelectArse($event)">
+                                <ngx-datatable-column name="Code" prop="code">
+                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value"
+                                        let-row="row">
+                                        <span *ngIf="!editing_arse[rowIndex]">{{ value }}</span>
+                                        <input *ngIf="editing_arse[rowIndex]" type="text"
+                                            (change)="updateValueArse($event, 'code', rowIndex)" [value]="value" />
+                                    </ng-template>
+                                </ngx-datatable-column>
+                                <ngx-datatable-column name="Libellé" prop="libelle">
+                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value"
+                                        let-row="row">
+                                        <span *ngIf="!editing_arse[rowIndex]">{{ value }}</span>
+                                        <input *ngIf="editing_arse[rowIndex]" type="text"
+                                            (change)="updateValueArse($event, 'libelle', rowIndex)" [value]="value" />
+                                    </ng-template>
+                                </ngx-datatable-column>
+                            </ngx-datatable>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </mat-tab>
+        <!-- fin ARSE -->
+
+        <!-- debut ACT -->
+        <mat-tab label="ACT">
+            <div class="content p-2">
+                <div class="mat-card mat-elevation-z4  m-4">
+                    <div class="package-type primary h-44" fxLayout="row" fxLayoutAlign="space-between center">
+                        <span class="p-12 coleur_vert">Actions
+                            <!-- <button mat-button (click)="modifier()">Basic</button> -->
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="AjouterAct"
+                                (click)="AjouterAct()"
+                                *ngIf="!this.new_item_act && !this.editing_act[this.index_selected_act]">
+                                <mat-icon matTooltip="Ajouter" class="coleur_vert">add_circle_outline</mat-icon>
+                            </button>
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Modifier"
+                                (click)="ModifierAct()"
+                                *ngIf="item_selected_act.length > 0 && !this.editing_act[this.index_selected_act]">
+                                <mat-icon matTooltip="Modifier" class="coleur_vert">edit</mat-icon>
+                            </button>
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Supprimer"
+                                (click)="supprimerAct()"
+                                *ngIf="item_selected_act.length > 0 && !this.editing_act[this.index_selected_act]">
+                                <mat-icon matTooltip="Supprimer" class="coleur_vert">delete</mat-icon>
+                            </button>
+
+
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Enregistrer"
+                                *ngIf="this.editing_act[this.index_selected_act]" (click)="save_in_base_act(0)">
+                                <mat-icon matTooltip="Enregistrer" class="coleur_vert">save</mat-icon>
+                            </button>
+
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Annuler"
+                                (click)="annulerAct()"
+                                *ngIf="item_selected_act.length > 0 && this.editing_act[this.index_selected_act]">
+                                <mat-icon matTooltip="Annuler" class="coleur_vert">cancel</mat-icon>
+                            </button>
+                        </span>
+                        <span class="p-12 coleur_vert title">TYPE ACTIVITE ACT</span>
+                        <span class="p-12"><input type="text"
+                                style="padding:8px;margin:15px auto;width:100%;color:#353A48;"
+                                placeholder="Rechercher..." [(ngModel)]="search_act" /></span>
+
+                    </div>
+                    <div>
+                        <ngx-datatable class="material" [rows]="rows_act | filter: search_act"
+                            [loadingIndicator]="loadingIndicator" [columnMode]="'force'" [headerHeight]="48"
+                            [footerHeight]="56" [rowHeight]="'auto'" [scrollbarH]="true" [reorderable]=""
+                            [selectionType]="'checkbox'" [limit]="5" [selected]="item_selected_act"
+                            [selectionType]="'single'" (select)="onSelectAct($event)">
+                            <ngx-datatable-column name="Code" prop="code">
+                                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value"
+                                    let-row="row">
+                                    <span *ngIf="!editing_act[rowIndex]">{{ value }}</span>
+                                    <input *ngIf="editing_act[rowIndex]" type="text"
+                                        (change)="updateValueAct($event, 'code', rowIndex)" [value]="value" />
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Libellé" prop="libelle">
+                                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value"
+                                    let-row="row">
+                                    <span *ngIf="!editing_act[rowIndex]">{{ value }}</span>
+                                    <input *ngIf="editing_act[rowIndex]" type="text"
+                                        (change)="updateValueAct($event, 'libelle', rowIndex)" [value]="value" />
+                                </ng-template>
+                            </ngx-datatable-column>
+                        </ngx-datatable>
+                    </div>
+                </div>
+            </div>
+        </mat-tab>
+        <!-- fin ACT -->
+
+        <!-- debut TMNC-COVID -->
+        <mat-tab label="TMNC-COVID">
+            <div class="content p-2">
+                <div class="mat-card mat-elevation-z4  m-4">
+                    <div class="package-type primary h-44" fxLayout="row" fxLayoutAlign="space-between center">
+                        <span class="p-12 coleur_vert">Actions
+                            <!-- <button mat-button (click)="modifier()">Basic</button> -->
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Ajouter"
+                                (click)="AjouterTmncCovid()"
+                                *ngIf="!this.new_item_tmnc_covid && !this.editing_tmnc_covid[this.index_selected_tmnc_covid]">
+                                <mat-icon matTooltip="Ajouter" class="coleur_vert">add_circle_outline</mat-icon>
+                            </button>
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Modifier"
+                                (click)="ModifierTmncCovid()"
+                                *ngIf="item_selected_tmnc_covid.length > 0 && !this.editing_tmnc_covid[this.index_selected_tmnc_covid]">
+                                <mat-icon matTooltip="Modifier" class="coleur_vert">edit</mat-icon>
+                            </button>
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Supprimer"
+                                (click)="supprimerTmncCovid()"
+                                *ngIf="item_selected_tmnc_covid.length > 0 && !this.editing_tmnc_covid[this.index_selected_tmnc_covid]">
+                                <mat-icon matTooltip="Supprimer" class="coleur_vert">delete</mat-icon>
+                            </button>
+
+
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Enregistrer"
+                                *ngIf="this.editing_tmnc_covid[this.index_selected_tmnc_covid]"
+                                (click)="save_in_base_tmnc_covid(0)">
+                                <mat-icon matTooltip="Enregistrer" class="coleur_vert">save</mat-icon>
+                            </button>
+
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Annuler"
+                                (click)="annulerTmncCovid()"
+                                *ngIf="item_selected_tmnc_covid.length > 0 && this.editing_tmnc_covid[this.index_selected_tmnc_covid]">
+                                <mat-icon matTooltip="Annuler" class="coleur_vert">cancel</mat-icon>
+                            </button>
+                        </span>
+                        <span class="p-12 coleur_vert title">TMNC-COVID</span>
+                        <span class="p-12"><input type="text"
+                                style="padding:8px;margin:15px auto;width:100%;color:#353A48;"
+                                placeholder="Rechercher..." [(ngModel)]="search_tmnc_covid" /></span>
+
+                    </div>
+                    <div>
+                        <ngx-datatable class="material" [rows]="rows_tmnc_covid | filter: search_tmnc_covid"
+                            [loadingIndicator]="loadingIndicator" [columnMode]="'force'" [headerHeight]="48"
+                            [footerHeight]="56" [rowHeight]="'auto'" [scrollbarH]="true" [reorderable]=""
+                            [selectionType]="'checkbox'" [limit]="10" [selected]="item_selected_tmnc_covid"
+                            [selectionType]="'single'" (select)="onSelectTmncCovid($event)">
+                            <ngx-datatable-column name="Code" prop="code">
+                                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value"
+                                    let-row="row">
+                                    <span *ngIf="!editing_tmnc_covid[rowIndex]">{{ value }}</span>
+                                    <input *ngIf="editing_tmnc_covid[rowIndex]" type="text"
+                                        (change)="updateValueTmncCovid($event, 'code', rowIndex)" [value]="value" />
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Libellé" prop="libelle">
+                                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value"
+                                    let-row="row">
+                                    <span *ngIf="!editing_tmnc_covid[rowIndex]">{{ value }}</span>
+                                    <input *ngIf="editing_tmnc_covid[rowIndex]" type="text"
+                                        (change)="updateValueTmncCovid($event, 'libelle', rowIndex)" [value]="value" />
+                                </ng-template>
+                            </ngx-datatable-column>
+                        </ngx-datatable>
+                    </div>
+                </div>
+            </div>
+        </mat-tab>
+        <!-- fin tmnc-covid -->
+    </mat-tab-group>
+
+    <ng-template #suppression_dialog_type_activite>
+        <h2 matDialogTitle>Etes-vous sûr de supprimer cet enregistrement ?</h2>
+        <mat-dialog-content>
+
+        </mat-dialog-content>
+        <mat-dialog-actions align="end">
+            <button mat-button matDialogClose style="color: red;" (click)="suppressionConfirmerTypeActivite()">OUI</button>
+            <button mat-button matDialogClose (click)="suppressionAnnuler()" color="primary">NON</button>
+        </mat-dialog-actions>
+    </ng-template>
+
+    <ng-template #suppression_dialog_nature_construction>
+        <h2 matDialogTitle>Etes-vous sûr de supprimer cet enregistrement ?</h2>
+        <mat-dialog-content>
+
+        </mat-dialog-content>
+        <mat-dialog-actions align="end">
+            <button mat-button matDialogClose style="color: red;" (click)="suppressionConfirmerNatureConstruction()">OUI</button>
+            <button mat-button matDialogClose (click)="suppressionAnnuler()" color="primary">NON</button>
+        </mat-dialog-actions>
+    </ng-template>
+
+    <ng-template #suppression_dialog_quantite_construite>
+        <h2 matDialogTitle>Etes-vous sûr de supprimer cet enregistrement ?</h2>
+        <mat-dialog-content>
+
+        </mat-dialog-content>
+        <mat-dialog-actions align="end">
+            <button mat-button matDialogClose style="color: red;" (click)="suppressionConfirmerQuantiteConstruite()">OUI</button>
+            <button mat-button matDialogClose (click)="suppressionAnnuler()" color="primary">NON</button>
+        </mat-dialog-actions>
+    </ng-template>
+
+    <ng-template #suppression_dialog_arse>
+        <h2 matDialogTitle>Etes-vous sûr de supprimer cet enregistrement ?</h2>
+        <mat-dialog-content>
+
+        </mat-dialog-content>
+        <mat-dialog-actions align="end">
+            <button mat-button matDialogClose style="color: red;" (click)="suppressionConfirmerArse()">OUI</button>
+            <button mat-button matDialogClose (click)="suppressionAnnuler()" color="primary">NON</button>
+        </mat-dialog-actions>
+    </ng-template>
+
+    <ng-template #suppression_dialog_act>
+        <h2 matDialogTitle>Etes-vous sûr de supprimer cet enregistrement ?</h2>
+        <mat-dialog-content>
+
+        </mat-dialog-content>
+        <mat-dialog-actions align="end">
+            <button mat-button matDialogClose style="color: red;" (click)="suppressionConfirmerAct()">OUI</button>
+            <button mat-button matDialogClose (click)="suppressionAnnuler()" color="primary">NON</button>
+        </mat-dialog-actions>
+    </ng-template>
+
+    <ng-template #suppression_dialog_tmnc_covid>
+        <h2 matDialogTitle>Etes-vous sûr de supprimer cet enregistrement ?</h2>
+        <mat-dialog-content>
+
+        </mat-dialog-content>
+        <mat-dialog-actions align="end">
+            <button mat-button matDialogClose style="color: red;" (click)="suppressionConfirmerTmncCovid()">OUI</button>
+            <button mat-button matDialogClose (click)="suppressionAnnuler()" color="primary">NON</button>
+        </mat-dialog-actions>
+    </ng-template>
+</div>

@@ -1,0 +1,620 @@
+<div class="page-layout simple fullwidth" fxLayout="column">
+    <div class="header primary p-4 h-24" fxLayout="row" fxLayoutAlign="start center">
+        <div fxLayout="column" fxLayoutAlign="center start">
+            <div fxLayout="row" fxLayoutAlign="start center"
+                style="margin-top: 0px !important; padding-top: 0px !important;">
+                <mat-icon class="s-18" style="color: #0eaf3b;">home</mat-icon>
+                <mat-icon class="s-18" style="color: #0eaf3b;">chevron_right</mat-icon>
+                <span style="color: #0eaf3b;">UGP/AGEX</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- debut agex -->
+    <mat-tab-group (selectedTabChange)="refresh($event)">
+        <mat-tab label="CONTRAT UGP/AGEX">
+            <div class="tab-content p-2">
+                <div style="margin-left: 5px; margin-top: 5px">
+                    <button button mat-raised-button class="button_vert" (click)="ajouter_AGEX()">
+                        NOUVEAU
+                    </button>
+                    <button button mat-raised-button class="button_modifier" *ngIf="show_btn_ajout"
+                        (click)="modifier_AGEX()" style="margin-left: 5px">
+                        MODIFIER
+                    </button>
+                    <button button mat-raised-button class="button_supprimer" *ngIf="show_btn_ajout"
+                        (click)="supprimer_AGEX()" style="margin-left: 5px">
+                        SUPPRIMER
+                    </button>
+                </div>
+            </div>
+            <!-- affichage masque -->
+            <fieldset *ngIf="affichage_masque">
+                <form [formGroup]="form_agex">
+                    <div fxLayout="row wrap" fxLayoutAlign="start start">
+                        <mat-form-field fxFlex="calc(30% - 16px)" class="pr-4">
+                            <mat-label>Réf Contrat</mat-label>
+                            <input matInput formControlName="numero_contrat" [(ngModel)]="agex.numero_contrat">
+                            <mat-error>Réf Contrat obligatoire!</mat-error>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="calc(30% - 16px)" class="pr-4">
+                            <mat-label>AGEX</mat-label>
+                            <mat-select formControlName="id_agex" [(ngModel)]="agex.id_agex">
+                                <mat-option *ngFor="let agex of all_agex" [value]="agex.id">
+                                    {{agex.Nom}}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error>AGEX obligatoire!</mat-error>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="calc(30% - 16px)" class="pr-4">
+                            <mat-label>Sous_projet</mat-label>
+                            <mat-select formControlName="id_sous_projet" [(ngModel)]="agex.id_sous_projet">
+                                <mat-option *ngFor="let sous_projet of all_sous_projet" [value]="sous_projet.id">
+                                    {{sous_projet.description}}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error>Sous_projet obligatoire!</mat-error>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                            <mat-label>Objet</mat-label>
+                            <input matInput formControlName="objet_contrat" [(ngModel)]="agex.objet_contrat">
+                            <mat-error>Objet obligatoire!</mat-error>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                            <mat-label>Montant du contrat</mat-label>
+                            <input matInput formControlName="montant_contrat" type="number"
+                                [(ngModel)]="agex.montant_contrat">
+                            <mat-error>Adresse plaignant obligatoire!</mat-error>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                            <mat-label>Date signature</mat-label>
+                            <input matInput formControlName="date_signature" type="date"
+                                [(ngModel)]="agex.date_signature" />
+                            <mat-error>Date obligatoire!</mat-error>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                            <mat-label>Fin contrat</mat-label>
+                            <input matInput formControlName="date_prevu_fin_contrat" type="date"
+                                [(ngModel)]="agex.date_prevu_fin_contrat" />
+                            <mat-error>Fin contrat obligatoire!</mat-error>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                            <mat-label>Status</mat-label>
+                            <mat-select formControlName="status_contrat" [(ngModel)]="agex.status_contrat">
+                                <mat-option *ngFor="let status of all_status" [value]="status.status">
+                                    {{status.status}}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error>Tranche obligatoire!</mat-error>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="calc(100% - 16px)" class="pr-4" *ngIf="agex.status_contrat=='Résilié'">
+                            <mat-label>Note de résiliation</mat-label>
+                            <textarea matInput formControlName="note_resiliation" [(ngModel)]="agex.note_resiliation">
+
+                            </textarea>
+                            <mat-error>Fin contrat obligatoire!</mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div fxLayoutAlign="center">
+                        <button mat-raised-button color="primary" style="margin-right: 10px" (click)="save_AGEX(agex,0)"
+                            [disabled]="form_agex.invalid">
+                            <mat-label> ENREGISTRER </mat-label>
+                        </button>
+                        <button mat-raised-button color="primary" (click)="hideAffichageMasque()">
+                            <mat-label> ANNULER </mat-label>
+                        </button>
+                    </div>
+                </form>
+            </fieldset>
+            <div class="mat-card mat-elevation-z4 m-4">
+                <div class="package-type h-44 primary-50 header primary" fxLayout="row"
+                    fxLayoutAlign="space-between center">
+                    <div class="p-12">
+                        <!-- <span class="border-right mr-2" style="color: #0eaf3b;">Actions</span> -->
+                    </div>
+                    <div class="p-12">
+                        <!-- <span class="border-right mr-2" style="color: #0eaf3b;">CONSULTANT</span> -->
+                    </div>
+                    <div class="p-12">
+                        <input type="text" style="
+                          padding: 8px;
+                          margin: 15px auto;
+                          width: 100%;
+                          color: #353a48;
+                          border: 1px solid #babdc5;
+                      " placeholder="Rechercher..." />
+                    </div>
+                </div>
+                <mat-progress-bar *ngIf="show_progress_bar"></mat-progress-bar>
+                <!--Datatable-->
+                <ngx-datatable class="material" [rows]="all_contrat_ugp_agex" [columnMode]="'force'"
+                    [headerHeight]="'auto'" [footerHeight]="56" [rowHeight]="'auto'" [scrollbarH]="true"
+                    [reorderable]="" [selectionType]="'checkbox'" [limit]="10" (select)="on_select_AGEX($event)"
+                    [selectionType]="'single'">
+                    <ngx-datatable-column [resizeable]="'true'" name="N°">
+                        <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                            {{rowIndex+1}}
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Réf Contrat">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            {{row.numero_contrat}}
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column [width]="'300px'" [minWidth]="'500px'" [resizeable]="'true'" name="AGEX">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            <span class="text-truncate">-<b>Dénomination:</b> {{row.nom_agex}} </span> <br>
+                            <span class="text-truncate">-<b>Intervenant:</b> {{row.intervenant_agex}} </span> <br>
+                            <span class="text-truncate">-<b>Nom de contact:</b> {{row.nom_contact_agex}} </span> <br>
+                            <span class="text-truncate">-<b>N° Phone:</b> {{row.numero_phone_contact}} </span><br>
+                            <span class="text-truncate">-<b>Adresse:</b> {{row.adresse_agex}} </span> <br>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column [width]="'300px'" [minWidth]="'200px'" [resizeable]="'true'"
+                        name="Sous-projet">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            {{row.description_sous_projet}}
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column [width]="'300px'" [minWidth]="'500px'" [resizeable]="'true'"
+                        name="Object du contrat">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            {{row.objet_contrat}}
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column [width]="'300px'" [minWidth]="'500px'" [resizeable]="'true'"
+                        name="Monant du contrat">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            {{row.montant_contrat}}
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column [width]="'300px'" [minWidth]="'500px'" [resizeable]="'true'"
+                        name="Date signature contrat">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            {{row.date_signature}}
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column [width]="'300px'" [minWidth]="'500px'" [resizeable]="'true'"
+                        name="Date prévu fin contrat">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            {{row.date_prevu_fin_contrat}}
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column [width]="'300px'" [minWidth]="'500px'" [resizeable]="'true'" name="Status">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            {{row.status_contrat}}
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column [width]="'300px'" [minWidth]="'500px'" [resizeable]="'true'"
+                        name="Note de résiliation">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            {{row.note_resiliation}}
+                        </ng-template>
+                    </ngx-datatable-column>
+                </ngx-datatable>
+            </div>
+        </mat-tab>
+        <!-- fin agex -->
+        <!-- DEBUT AVENANT CONTRAT -->
+        <mat-tab label="AVENANT AU CONTRAT N°{{numero_contrat}}" [disabled]="desactiver_onglets">
+            <div class="tab-content p-2">
+                <div style="margin-left: 5px; margin-top: 5px">
+                    <button button mat-raised-button class="button_vert" (click)="ajout_AVENANT()">
+                        NOUVEAU
+                    </button>
+                    <button button mat-raised-button class="button_modifier" *ngIf="show_btn_ajout_avenant"
+                        (click)="modifier_AVENANT()" style="margin-left: 5px">
+                        MODIFIER
+                    </button>
+                    <button button mat-raised-button class="button_supprimer" *ngIf="show_btn_ajout_avenant"
+                        style="margin-left: 5px" (click)="supprimer_AVENANT()">
+                        SUPPRIMER
+                    </button>
+                </div>
+            </div>
+            <!-- affichage masque -->
+            <fieldset *ngIf="affichage_masque_avenant">
+                <form [formGroup]="form_avenant">
+                    <div fxLayout="row wrap" fxLayoutAlign="start start">
+                        <mat-form-field fxFlex="calc(100% - 16px)" class="pr-4">
+                            <mat-label>Type</mat-label>
+                            <mat-select formControlName="type" [(ngModel)]="avenant.type">
+                                <mat-option *ngFor="let type of all_type_avenant" [value]="type.type">
+                                    {{type.type}}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error>Type obligatoire!</mat-error>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="calc(100% - 16px)" class="pr-4">
+                            <mat-label>Objet du contrat</mat-label>
+                            <input matInput formControlName="objet_contrat" [(ngModel)]="avenant.objet_contrat">
+                            <mat-error>Objet obligatoire!</mat-error>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                            <mat-label>Montant du contrat</mat-label>
+                            <input matInput formControlName="montant_contrat" type="number"
+                                [(ngModel)]="avenant.montant_contrat">
+                            <mat-error>Montant obligatoire!</mat-error>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                            <mat-label>Date signature contrat</mat-label>
+                            <input matInput formControlName="date_signature" type="date"
+                                [(ngModel)]="avenant.date_signature">
+                            <mat-error>Date signature obligatoire!</mat-error>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                            <mat-label>Date prévu fin contrat</mat-label>
+                            <input matInput formControlName="date_prevu_fin_contrat" type="date"
+                                [(ngModel)]="avenant.date_prevu_fin_contrat">
+                            <mat-error>Date prévu fin obligatoire!</mat-error>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                            <mat-label>Status</mat-label>
+                            <mat-select formControlName="status_contrat" [(ngModel)]="avenant.status_contrat">
+                                <mat-option *ngFor="let status of all_status" [value]="status.status">
+                                    {{status.status}}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error>Status obligatoire!</mat-error>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="calc(100% - 16px)" class="pr-4"
+                            *ngIf="avenant.status_contrat=='Résilié'">
+                            <mat-label>Note de résiliation</mat-label>
+                            <textarea matInput formControlName="note_resiliation"
+                                [(ngModel)]="avenant.note_resiliation">
+                            </textarea>
+                            <mat-error>Note de résiliation obligatoire!</mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div fxLayoutAlign="center">
+                        <button mat-raised-button color="primary" style="margin-right: 10px"
+                            (click)="save_AVENANT(avenant,0)" [disabled]="form_avenant.invalid">
+                            <mat-label> ENREGISTRER </mat-label>
+                        </button>
+                        <button mat-raised-button color="primary" (click)="hideAffichageMasque_AVENANT()">
+                            <mat-label> ANNULER </mat-label>
+                        </button>
+                    </div>
+                </form>
+            </fieldset>
+            <div class="mat-card mat-elevation-z4 m-4">
+                <div class="package-type h-44 primary-50 header primary" fxLayout="row"
+                    fxLayoutAlign="space-between center">
+                    <div class="p-12">
+                        <!-- <span class="border-right mr-2" style="color: #0eaf3b;">Actions</span> -->
+                    </div>
+                    <div class="p-12">
+                        <!-- <span class="border-right mr-2" style="color: #0eaf3b;">CONSULTANT</span> -->
+                    </div>
+                    <div class="p-12">
+                        <input type="text" style="
+                          padding: 8px;
+                          margin: 15px auto;
+                          width: 100%;
+                          color: #353a48;
+                          border: 1px solid #babdc5;
+                      " placeholder="Rechercher..." />
+                    </div>
+                </div>
+                <!--Datatable-->
+                <ngx-datatable class="material" [rows]="all_contrat_ugp_agex_avenant" [columnMode]="'force'"
+                    [headerHeight]="'auto'" [footerHeight]="56" [rowHeight]="'auto'" [scrollbarH]="true"
+                    [reorderable]="" [selectionType]="'checkbox'" [limit]="10" [selectionType]="'single'"
+                    (select)="on_select_AVENANT($event)">
+                    <ngx-datatable-column name="Type">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            {{row.type}}
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column [resizeable]="'true'" name="Objet du contrat">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            {{row.objet_contrat}}
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column [resizeable]="'true'" name="Montant du contrat">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            {{row.montant_contrat}}
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column [resizeable]="'true'" name="Date signature du contrat">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            {{row.date_signature}}
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column [resizeable]="'true'" name="Date prévu fin du contrat">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            {{row.date_prevu_fin_contrat}}
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column [resizeable]="'true'" name="Status">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            {{row.status_contrat}}
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column [resizeable]="'true'" name="Note de résiliation">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            {{row.note_resiliation}}
+                        </ng-template>
+                    </ngx-datatable-column>
+                </ngx-datatable>
+            </div>
+        </mat-tab>
+        <!-- FIN AVENANT -->
+        <!-- SIGNATAIRE | CONTRAT N° SSSDS -->
+        <mat-tab label="SIGNATAIRE | CONTRAT N°{{numero_contrat}}" [disabled]="desactiver_onglets">
+            <div class="tab-content p-2">
+                <div style="margin-left: 5px; margin-top: 5px">
+                    <button button mat-raised-button class="button_vert" (click)="ajout_SIGNATAIRE()">
+                        NOUVEAU
+                    </button>
+                    <button button mat-raised-button class="button_modifier" *ngIf="show_btn_signataire"
+                        (click)="modifier_SIGNATAIRE()" style="margin-left: 5px">
+                        MODIFIER
+                    </button>
+                    <button button mat-raised-button class="button_supprimer" *ngIf="show_btn_signataire"
+                        (click)="supprimer_SIGNATAIRE()" style="margin-left: 5px">
+                        SUPPRIMER
+                    </button>
+                </div>
+            </div>
+            <!-- affichage masque -->
+            <fieldset *ngIf="affichage_masque_signataire">
+                <form [formGroup]="form_signataire">
+                    <div fxLayout="row wrap" fxLayoutAlign="start start">
+                        <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                            <mat-label>NomPrénom</mat-label>
+                            <input matInput formControlName="nom_signataire" [(ngModel)]="signataire.nom_signataire">
+                            <mat-error>Nom signataire obligatoire!</mat-error>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                            <mat-label>Titre</mat-label>
+                            <input matInput formControlName="titre_signatire" [(ngModel)]="signataire.titre_signatire">
+                            <mat-error>Titre obligatoire!</mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div fxLayoutAlign="center">
+                        <button mat-raised-button color="primary" style="margin-right: 10px"
+                            (click)="save_SIGNATAIRE(signataire,0)" [disabled]="form_signataire.invalid">
+                            <mat-label> ENREGISTRER </mat-label>
+                        </button>
+                        <button mat-raised-button color="primary" (click)="hideAffichageMasque_SIGNATAIRE()">
+                            <mat-label> ANNULER </mat-label>
+                        </button>
+                    </div>
+                </form>
+            </fieldset>
+            <div class="mat-card mat-elevation-z4 m-4">
+                <div class="package-type h-44 primary-50 header primary" fxLayout="row"
+                    fxLayoutAlign="space-between center">
+                    <div class="p-12">
+                        <!-- <span class="border-right mr-2" style="color: #0eaf3b;">Actions</span> -->
+                    </div>
+                    <div class="p-12">
+                        <!-- <span class="border-right mr-2" style="color: #0eaf3b;">CONSULTANT</span> -->
+                    </div>
+                    <div class="p-12">
+                        <input type="text" style="
+                          padding: 8px;
+                          margin: 15px auto;
+                          width: 100%;
+                          color: #353a48;
+                          border: 1px solid #babdc5;
+                      " placeholder="Rechercher..." />
+                    </div>
+                </div>
+                <!--Datatable-->
+                <ngx-datatable class="material" [rows]="all_contrat_ugp_agex_signataire" [columnMode]="'force'"
+                    [headerHeight]="'auto'" [footerHeight]="56" [rowHeight]="'auto'" [scrollbarH]="true"
+                    [reorderable]="" [selectionType]="'checkbox'" [limit]="10" [selectionType]="'single'"
+                    (select)="on_select_SIGNATAIRE($event)">
+                    <ngx-datatable-column name="NomPrénom">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            {{row.nom_signataire}}
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column [resizeable]="'true'" name="Titre">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            {{row.titre_signatire}}
+                        </ng-template>
+                    </ngx-datatable-column>
+                </ngx-datatable>
+            </div>
+        </mat-tab>
+        <!-- FIN SIGNATAIRE | CONTRAT N° SSSDS -->
+        <!-- DEBUT MODALITE DE PAIEMENT | CONTRAT N° SSSDS -->
+        <mat-tab label="MODALITE DE PAIEMENT | CONTRAT N°{{numero_contrat}}" [disabled]="desactiver_onglets">
+            <div class="tab-content p-2">
+                <div style="margin-left: 5px; margin-top: 5px">
+                    <button button mat-raised-button class="button_vert" (click)="ajout_MODALITE(this.montant_contrat)">
+                        NOUVEAU
+                    </button>
+                    <button button mat-raised-button class="button_modifier" *ngIf="show_btn_modalite"
+                        (click)="modifier_MODALITE()" style="margin-left: 5px">
+                        MODIFIER
+                    </button>
+                    <button button mat-raised-button class="button_supprimer" *ngIf="show_btn_modalite"
+                        style="margin-left: 5px" (click)="supprimer_MODALITE()">
+                        SUPPRIMER
+                    </button>
+                </div>
+                <!-- affichage masque -->
+                <fieldset *ngIf="affichage_masque_modalite">
+                    <form [formGroup]="form_modalite">
+                        <div fxLayout="row wrap" fxLayoutAlign="start start">
+                            <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                <mat-label>Tranche</mat-label>
+                                <input matInput formControlName="numero_tranche" [(ngModel)]="modalite.numero_tranche">
+                                <mat-error>Tranche obligatoire!</mat-error>
+                            </mat-form-field>
+                            <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                <mat-label>Pourcentage</mat-label>
+                                <input matInput formControlName="poucentage" [(ngModel)]="modalite.poucentage"
+                                    type="number">
+                                <mat-error>Pourcentage obligatoire!</mat-error>
+                            </mat-form-field>
+                            <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                <mat-label>Valeur</mat-label>
+                                <input matInput formControlName="montant" [(ngModel)]="modalite.montant" type="number">
+                                <mat-error>Pourcentage obligatoire!</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div fxLayoutAlign="center">
+                            <button mat-raised-button color="primary" style="margin-right: 10px"
+                                (click)="save_MODALITE(modalite,0)" [disabled]="form_modalite.invalid">
+                                <mat-label> ENREGISTRER </mat-label>
+                            </button>
+                            <button mat-raised-button color="primary" (click)="hideAffichageMasque_MODALITE()">
+                                <mat-label> ANNULER </mat-label>
+                            </button>
+                        </div>
+                    </form>
+                </fieldset>
+                <div class="mat-card mat-elevation-z4 m-4">
+                    <div class="package-type h-44 primary-50 header primary" fxLayout="row"
+                        fxLayoutAlign="space-between center">
+                        <div class="p-12">
+                            <!-- <span class="border-right mr-2" style="color: #0eaf3b;">Actions</span> -->
+                        </div>
+                        <div class="p-12">
+                            <!-- <span class="border-right mr-2" style="color: #0eaf3b;">CONSULTANT</span> -->
+                        </div>
+                        <div class="p-12">
+                            <input type="text" style="
+                          padding: 8px;
+                          margin: 15px auto;
+                          width: 100%;
+                          color: #353a48;
+                          border: 1px solid #babdc5;
+                      " placeholder="Rechercher..." />
+                        </div>
+                    </div>
+                    <!--Datatable-->
+                    <ngx-datatable class="material" [rows]="all_contrat_ugp_agex_modalite" [columnMode]="'force'"
+                        [headerHeight]="'auto'" [footerHeight]="56" [rowHeight]="'auto'" [scrollbarH]="true"
+                        [reorderable]="" [selectionType]="'checkbox'" [limit]="10" [selectionType]="'single'"
+                        (select)="on_select_MODALITE($event)">
+                        <ngx-datatable-column name="Tranche">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                {{row.numero_tranche}}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column [resizeable]="'true'" name="Pourcentage">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                {{row.poucentage}}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column [resizeable]="'true'" name="Valeur">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                {{row.montant}}
+                            </ng-template>
+                        </ngx-datatable-column>
+                    </ngx-datatable>
+                </div>
+            </div>
+        </mat-tab>
+        <!-- FIN MODALITE DE PAIEMENT -->
+        <!-- DEBUT DEPENSE AGEX -->
+        <mat-tab label="DEPENSE AGEX" [disabled]="desactiver_onglets">
+            <div class="content p-2">
+                <div class="mat-card mat-elevation-z4  m-4">
+                    <div class="package-type primary h-44" fxLayout="row" fxLayoutAlign="space-between center">
+                        <span class="p-12 coleur_vert">Actions
+                            <!-- <button mat-button (click)="modifier()">Basic</button> -->
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Ajouter">
+                                <mat-icon matTooltip="Ajouter" class="coleur_vert">add_circle_outline</mat-icon>
+                            </button>
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Modifier">
+                                <mat-icon matTooltip="Modifier" class="coleur_vert">edit</mat-icon>
+                            </button>
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Supprimer">
+                                <mat-icon matTooltip="Supprimer" class="coleur_vert">delete</mat-icon>
+                            </button>
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Enregistrer">
+                                <mat-icon matTooltip="Enregistrer" class="coleur_vert">save</mat-icon>
+                            </button>
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Annuler">
+                                <mat-icon matTooltip="Annuler" class="coleur_vert">cancel</mat-icon>
+                            </button>
+                            <button mat-stroked-button style="color: #0eaf3b;">
+                                <mat-icon>get_app</mat-icon>
+                                EXPORTER EN EXCEL
+                            </button>
+                        </span>
+                        <span class="p-12 coleur_vert">ANNEE</span>
+                        <span class="p-12"><input type="text"
+                                style="padding:8px;margin:15px auto;width:100%;color:#353A48;"
+                                placeholder="Rechercher..." /></span>
+                    </div>
+                    <div>
+                        <p>Hello world</p>
+                    </div>
+                </div>
+            </div>
+        </mat-tab>
+        <!-- FIN DEPENSE AGEX -->
+    </mat-tab-group>
+
+    <!-- mat-dialog AGEX -->
+    <ng-template #suppression_AGEX>
+        <mat-dialog-content>
+            <div matDialogTitle>
+                Etes-vous sûr de supprimer cet enregistrement ?
+            </div>
+        </mat-dialog-content>
+        <mat-dialog-actions align="end">
+            <button mat-button matDialogClose color="primary" (click)="closeDialog()">
+                ANNULER
+            </button>
+            <button mat-button matDialogClose color="primary" (click)="confirm_suppression_AGEX()">
+                OK
+            </button>
+        </mat-dialog-actions>
+    </ng-template>
+
+    <!-- mat-dialog AVENANT  -->
+    <ng-template #suppression_AVENANT>
+        <mat-dialog-content>
+            <div matDialogTitle>
+                Etes-vous sûr de supprimer cet enregistrement ?
+            </div>
+        </mat-dialog-content>
+        <mat-dialog-actions align="end">
+            <button mat-button matDialogClose color="primary" (click)="closeDialog()">
+                ANNULER
+            </button>
+            <button mat-button matDialogClose color="primary" (click)="confirm_suppression_AVENANT()">
+                OK
+            </button>
+        </mat-dialog-actions>
+    </ng-template>
+    <!-- mat-dialog SIGNATAIRE  -->
+    <ng-template #suppression_SIGNATAIRE>
+        <mat-dialog-content>
+            <div matDialogTitle>
+                Etes-vous sûr de supprimer cet enregistrement ?
+            </div>
+        </mat-dialog-content>
+        <mat-dialog-actions align="end">
+            <button mat-button matDialogClose color="primary" (click)="closeDialog()">
+                ANNULER
+            </button>
+            <button mat-button matDialogClose color="primary" (click)="confirm_suppression_SIGNATAIRE()">
+                OK
+            </button>
+        </mat-dialog-actions>
+    </ng-template>
+    <ng-template #suppression_MODALITE>
+        <mat-dialog-content>
+            <div matDialogTitle>
+                Etes-vous sûr de supprimer cet enregistrement ?
+            </div>
+        </mat-dialog-content>
+        <mat-dialog-actions align="end">
+            <button mat-button matDialogClose color="primary" (click)="closeDialog()">
+                ANNULER
+            </button>
+            <button mat-button matDialogClose color="primary" (click)="confirm_suppression_MODALITE()">
+                OK
+            </button>
+        </mat-dialog-actions>
+    </ng-template>

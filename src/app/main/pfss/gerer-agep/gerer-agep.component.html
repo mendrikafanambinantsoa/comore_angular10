@@ -1,0 +1,138 @@
+<div *ngIf="config" class="page-layout simple fullwidth" fxLayout="column">
+  <div class="header primary p-4 h-24" fxLayout="row" fxLayoutAlign="start center">
+    <div fxLayout="column" fxLayoutAlign="center start">
+      <div fxLayout="row" fxLayoutAlign="start center" style="margin-top: 0px !important; padding-top: 0px !important">
+        <mat-icon class="s-18" style="color: #0eaf3b">home</mat-icon>
+        <mat-icon class="s-18" style="color: #0eaf3b">chevron_right</mat-icon>
+        <span style="color: #0eaf3b">Contrat AGEP | {{ config.type_sous_projet }}</span>
+      </div>
+    </div>
+  </div>
+  <!-- <mat-tab-group mat-align-tabs="center"> -->
+    <!-- debut contrat agep -->
+    <!-- <mat-tab label="CONTRAT AGEP"> -->
+      <!-- <ngx-datatable class="material" [columnMode]="'auto'" [headerHeight]="48" [footerHeight]="50"
+        [rowHeight]="'auto'" limit="10" [selectionType]="'single'" [rows]="allContrat_agep" [scrollbarH]="true">
+        <ngx-datatable-column name="Numero d'ordre">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            {{ row.numero_ordre }}
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Contrat N°">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            {{ row.numero_contrat }}
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="AGEP">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            {{ row.agep[0].identifiant }}
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Adresse de l'agep">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            {{ row.agep[0].adresse }}
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Objet du contrat">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            {{ row.objet_contrat }}
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Montant du contrat">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            {{ row.montant_contrat }}
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Montant paiement à effectué prévu">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            {{ row.montant_a_effectue_prevu }}
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Modalité du contrat">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            {{ row.modalite_contrat }}
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Date prévu fin contrat">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            {{ row.date_prevu_fin | date:'dd/MM/yyyy' }}
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Noms des signataires">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            {{ row.noms_signataires }}
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Date signature contrat">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            {{ row.date_signature | date:'dd/MM/yyyy' }}
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Statut contrat">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            {{ row.statu }}
+          </ng-template>
+        </ngx-datatable-column>
+      </ngx-datatable>
+    </mat-tab> -->
+    <!-- fin contrat agep -->
+
+    <!-- debut avenant contrat agep -->
+    <!-- <mat-tab label="AVENANT CONTRAT AGEP">
+      <ngx-datatable class="material" [columnMode]="'auto'" [headerHeight]="48" [footerHeight]="50"
+        [rowHeight]="'auto'" limit="10" [selectionType]="'single'" [scrollbarH]="true">
+        <ngx-datatable-column name="Avenant N°">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            Numero d'ordre
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Objet du avenant">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            Numero d'ordre
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Type avenant">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            Numero d'ordre
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Montant du avenant">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            Numero d'ordre
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Modalité du avenant">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            Numero d'ordre
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Date prévu fin avenant">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            Numero d'ordre
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Noms des signataires">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            Numero d'ordre
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Date signature avenant">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            Numero d'ordre
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Observation">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            Numero d'ordre
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Statut avenant">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            Numero d'ordre
+          </ng-template>
+        </ngx-datatable-column>
+      </ngx-datatable>
+    </mat-tab> -->
+    <!-- fin avenant contrat agep -->
+  <!-- </mat-tab-group> -->
+</div>

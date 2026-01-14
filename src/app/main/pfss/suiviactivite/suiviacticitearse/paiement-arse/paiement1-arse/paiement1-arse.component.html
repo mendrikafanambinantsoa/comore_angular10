@@ -1,0 +1,368 @@
+<div class="page-layout simple fullwidth" fxLayout="column">
+  <div class="header primary p-4 h-24" fxLayout="row" fxLayoutAlign="start center">
+    <div fxLayout="column" fxLayoutAlign="center start">
+      <div fxLayout="row" fxLayoutAlign="start center" style="margin-top: 0px !important; padding-top: 0px !important;">
+        <mat-icon class="s-18" style="color: #0eaf3b">home</mat-icon>
+        <mat-icon class="s-18" style="color: #0eaf3b">chevron_right</mat-icon>
+        <span style="color: #0eaf3b">Suivi activité</span>
+        <mat-icon class="s-18" style="color: #0eaf3b">chevron_right</mat-icon>
+        <span style="color: #0eaf3b">Export fiche/Etat</span>
+        <mat-icon class="s-18" style="color: #0eaf3b">chevron_right</mat-icon>
+        <span style="color: #0eaf3b">Etat de paiement</span>
+      </div>
+    </div>
+  </div>
+  <div class="content">
+    <div class="tab-content p-2">
+      <mat-tab-group>
+        <!-- debut etat de paiement -->
+        <mat-tab
+          label="ETAT DE PAIEMENT {{etat_paiement.sous_projet | uppercase}} : {{etat_paiement.affiche_titre | uppercase}}">
+          <div class="column" style="margin-left: 5px">
+            <form [formGroup]="form_etat_paiement">
+              <div fxLayout="row" fxLayoutGap="5px">
+                <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                  <mat-label>Ile</mat-label>
+                  <mat-select formControlName="id_ile" [(ngModel)]="etat_paiement.id_ile"
+                    (selectionChange)="filtre_region()">
+                    <mat-option *ngFor="let ile of all_ile" [value]="ile.id">
+                      {{ ile.Ile }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                  <mat-label>Préfecture</mat-label>
+                  <mat-select formControlName="id_region" [(ngModel)]="etat_paiement.id_region"
+                    [disabled]="!etat_paiement.id_ile" (selectionChange)="filtre_commune()">
+                    <mat-option *ngFor="let region of all_region" [value]="region.id">
+                      {{ region.Region }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                  <mat-label>Commune</mat-label>
+                  <mat-select formControlName="id_commune" [(ngModel)]="etat_paiement.id_commune"
+                    [disabled]="!etat_paiement.id_region" (selectionChange)="filtre_village()">
+                    <mat-option *ngFor="let commune of all_commune" [value]="commune.id">
+                      {{ commune.Commune }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                  <mat-label>Village</mat-label>
+                  <mat-select formControlName="village_id" [(ngModel)]="etat_paiement.village_id"
+                    [disabled]="!etat_paiement.id_commune" (selectionChange)="filtre_zip()">
+                    <mat-option *ngFor="let village of all_village" [value]="village.id">
+                      {{ village.Village }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div fxLayout="row" fxLayoutGap="5px">
+                <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                  <input type="text" matInput placeholder="Zone" formControlName="zip" [(ngModel)]="etat_paiement.zip"
+                    readonly />
+                </mat-form-field>
+                <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                  <input type="text" matInput placeholder="Tranche" formControlName="tranche"
+                    [(ngModel)]="etat_paiement.tranche" readonly />
+                </mat-form-field>
+                <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4" *ngIf="etat_paiement.show_input_purcentage">
+                  <input type="text" matInput placeholder="%" formControlName="pourcentage"
+                    [(ngModel)]="etat_paiement.pourcentage" readonly />
+                </mat-form-field>
+                <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                  <input type="text" matInput placeholder="Montant" formControlName="montant_a_payer"
+                    [(ngModel)]="etat_paiement.montant_a_payer" readonly />
+                </mat-form-field>
+              </div>
+              <div fxLayout="row" fxLayoutGap="5px">
+                <input type="file" name="fichier" id="fichier_chef_menage" [disabled]="!etat_paiement.village_id">
+                <button mat-raised-button class="button_vert" [disabled]="form_etat_paiement.invalid"
+                  style="margin-left: 5px;">
+                  <mat-label> IMPORTER </mat-label>
+                </button>
+              </div>
+              <!-- <div fxLayout="row" fxLayoutGap="5px">
+                <button mat-raised-button class="button_vert" [disabled]="form_etat_paiement.invalid"
+                  (click)="filtrerEtatPaiement()" style="margin-left: 5px;">
+                  <mat-label> ACTUALISER </mat-label>
+                </button>
+                <button mat-raised-button class="button_vert" style="margin-left: 5px;"
+                  [disabled]="form_etat_paiement.invalid">
+                  <mat-label> EXPORTER EN EXCEL </mat-label>
+                </button>
+              </div> -->
+            </form>
+          </div>
+          <div class="mat-card mat-elevation-z4 m-4">
+            <div class="package-type h-44 primary-50 header primary" fxLayout="row"
+              fxLayoutAlign="space-between center">
+              <div class="p-12">
+                <!-- <span class="border-right mr-2" style="color: #0eaf3b;">Actions</span> -->
+              </div>
+              <div class="p-12">
+                <!-- <span class="border-right mr-2" style="color: #0eaf3b;">CONSULTANT</span> -->
+              </div>
+              <div class="p-12">
+                <input type="text" style="
+                          padding: 8px;
+                          margin: 15px auto;
+                          width: 100%;
+                          color: #353a48;
+                          border: 1px solid #babdc5;
+                      " placeholder="Rechercher..." [(ngModel)]="search_etat_paiement" />
+              </div>
+            </div>
+            <div>
+              <mat-progress-bar mode="indeterminate" *ngIf="loading_etat_paiement"></mat-progress-bar>
+            </div>
+            <div>
+              <ngx-datatable class="material" [rows]="all_etat_paiement | filter: search_etat_paiement"
+                [columnMode]="'force'" [headerHeight]="48" [footerHeight]="56" [rowHeight]="'auto'" [scrollbarH]="true"
+                [reorderable]="" [selectionType]="'checkbox'" [limit]="10" [selected]="" [selectionType]="'single'"
+                *ngIf="!loading_etat_paiement">
+                <ngx-datatable-column name="N° Récépissé" prop="numero_recepisse">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.numero_recepisse }}
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Chef ménage" prop="nomchefmenage">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.nomchefmenage }}
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Recepteur principal" prop="NomTravailleur">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.NomTravailleur }}
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Recepteur suppléant" prop="NomTravailleurSuppliant">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.NomTravailleurSuppliant }}
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Compte banque" prop="numero_compte_bancaire">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.numero_compte_bancaire }}
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Domiciliation" prop="domiciliation">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.domiciliation }}
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Mont à payer" prop="montanttotalapayer">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.montanttotalapayer}}
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Mont payé" prop="montantpayetravailleur">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.montantpayetravailleur }}
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Virement" prop="date_virement">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.date_virement | date:'dd/MM/yyyy'}}
+                  </ng-template>
+                </ngx-datatable-column>
+              </ngx-datatable>
+            </div>
+          </div>
+        </mat-tab>
+        <!-- fin etat de paiement -->
+        <!-- debut liste de paiement importe pour TMS suelement -->
+        <mat-tab
+          label="LISTE DE PAIEMENT {{etat_paiement.sous_projet | uppercase}} DEJA IMPORTE : {{etat_paiement.affiche_titre | uppercase}}"
+          *ngIf="etat_paiement.show_onglet_liste_paiement">
+          <div class="column" style="margin-left: 5px">
+            <form [formGroup]="form_liste_paiement_importe">
+              <div fxLayout="row" fxLayoutGap="5px">
+                <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                  <mat-label>Ile</mat-label>
+                  <mat-select formControlName="id_ile" [(ngModel)]="liste_paiement_importe.id_ile"
+                    (selectionChange)="filtre_region_liste()">
+                    <mat-option *ngFor="let ile of all_ile" [value]="ile.id">
+                      {{ ile.Ile }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                  <mat-label>Préfecture</mat-label>
+                  <mat-select formControlName="id_region" [(ngModel)]="liste_paiement_importe.id_region"
+                    [disabled]="!liste_paiement_importe.id_ile" (selectionChange)="filtre_commune_liste()">
+                    <mat-option *ngFor="let region of all_region" [value]="region.id">
+                      {{ region.Region }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                  <mat-label>Commune</mat-label>
+                  <mat-select formControlName="id_commune" [(ngModel)]="liste_paiement_importe.id_commune"
+                    [disabled]="!liste_paiement_importe.id_region" (selectionChange)="filtre_village_liste()">
+                    <mat-option *ngFor="let commune of all_commune" [value]="commune.id">
+                      {{ commune.Commune }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div fxLayout="row" fxLayoutGap="5px">
+                <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                  <mat-label>Village</mat-label>
+                  <mat-select formControlName="village_id" [(ngModel)]="liste_paiement_importe.village_id"
+                    [disabled]="!liste_paiement_importe.id_commune" (selectionChange)="filtre_zip_liste()">
+                    <mat-option *ngFor="let village of all_village" [value]="village.id">
+                      {{ village.Village }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                  <mat-label>Agence de paiement</mat-label>
+                  <mat-select formControlName="agep_id" [(ngModel)]="liste_paiement_importe.agep_id">
+                    <mat-option *ngFor="let agep of all_agep" [value]="agep.id">
+                      {{ agep.identifiant }} - {{ agep.raison_social }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                  <mat-label>Etape</mat-label>
+                  <mat-select formControlName="etape_id" [(ngModel)]="liste_paiement_importe.etape_id">
+                    <mat-option *ngFor="let etape of all_etape" [value]="etape.id">
+                      {{ etape.Phase }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div fxLayout="row" fxLayoutGap="5px">
+                <button mat-raised-button class="button_vert"
+                  (click)="filtrerListePaiementImporter()" style="margin-left: 5px;">
+                  <mat-label> ACTUALISER </mat-label>
+                </button>
+                <button mat-raised-button class="button_vert" [disabled]="form_liste_paiement_importe.invalid"
+                  (click)="supprimerlistePaiement()" style="margin-left: 5px;" *ngIf="show_btn_delete_liste_paiement">
+                  <mat-label> SUPPRIMER </mat-label>
+                </button>
+                <button mat-raised-button class="button_vert" style="margin-left: 5px;"
+                  [disabled]="form_liste_paiement_importe.invalid">
+                  <mat-label> EXPORTER EN EXCEL </mat-label>
+                </button>
+              </div>
+            </form>
+          </div>
+          <div class="mat-card mat-elevation-z4 m-4">
+            <div class="package-type h-44 primary-50 header primary" fxLayout="row"
+              fxLayoutAlign="space-between center">
+              <div class="p-12">
+                <!-- <span class="border-right mr-2" style="color: #0eaf3b;">Actions</span> -->
+              </div>
+              <div class="p-12">
+                <!-- <span class="border-right mr-2" style="color: #0eaf3b;">CONSULTANT</span> -->
+              </div>
+              <div class="p-12">
+                <input type="text" style="
+                          padding: 8px;
+                          margin: 15px auto;
+                          width: 100%;
+                          color: #353a48;
+                          border: 1px solid #babdc5;
+                      " placeholder="Rechercher..." [(ngModel)]="search_liste_paiement_importe" />
+              </div>
+            </div>
+            <div>
+              <mat-progress-bar mode="indeterminate" *ngIf="loading_liste_paiement"></mat-progress-bar>
+            </div>
+            <div>
+              <ngx-datatable class="material"
+                [rows]="all_liste_paiement_importe | filter: search_liste_paiement_importe" [columnMode]="'force'"
+                [headerHeight]="48" [footerHeight]="56" [rowHeight]="'auto'" [scrollbarH]="true" [reorderable]=""
+                [selectionType]="'checkbox'" [limit]="10" [selected]="" [selectionType]="'single'"(select)="onSelectListePaiement($event)"
+                *ngIf="!loading_liste_paiement">
+                <ngx-datatable-column name="Ile" prop="ile">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.ile }}
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Préfecture" prop="region">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.region }}
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Commune" prop="commune">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.commune }}
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Village" prop="village">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.village }}
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Date paiement" prop="datepaiement">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.datepaiement | date:'dd/MM/yyyy' }}
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Tranche" prop="tranche">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.tranche }}
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="AGEP" prop="code_agep">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.code_agep}}
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Total à payer" prop="montanttotalapayer">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.montanttotalapayer}}
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Total payé" prop="montanttotalpaye">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.montanttotalpaye}}
+                  </ng-template>
+                </ngx-datatable-column>
+              </ngx-datatable>
+            </div>
+          </div>
+        </mat-tab>
+        <!-- fin liste de paiement importe -->
+      </mat-tab-group>
+    </div>
+  </div>
+</div>
+
+<ng-template #aucun_etat_paiement>
+  <mat-dialog-content>
+    <div matDialogTitle>Aucun menage beneficiaire pour le filtre choisi !.</div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button matDialogClose color="primary" (click)="closeDialog()">
+      Fermer
+    </button>
+  </mat-dialog-actions>
+</ng-template>
+<ng-template #aucun_liste_paiement>
+  <mat-dialog-content>
+    <div matDialogTitle>Aucun menage beneficiaire pour le filtre choisi !.</div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button matDialogClose color="primary" (click)="closeDialog()">
+      Fermer
+    </button>
+  </mat-dialog-actions>
+</ng-template>
+<ng-template #supprimer_liste_paiement>
+  <mat-dialog-content>
+    <div matDialogTitle>Etes-vous sûr de supprimer cet enregistrement ?</div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button matDialogClose color="primary" (click)="supprimerListePaiementOnBase()">
+      OK
+    </button>
+    <button mat-button matDialogClose color="primary" (click)="closeDialog()">
+      Fermer
+    </button>
+  </mat-dialog-actions>
+</ng-template>

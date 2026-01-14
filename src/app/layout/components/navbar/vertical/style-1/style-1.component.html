@@ -1,0 +1,38 @@
+<div class="navbar-top">
+
+    <div class="logo">
+        <img class="logo-icon" src="assets/images/logos/logo_comore.png">
+        <span class="logo-text">PFSS</span>
+    </div>
+
+    <div class="buttons">
+
+        <button
+            mat-icon-button
+            class="toggle-sidebar-folded"
+            (click)="toggleSidebarFolded()"
+            fxHide.lt-lg>
+            <mat-icon>menu</mat-icon>
+        </button>
+
+        <button
+            mat-icon-button
+            class="toggle-sidebar-opened"
+            (click)="toggleSidebarOpened()"
+            fxHide.gt-md>
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+
+    </div>
+
+</div>
+
+<div class="navbar-scroll-container"
+     fusePerfectScrollbar
+     [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+    <div class="navbar-content">
+        <fuse-navigation class="material2" layout="vertical"></fuse-navigation>
+    </div>
+
+</div>

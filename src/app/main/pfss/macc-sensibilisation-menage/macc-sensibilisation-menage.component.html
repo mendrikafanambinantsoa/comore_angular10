@@ -1,0 +1,207 @@
+<div class="page-layout simple fullwidth">
+  <div class="header primary p-4 h-24" fxLayout="row" fxLayoutAlign="start center">
+    <div fxLayout="column" fxLayoutAlign="center start">
+      <div fxLayout="row" fxLayoutAlign="start center" style="margin-top: 0px !important; padding-top: 0px !important">
+        <mat-icon class="s-18" style="color: #0eaf3b">home</mat-icon>
+        <mat-icon class="s-18" style="color: #0eaf3b">chevron_right</mat-icon>
+        <span style="color: #0eaf3b">Mesure d'accompagnement</span>
+        <mat-icon class="s-18" style="color: #0eaf3b">chevron_right</mat-icon>
+        <span style="color: #0eaf3b">{{ title }}</span>
+        <mat-icon class="s-18" style="color: #0eaf3b">chevron_right</mat-icon>
+        <span style="color: #0eaf3b">{{ type }}</span>
+      </div>
+    </div>
+  </div>
+  <!--content -->
+  <div class="content p-2">
+    <!--filtre form-->
+    <div>
+      <form [formGroup]="filtreForm" fxLayout="column">
+        <div fxLayout="row">
+          <mat-form-field appearance="fill" class="pr-4" fxFlex="50%">
+            <mat-label>Ile</mat-label>
+            <mat-select formControlName="ile_id" (selectionChange)="onSelectIle($event)">
+              <mat-option *ngFor="let item of ileData$ | async" [value]="item.id">
+                {{ item.Ile }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="pr-4" fxFlex="50%">
+            <mat-label>Prefecture</mat-label>
+            <mat-select formControlName="prefecture_id" (selectionChange)="onSelectPrefecture($event)">
+              <mat-option *ngFor="
+                                    let item of filtered_prefecture$ | async
+                                " [value]="item.id">
+                {{ item.Region }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="pr-4" fxFlex="50%">
+            <mat-label>Commune</mat-label>
+            <mat-select formControlName="commune_id" (selectionChange)="onSelectCommune($event)">
+              <mat-option *ngFor="let item of filtered_commune$ | async" [value]="item.id">
+                {{ item.Commune }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="pr-4" fxFlex="50%">
+            <mat-label>Village</mat-label>
+            <mat-select formControlName="village_id" (selectionChange)="onSelectVillage($event)">
+              <mat-option *ngFor="let item of filtered_village$ | async" [value]="item.id">
+                {{ item.Village }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
+          <button mat-raised-button color="primary" (click)="filterData()">
+            Actualiser
+          </button>
+        </div>
+      </form>
+    </div>
+    <mat-divider [inset]="true"></mat-divider>
+    <mat-progress-bar *ngIf="isLoading$ | async" mode="indeterminate"></mat-progress-bar>
+
+    <!-- Message d'erreur -->
+    <div *ngIf="error$ | async" class="mt-2">
+      <mat-error>{{ error$ | async }}</mat-error>
+    </div>
+
+
+    <!-- Spinner de chargement -->
+    <div *ngIf="isLoading$ | async" class="loading-spinner">
+      <mat-spinner diameter="30"></mat-spinner>
+    </div>
+
+    <!--filtre form-->
+    <div class="mat-card mat-elevation-z4 m-4" fxLayoutGap="10px" fxLayout="column">
+      <div class="package-type primary h-44" fxLayout="row" fxLayoutAlign="space-between center">
+        <!--action button-->
+        <div class="p-12">
+          <span class="border-right mr-2" style="color: #0eaf3b">Actions</span>
+          <button mat-button mat-icon-button color="fuse-navy" class="m-4" (click)="toggleForm()"
+            *ngIf="enable_add_button">
+            <mat-icon>add_circle_outline</mat-icon>
+          </button>
+          <button mat-button mat-icon-button color="fuse-navy" class="m-4" *ngIf="button_edit_delete"
+            (click)="toggleForm(true)">
+            <mat-icon>edit_outline</mat-icon>
+          </button>
+          <button mat-button mat-icon-button color="fuse-navy" class="m-4" *ngIf="button_edit_delete"
+            (click)="deleteSensibilisation()">
+            <mat-icon>delete_outline</mat-icon>
+          </button>
+          <button mat-button mat-raised-button color="fuse-navy">
+            <mat-icon slot="start">get_app</mat-icon>
+            <label>EXPORTER EN EXCEL</label>
+          </button>
+        </div>
+        <!--action button-->
+        <!--titre-->
+        <div class="">
+          <span class="border-right mr-2" style="color: #0eaf3b; text-transform: uppercase">{{ title }}</span>
+        </div>
+        <!--titre-->
+        <!--search bar-->
+        <div class="p-12">
+          <fieldset class="field-container" appearance="outline">
+            <input type="text" placeholder="Rechercher" class="field" [(ngModel)]="search" />
+            <div class="icons-container">
+              <mat-icon class="icon-search"></mat-icon>
+              <div class="icon-close">
+                <div class="x-up"></div>
+                <div class="x-down"></div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+        <!--search bar-->
+      </div>
+      <!--form and datatable-->
+
+      <!--sensibilisation form-->
+      <div *ngIf="show_hide_form">
+        <form [formGroup]="sensibilisationForm" fxLayout="column">
+          <div fxLayout="row" fxLayoutGap="10px">
+            <mat-form-field appearance="fill" class="pr-4" fxFlex="50%">
+              <mat-label>Date sensibilisation</mat-label>
+              <input type="date" matInput formControlName="date_sensibilisation">
+              <mat-error>Date de la sensibilisation obligatoire</mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="pr-4" fxFlex="50%">
+              <mat-label>Localité/Quartier</mat-label>
+              <input type="text" matInput formControlName="localite_quartier">
+              <mat-error>Localité/Quartier obligatoire</mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="pr-4" fxFlex="50%">
+              <mat-label>Theme aborde</mat-label>
+              <mat-select formControlName="theme_sensibilisation_id">
+                <mat-option *ngFor="let item of themeData$ | async" [value]="item.id">
+                  {{ item.description }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div fxLayout="row" fxLayoutGap="10px">
+            <mat-form-field appearance="fill" class="pr-4" fxFlex="50%">
+              <mat-label>Outil utilisé</mat-label>
+              <mat-select formControlName="outil_utilise_sensibilisation_id">
+                <mat-option *ngFor="let item of outilsData$ | async" [value]="item.id">
+                  {{ item.description }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="pr-4" fxFlex="50%">
+              <mat-label>Participant homme</mat-label>
+              <input type="number" matInput formControlName="participant_homme">
+              <mat-error>Nombre de participant obligatoire</mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="pr-4" fxFlex="50%">
+              <mat-label>Participant femme</mat-label>
+              <input type="number" matInput formControlName="participant_femme">
+              <mat-error>Nombre de participant obligatoire</mat-error>
+            </mat-form-field>
+          </div>
+          <div fxLayout="row" fxLayoutGap="10px">
+            <mat-form-field appearance="fill" class="pr-4" fxFlex="50%">
+              <mat-label>Participant enfant</mat-label>
+              <input type="number" matInput formControlName="participant_enfant">
+              <mat-error>Nombre de participant obligatoire</mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="pr-4" fxFlex="50%">
+              <mat-label>Animateur</mat-label>
+              <input type="text" matInput formControlName="animateur">
+              <mat-error>Animateur obligatoire</mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="pr-4" fxFlex="50%">
+              <mat-label>Observation</mat-label>
+              <input type="text" matInput formControlName="observation">
+            </mat-form-field>
+          </div>
+          <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
+            <button mat-raised-button color="accent"
+              (click)="is_edit_mode ? updateSensibilisation() : createSensibilisation()">
+              {{ is_edit_mode ? "Modifier" : "Enregistrer" }}
+            </button>
+
+            <button mat-raised-button color="primary" (click)="toggleForm()">
+              Annuler
+            </button>
+          </div>
+        </form>
+      </div>
+      <!--sensibilisation form-->
+      <!--datatable-->
+      <div>
+        <ng-container>
+          <ngx-datatable class="material" [columnMode]="'force'" [rows]="sensibilisationData$ | async | filter : search"
+            [headerHeight]="48" [footerHeight]="50" [rowHeight]="'auto'" limit="10" [reorderable]="true"
+            [columns]="columns_sensibilisation" [selected]="selected_sensibilisation" [selectionType]="'single'" (select)="onSelectSensibilisation($event)">
+          </ngx-datatable>
+        </ng-container>
+      </div>
+      <!--datatable-->
+    </div>
+  </div>
+</div>

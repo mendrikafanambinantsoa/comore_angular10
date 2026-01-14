@@ -1,0 +1,103 @@
+<!-- toolbar.component.html - Compatible Angular 10 -->
+
+<!-- Toolbar horizontal en haut -->
+<mat-toolbar class="pfss-toolbar">
+  
+  <!-- Left Section: Logo mobile -->
+  <div class="toolbar-left" fxHide.gt-md>
+    <button 
+      mat-icon-button 
+      (click)="toggleSidebarOpened()">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <img src="assets/images/logos/logo_comore.png" class="toolbar-logo" alt="Logo">
+    <span class="toolbar-app">PFSS</span>
+  </div>
+
+  <!-- Center Section: Title -->
+  <div class="toolbar-center" fxHide.lt-lg>
+    <span class="toolbar-title">Projet de Filets Sociaux de Sécurité</span>
+  </div>
+
+  <!-- Spacer -->
+  <span fxFlex></span>
+
+  <!-- Right Section: User Menu -->
+  <div class="toolbar-right">
+    
+    <!-- User Menu Button -->
+    <button 
+      mat-button 
+      class="user-button"
+      [matMenuTriggerFor]="userMenu">
+      <div class="user-avatar-wrapper">
+        <mat-icon class="user-icon">account_circle</mat-icon>
+        <span class="online-indicator"></span>
+      </div>
+      <div class="user-details" fxHide.lt-md>
+        <span class="user-name">{{ getUserDisplayName() }}</span>
+        <span class="user-role">{{ getUserRole() }}</span>
+      </div>
+      <mat-icon class="dropdown-icon" fxHide.lt-md>expand_more</mat-icon>
+    </button>
+
+  </div>
+
+</mat-toolbar>
+
+<!-- Enhanced User Menu -->
+<mat-menu #userMenu="matMenu" class="user-menu-enhanced" xPosition="before">
+  
+  <!-- User Profile Header -->
+  <div class="user-menu-header" mat-menu-item [disableRipple]="true">
+    <div class="header-background"></div>
+    <div class="header-content">
+      <div class="avatar-container">
+        <mat-icon class="user-avatar-large">account_circle</mat-icon>
+        <div class="status-badge"></div>
+      </div>
+      <div class="user-info">
+        <div class="user-name-large">{{ getUserDisplayName() }}</div>
+        <div class="user-email">{{ currentUser.nom }}</div>
+        <div class="user-status">
+          <span class="status-dot"></span>
+          <span class="status-text">En ligne</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <mat-divider></mat-divider>
+
+  <!-- Profile Section Title -->
+  <div class="section-title" mat-menu-item [disableRipple]="true">Mon Compte</div>
+  
+  <button mat-menu-item class="menu-item-enhanced" (click)="openProfile()">
+    <div class="menu-item-icon">
+      <mat-icon>person</mat-icon>
+    </div>
+    <div class="menu-item-content">
+      <span class="menu-item-title">Mon profil</span>
+      <span class="menu-item-subtitle">Informations personnelles</span>
+    </div>
+    <mat-icon class="menu-item-arrow">chevron_right</mat-icon>
+  </button>
+  
+  
+
+  <mat-divider></mat-divider>
+
+  <!-- Logout -->
+  <button mat-menu-item class="menu-item-enhanced logout-item" (click)="logout()">
+    <div class="menu-item-icon logout-icon">
+      <mat-icon>exit_to_app</mat-icon>
+    </div>
+    <div class="menu-item-content">
+      <span class="menu-item-title">Déconnexion</span>
+      <span class="menu-item-subtitle">Se déconnecter du système</span>
+    </div>
+    <mat-icon class="menu-item-arrow">chevron_right</mat-icon>
+  </button>
+
+</mat-menu>

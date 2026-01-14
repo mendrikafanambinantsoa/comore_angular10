@@ -1,0 +1,202 @@
+<div class="page-layout simple fullwidth" fxLayout="column">
+  <div class="header primary p-4 h-24" fxLayout="row" fxLayoutAlign="start center">
+    <div fxLayout="column" fxLayoutAlign="center start">
+      <div fxLayout="row" fxLayoutAlign="start center" style="margin-top: 0px !important; padding-top: 0px !important;">
+        <mat-icon class="s-18" style="color: #0eaf3b;">home</mat-icon>
+        <mat-icon class="s-18" style="color: #0eaf3b;">chevron_right</mat-icon>
+        <span style="color: #0eaf3b;">Données de base</span>
+        <mat-icon class="s-18" style="color: #0eaf3b;">chevron_right</mat-icon>
+        <span style="color: #0eaf3b;">Milieu/Zone</span>
+      </div>
+    </div>
+  </div>
+  <mat-tab-group>
+    <!-- debut milieu -->
+    <mat-tab label="MILIEU">
+      <div class="content p-2">
+        <div class="mat-card mat-elevation-z4  m-4">
+          <div class="package-type primary h-44" fxLayout="row" fxLayoutAlign="space-between center">
+            <span class="p-12 coleur_vert">Actions
+              <!-- <button mat-button (click)="modifier()">Basic</button> -->
+              <button mat-button mat-icon-button color="fuse-navy" aria-label="Ajouter" (click)="ajoutMilieu()">
+                <mat-icon matTooltip="Ajouter" class="coleur_vert">add_circle_outline</mat-icon>
+              </button>
+              <button mat-button mat-icon-button color="fuse-navy" aria-label="Modifier" (click)="modifierMilieu()"
+                *ngIf="afficher_btn_modifier_milieu">
+                <mat-icon matTooltip="Modifier" class="coleur_vert">edit</mat-icon>
+              </button>
+              <button mat-button mat-icon-button color="fuse-navy" aria-label="Supprimer" (click)="supprimerMilieu()"
+                *ngIf="afficher_btn_supprimer_milieu">
+                <mat-icon matTooltip="Supprimer" class="coleur_vert">delete</mat-icon>
+              </button>
+              <button mat-button mat-icon-button color="fuse-navy" aria-label="Annuler"
+                *ngIf="afficher_btn_annuler_milieu" (click)="annuler($event)">
+                <mat-icon matTooltip="Annuler" class="coleur_vert">cancel</mat-icon>
+              </button>
+            </span>
+            <span class="p-12 coleur_vert">MILIEU</span>
+            <span class="p-12"><input type="text" style="padding:8px;margin:15px auto;width:100%;color:#353A48;"
+                placeholder="Rechercher..." /></span>
+
+          </div>
+          <div>
+            <form [formGroup]="form_ajout_milieu" fxlayout="row" *ngIf="afficher_form_ajout_milieu">
+              <div fxLayout="row wrap" fxLayoutAlign="start start">
+                <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                  <mat-label>code</mat-label>
+                  <input matInput formControlName="code" [(ngModel)]="milieu.code">
+                  <mat-error>Activité ciblage obligatoire!</mat-error>
+                </mat-form-field>
+                <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                  <mat-label>Libelle</mat-label>
+                  <input matInput formControlName="description" [(ngModel)]="milieu.description">
+                  <mat-error>Type plainte obligatoire!</mat-error>
+                </mat-form-field>
+              </div>
+              <div fxLayoutAlign="center">
+                <button mat-raised-button color="primary" style="margin-right: 10px" (click)="enregistrerMilieu(milieu)"
+                  [disabled]="form_ajout_milieu.invalid">
+                  <mat-label> Enregistrer </mat-label>
+                </button>
+                <button mat-raised-button color="primary" (click)="fermerFormMilieu()">
+                  <mat-label> Annuler </mat-label>
+                </button>
+              </div>
+            </form>
+          </div>
+          <div>
+            <ngx-datatable class="material" [columnMode]="'force'" [headerHeight]="48" [footerHeight]="50"
+              [rowHeight]="'auto'" limit="10" [selectionType]="'single'" [rows]="all_milieu" [limit]="10"
+              (select)="onSelectMilieu($event)">
+              <ngx-datatable-column name="Code">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  {{ row.code }}
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Libelle">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  {{ row.description }}
+                </ng-template>
+              </ngx-datatable-column>
+            </ngx-datatable>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+    <!-- fin milieu -->
+
+    <!-- debut zip -->
+    <mat-tab label="ZONE">
+      <div class="content p-2">
+        <div class="mat-card mat-elevation-z4  m-4">
+          <div class="package-type primary h-44" fxLayout="row" fxLayoutAlign="space-between center">
+            <span class="p-12 coleur_vert">Actions
+              <!-- <button mat-button (click)="modifier()">Basic</button> -->
+              <button mat-button mat-icon-button color="fuse-navy" aria-label="Ajouter" (click)="ajoutZone()">
+                <mat-icon matTooltip="Ajouter" class="coleur_vert">add_circle_outline</mat-icon>
+              </button>
+              <button mat-button mat-icon-button color="fuse-navy" aria-label="Modifier" (click)="modifierZone()">
+                <mat-icon matTooltip="Modifier" class="coleur_vert">edit</mat-icon>
+              </button>
+              <button mat-button mat-icon-button color="fuse-navy" aria-label="Supprimer" (click)="supprimerZone()">
+                <mat-icon matTooltip="Supprimer" class="coleur_vert">delete</mat-icon>
+              </button>
+
+
+              <!-- <button mat-button mat-icon-button color="fuse-navy" aria-label="Enregistrer">
+                                <mat-icon matTooltip="Enregistrer" class="coleur_vert">save</mat-icon>
+</button> -->
+
+              <!-- <button mat-button mat-icon-button color="fuse-navy" aria-label="Annuler" -->
+              <!--     *ngIf="afficher_btn_annuler_milieu" (click)="annuler($event)"> -->
+              <!--     <mat-icon matTooltip="Annuler" class="coleur_vert">cancel</mat-icon> -->
+              <!-- </button> -->
+            </span>
+            <span class="p-12 coleur_vert">ZONE</span>
+            <span class="p-12"><input type="text" style="padding:8px;margin:15px auto;width:100%;color:#353A48;"
+                placeholder="Rechercher..." /></span>
+
+          </div>
+
+          <!-- FORM ZONE  -->
+          <div>
+            <form [formGroup]="form_ajout_zone" fxlayout="row" *ngIf="afficher_form_ajout_zone">
+              <div fxLayout="row wrap" fxLayoutAlign="start start">
+                <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                  <mat-label>code</mat-label>
+                  <input matInput formControlName="code" [(ngModel)]="zone.code">
+                  <mat-error>Activité ciblage obligatoire!</mat-error>
+                </mat-form-field>
+                <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                  <mat-label>Libelle</mat-label>
+                  <input matInput formControlName="description" [(ngModel)]="zone.libelle">
+                  <mat-error>Type plainte obligatoire!</mat-error>
+                </mat-form-field>
+              </div>
+              <div fxLayoutAlign="center">
+                <button mat-raised-button color="primary" style="margin-right: 10px" (click)="enregistrerZone(zone)"
+                  [disabled]="form_ajout_zone.invalid">
+                  <mat-label> Enregistrer </mat-label>
+                </button>
+                <button mat-raised-button color="primary" (click)="closeModFormZone()">
+                  <mat-label> Annuler </mat-label>
+                </button>
+              </div>
+            </form>
+          </div>
+          <div>
+            <ngx-datatable class="material" [columnMode]="'force'" [headerHeight]="48" [footerHeight]="50"
+              [rowHeight]="'auto'" limit="10" [selectionType]="'single'" [rows]="all_zone" [limit]="10"
+              (select)="onSelectZone($event)">
+              <ngx-datatable-column name="Code">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  {{ row.code }}
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Libelle">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  {{ row.libelle }}
+                </ng-template>
+              </ngx-datatable-column>
+            </ngx-datatable>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+    <!-- fin zip -->
+  </mat-tab-group>
+</div>
+<!-- DIALOG POUR LEs MILIEUX -->
+<ng-template #supprimer_milieu>
+
+  <mat-dialog-content>
+    <div matDialogTitle>
+      Etes-vous sûr de supprimer cet enregistrement?
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button matDialogClose color="primary" (click)="closeDialog()">
+      ANNULER
+    </button>
+    <button mat-button matDialogClose color="primary" (click)="confirm_supprimer_milieu()">
+      OK
+    </button>
+  </mat-dialog-actions>
+</ng-template>
+
+<!-- DIALOGE POUR LES ZONES -->
+<ng-template #supprimer_zone>
+  <mat-dialog-content>
+    <div matDialogTitle>
+      Etes-vous sûr de supprimer cet enregistrement?
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button matDialogClose color="primary" (click)="closeDialogZone()">
+      ANNULER
+    </button>
+    <button mat-button matDialogClose color="primary" (click)="confirm_supprimer_zone()">
+      OK
+    </button>
+  </mat-dialog-actions>
+</ng-template>

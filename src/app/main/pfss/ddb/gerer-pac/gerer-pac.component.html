@@ -1,0 +1,512 @@
+<div class="page-layout simple fullwidth" fxLayout="column">
+    <div
+        class="header primary p-4 h-24"
+        fxLayout="row"
+        fxLayoutAlign="start center"
+    >
+        <div fxLayout="column" fxLayoutAlign="center start">
+            <div
+                fxLayout="row"
+                fxLayoutAlign="start center"
+                style="margin-top: 0px !important; padding-top: 0px !important"
+            >
+                <mat-icon class="s-18" style="color: #0eaf3b">home</mat-icon>
+                <mat-icon class="s-18" style="color: #0eaf3b"
+                    >chevron_right</mat-icon
+                >
+                <span style="color: #0eaf3b">Données de base</span>
+                <mat-icon class="s-18" style="color: #0eaf3b"
+                    >chevron_right</mat-icon
+                >
+                <span style="color: #0eaf3b">PAC</span>
+            </div>
+        </div>
+    </div>
+    <mat-tab-group>
+        <!-- debut pac -->
+        <mat-tab label="PAC">
+            <div class="content p-2">
+                <div class="mat-card mat-elevation-z4 m-4">
+                    <div
+                        class="package-type primary h-44"
+                        fxLayout="row"
+                        fxLayoutAlign="space-between center"
+                    >
+                        <span class="p-12 coleur_vert"
+                            >Actions
+                            <!-- <button mat-button (click)="modifier()">Basic</button> -->
+                            <button
+                                mat-button
+                                mat-icon-button
+                                color="fuse-navy"
+                                aria-label="Ajouter"
+                                (click)="ajoutPac()"
+                            >
+                                <mat-icon
+                                    matTooltip="Ajouter"
+                                    class="coleur_vert"
+                                    >add_circle_outline</mat-icon
+                                >
+                            </button>
+                            <button
+                                mat-button
+                                mat-icon-button
+                                color="fuse-navy"
+                                aria-label="Modifier"
+                                *ngIf="btn_modifier_pac"
+                                (click)="modifierPac()"
+                            >
+                                <mat-icon
+                                    matTooltip="Modifier"
+                                    class="coleur_vert"
+                                    >edit</mat-icon
+                                >
+                            </button>
+                            <button
+                                mat-button
+                                mat-icon-button
+                                color="fuse-navy"
+                                aria-label="Supprimer"
+                                *ngIf="btn_supprimer_pac"
+                            >
+                                <mat-icon
+                                    matTooltip="Supprimer"
+                                    class="coleur_vert"
+                                    >delete</mat-icon
+                                >
+                            </button>
+                        </span>
+                        <span class="p-12 coleur_vert">PAC</span>
+                        <span class="p-12"
+                            ><input
+                                type="text"
+                                style="
+                                    padding: 8px;
+                                    margin: 15px auto;
+                                    width: 100%;
+                                    color: #353a48;
+                                "
+                                placeholder="Rechercher..."
+                        /></span>
+                    </div>
+                    <div class="p-4" *ngIf="afficher_formulaire_pac">
+                        <form [formGroup]="formulaire_pac">
+                          <mat-form-field appearance="fill" class="m-4">
+                            <mat-label>
+                              Ile
+                            </mat-label>
+                             <mat-select formControlName="id_ile" [(ngModel)]="pac.id_ile">
+                                <mat-option *ngFor=" let ile of allIle" [value] = "ile.id">
+                                    {{ile.Ile}}
+                                </mat-option>
+                            </mat-select>
+                            <!-- <input matInput formControlName="id_ile" type="text" [(ngModel)]="pac.id_ile"> -->
+                            <mat-error>
+                              ile obligatoire
+                            </mat-error>
+                          </mat-form-field>
+                          <mat-form-field appearance="fill" class="m-4">
+                            <mat-label>
+                              Prefecture
+                            </mat-label>
+                            <input matInput formControlName="id_region" type="text" [(ngModel)]="pac.id_region">
+                            <mat-error>
+                              prefecture obligatoire
+                            </mat-error>
+                          </mat-form-field>
+                          <mat-form-field appearance="fill" class="m-4">
+                            <mat-label>
+                              Commune
+                            </mat-label>
+                            <input matInput formControlName="id_commune" type="text" [(ngModel)]="pac.id_commune">
+                            <mat-error>
+                              Commune obligatoire
+                            </mat-error>
+                          </mat-form-field><mat-form-field appearance="fill" class="m-4">
+                            <mat-label>
+                              Village
+                            </mat-label>
+                            <input matInput formControlName="village" type="text" [(ngModel)]="pac.village">
+                            <mat-error>
+                              Village obligatoire
+                            </mat-error>
+                          </mat-form-field><mat-form-field appearance="fill" class="m-4">
+                            <mat-label>
+                              Zip
+                            </mat-label>
+                            <input matInput formControlName="id_zip" type="text" [(ngModel)]="pac.id_zip">
+                            <mat-error>
+                              Zip obligatoire
+                            </mat-error>
+                          </mat-form-field><mat-form-field appearance="fill" class="m-4">
+                            <mat-label>
+                              Vague
+                            </mat-label>
+                            <input matInput formControlName="vague" type="text" [(ngModel)]="pac.vague">
+                            <mat-error>
+                              Vague obligatoire
+                            </mat-error>
+                          </mat-form-field>
+                          <mat-form-field appearance="fill" class="m-4">
+                            <mat-label>
+                              Type AGR
+                            </mat-label>
+                            <input matInput formControlName="id_type_agr" type="text" [(ngModel)]="pac.id_type_agr">
+                            <mat-error>
+                              Type AGR obligatoire
+                            </mat-error>
+                          </mat-form-field>
+                          <mat-form-field appearance="fill" class="m-4">
+                            <mat-label>
+                              Libelle AGR
+                            </mat-label>
+                            <input matInput formControlName="libelle" type="text" [(ngModel)]="pac.libelle">
+                            <mat-error>
+                              Libelle AGR obligatoire
+                            </mat-error>
+                          </mat-form-field>
+                          <mat-form-field appearance="fill" class="m-4">
+                            <mat-label>
+                              Milieu physique
+                            </mat-label>
+                            <input matInput formControlName="milieu_physique" type="text" [(ngModel)]="pac.milieu_physique">
+                            <mat-error>
+                              Milieu physique obligatoire
+                            </mat-error>
+                          </mat-form-field>
+                          <mat-form-field appearance="fill" class="m-4">
+                            <mat-label>
+                              Condition climatique
+                            </mat-label>
+                            <input matInput formControlName="condition_climatique" type="text" [(ngModel)]="pac.condition_climatique">
+                            <mat-error>
+                              Condition climatique obligatoire
+                            </mat-error>
+                          </mat-form-field>
+                          <mat-form-field appearance="fill" class="m-4">
+                            <mat-label>
+                              Difficulté socio-economique
+                            </mat-label>
+                            <input matInput formControlName="diffi_socio_eco" type="text" [(ngModel)]="pac.diffi_socio_eco">
+                            <mat-error>
+                              Difficulté socio-economique obligatoire
+                            </mat-error>
+                          </mat-form-field>
+                          <mat-form-field appearance="fill" class="m-4">
+                            <mat-label>
+                              Infrastructure publique et sociale
+                            </mat-label>
+                            <input matInput formControlName="infra_pub_soc" type="text" [(ngModel)]="pac.infra_pub_soc">
+                            <mat-error>
+                              Infrastructure Publique et sociale obligatoire
+                            </mat-error>
+                          </mat-form-field>
+                          <mat-form-field appearance="fill" class="m-4">
+                            <mat-label>
+                              Analyse des problematiques
+                            </mat-label>
+                            <input matInput formControlName="analyse_pro" type="text" [(ngModel)]="pac.analyse_pro">
+                            <mat-error>
+                                Analyse des problematiques obligatoire
+                            </mat-error>
+                          </mat-form-field>
+                          <mat-form-field appearance="fill" class="m-4">
+                            <mat-label>
+                              Identification et priorisation des ARS
+                            </mat-label>
+                            <input matInput formControlName="identi_prio_arse" type="text" [(ngModel)]="pac.identi_prio_arse">
+                            <mat-error>
+                              Identification et priorisation des ARS obligatoire
+                            </mat-error>
+                          </mat-form-field>
+                          <mat-form-field appearance="fill" class="m-4">
+                            <mat-label>
+                              Marche locale et regional ARSE
+                            </mat-label>
+                            <input matInput formControlName="marche_loc_reg_arse" type="text" [(ngModel)]="pac.marche_loc_reg_arse">
+                            <mat-error>
+                              Marche locale et regional ARSE obligatoire
+                            </mat-error>
+                          </mat-form-field>
+                          <mat-form-field appearance="fill" class="m-4">
+                            <mat-label>
+                              Description des activites
+                            </mat-label>
+                            <input matInput formControlName="description_activite" type="text" [(ngModel)]="pac.description_activite">
+                            <mat-error>
+                              Description des activites obligatoire
+                            </mat-error>
+                          </mat-form-field>
+                          <mat-form-field appearance="fill" class="m-4">
+                            <mat-label>
+                              Estimation des besoins
+                            </mat-label>
+                            <input matInput formControlName="estimation_besoin" type="text" [(ngModel)]="pac.estimation_besoin">
+                            <mat-error>
+                              Estimation des besoins obligatoire
+                            </mat-error>
+                          </mat-form-field>
+                          <mat-form-field appearance="fill" class="m-4">
+                            <mat-label>
+                              Etude economique
+                            </mat-label>
+                            <input matInput formControlName="etude_eco" type="text" [(ngModel)]="pac.etude_eco">
+                            <mat-error>
+                              Etude economique obligatoire
+                            </mat-error>
+                          </mat-form-field>
+                          <mat-form-field appearance="fill" class="m-4">
+                            <mat-label>
+                              Structures d'appui
+                            </mat-label>
+                            <input matInput formControlName="structure_appui" type="text" [(ngModel)]="pac.structure_appui">
+                            <mat-error>
+                              Structures d'appui obligatoire
+                            </mat-error>
+                          </mat-form-field>
+                          <mat-form-field appearance="fill" class="m-4">
+                            <mat-label>
+                              Impact environnementaux
+                            </mat-label>
+                            <input matInput formControlName="impact_env" type="text" [(ngModel)]="pac.impact_env">
+                            <mat-error>
+                              Impact environnementaux obligatoire
+                            </mat-error>
+                          </mat-form-field>
+                          <mat-form-field appearance="fill" class="m-4">
+                            <mat-label>
+                              Impact sociaux
+                            </mat-label>
+                            <input matInput formControlName="impact_sociau" type="text" [(ngModel)]="pac.impact_sociau">
+                            <mat-error>
+                              Impact sociaux obligatoire
+                            </mat-error>
+                          </mat-form-field>
+                          <div fxLayoutAlign="center">
+                            <button mat-raised-button color="accent" style="margin-right: 10px;"
+                            (click)="ajoutDescription(description, 0)" [disabled]="formulaire_pac.invalid">
+                              <mat-label>
+                                Enregistrer
+                              </mat-label>
+                            </button>
+                            <button mat-raised-button color="primary" (click)="annulerPac()">
+                              <mat-label>
+                                Annuler
+                              </mat-label>
+                            </button>
+                          </div>
+                        </form>
+                    </div>
+                    <div>
+                        <ngx-datatable class="material" [rows]="rows_pac" scrollbarV="true" (select)="click_pac($event)" [selected]="selected" [selectionType]="'single'" [limit]="10">
+                            <ngx-datatable-column name="Ile">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                    {{ row.ile.Ile}}
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Préfecture">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                    {{ row.region.Region }}
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Commune">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                    {{ row.commune.Commune }}
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Village">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                    {{ row.village.Village }}
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Zip">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                    {{ row.zip.libelle }}
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Vague">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                    {{ row.village.vague }}
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Type AGR">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                    {{ row.type_agr.code }}
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Libelle AGR">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                    {{ row.libelle }}
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Milieu physique">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                    {{ row.milieu_physique }}
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Condition climatique">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                    {{ row.condition_climatique }}
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Difficulté socio-économique">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                    {{ row.diffi_socio_eco }}
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Infrastructure publique et sociale">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                    {{ row.infra_pub_soc }}
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Analyse des problématiques">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                    {{ row.analyse_pro }}
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="dentification et priorisation des ARSE">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                    {{ row.identi_prio_arse }}
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Marché locale et régional ARSE">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                    {{ row.marche_loc_reg_arse }}
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Description des activités">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                    {{ row.description_activite }}
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Estimation des besoins">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                    {{ row.estimation_besoin }}
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Etude économique">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                    {{ row.etude_eco }}
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Structures d’appui">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                    {{ row.structure_appui }}
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Impact environnementaux">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                    {{ row.impact_env }}
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Impact sociaux">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                    {{ row.impact_sociau }}
+                                </ng-template>
+                            </ngx-datatable-column>
+                        </ngx-datatable>
+                    </div>
+                </div>
+            </div>
+        </mat-tab>
+        <!-- fin pac -->
+
+        <!-- debut detail pac -->
+        <mat-tab label="DETAIL PAC" [disabled] = "onglet_detail_pac">
+            <div class="content p-2">
+                <div class="mat-card mat-elevation-z4 m-4">
+                    <div
+                        class="package-type primary h-44"
+                        fxLayout="row"
+                        fxLayoutAlign="space-between center"
+                    >
+                        <span class="p-12 coleur_vert"
+                            >Actions
+                            <!-- <button mat-button (click)="modifier()">Basic</button> -->
+                            <button
+                                mat-button
+                                mat-icon-button
+                                color="fuse-navy"
+                                aria-label="Ajouter"
+                            >
+                                <mat-icon
+                                    matTooltip="Ajouter"
+                                    class="coleur_vert"
+                                    >add_circle_outline</mat-icon
+                                >
+                            </button>
+                            <button
+                                mat-button
+                                mat-icon-button
+                                color="fuse-navy"
+                                aria-label="Modifier"
+                                *ngIf="btn_supprimer_detail_pac"
+                            >
+                                <mat-icon
+                                    matTooltip="Modifier"
+                                    class="coleur_vert"
+                                    >edit</mat-icon
+                                >
+                            </button>
+                            <button
+                                mat-button
+                                mat-icon-button
+                                color="fuse-navy"
+                                aria-label="Supprimer"
+                                *ngIf="btn_supprimer_detail_pac"
+                            >
+                                <mat-icon
+                                    matTooltip="Supprimer"
+                                    class="coleur_vert"
+                                    >delete</mat-icon
+                                >
+                            </button>
+                        </span>
+                        <span class="p-12 coleur_vert">DETAIL PAC</span>
+                        <span class="p-12"
+                            ><input
+                                type="text"
+                                style="
+                                    padding: 8px;
+                                    margin: 15px auto;
+                                    width: 100%;
+                                    color: #353a48;
+                                "
+                                placeholder="Rechercher..."
+                        /></span>
+                    </div>
+                    <div>
+                        <ngx-datatable class="material" [rows]="rows_pac_detail" (select)="click_detail_pac($event)" [selected]="selected" [selectionType]="'single'" [limit]="10">
+                            <ngx-datatable-column name="Numero d'ordre">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                    {{ row.numero}}
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Les besoins">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                    {{ row.besoin }}
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Durée">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                    {{ row.duree }}
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Coût">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                    {{ row.cout }}
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Calendrier de l'activité">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                    {{ row.calendrier_activite }}
+                                </ng-template>
+                            </ngx-datatable-column>
+                        </ngx-datatable>
+                    </div>
+                </div>
+            </div>
+        </mat-tab>
+        <!-- fin detail pac -->
+    </mat-tab-group>
+</div>

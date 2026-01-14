@@ -1,0 +1,188 @@
+<div class="page-layout simple fullwidth" fxLayout="column">
+  <div class="header primary p-4 h-24" fxLayout="row" fxLayoutAlign="start center">
+    <div fxLayout="column" fxLayoutAlign="center start">
+      <div fxLayout="row" fxLayoutAlign="start center" style="margin-top: 0px !important; padding-top: 0px !important">
+        <mat-icon class="s-18" style="color: #0eaf3b">home</mat-icon>
+        <mat-icon class="s-18" style="color: #0eaf3b">chevron_right</mat-icon>
+        <span style="color: #0eaf3b">PGES ACTR</span>
+      </div>
+    </div>
+  </div>
+  <mat-tab-group>
+    <!---debut PGES --->
+    <mat-tab label="PGES">
+      <div class="tab-content p-2">
+        <div class="column" style="margin-left: 5px">
+          <form [formGroup]="filtre">
+            <div fxLayout="row" fxLayoutGap="5px">
+              <mat-form-field fxFlex="20" class="pr-4">
+                <mat-label>Ile</mat-label>
+                <mat-select formControlName="id_ile" [(ngModel)]="filtre_gerer_pges.id_ile"
+                  (selectionChange)="filtre_region()">
+                  <mat-option *ngFor="let ile of all_ile" [value]="ile.id">
+                    {{ ile.Ile }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field fxFlex="20" class="pr-4">
+                <mat-label>Préfecture</mat-label>
+                <mat-select formControlName="id_region" [(ngModel)]="filtre_gerer_pges.id_region"
+                  [disabled]="!filtre_gerer_pges.id_ile" (selectionChange)="filtre_commune()">
+                  <mat-option *ngFor="let region of all_region" [value]="region.id">
+                    {{ region.Region }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field fxFlex="30" class="pr-4">
+                <mat-label>Commune</mat-label>
+                <mat-select formControlName="id_commune" [(ngModel)]="filtre_gerer_pges.id_commune"
+                  [disabled]="!filtre_gerer_pges.id_region" (selectionChange)="filtre_village()">
+                  <mat-option *ngFor="let commune of all_commune" [value]="commune.id">
+                    {{ commune.Commune }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field fxFlex="30" class="pr-4">
+                <mat-label>Village</mat-label>
+                <mat-select formControlName="village_id" [(ngModel)]="filtre_gerer_pges.village_id"
+                  [disabled]="!filtre_gerer_pges.id_commune" (selectionChange)="onVillageChange($event)">
+                  <mat-option *ngFor="let village of all_village" [value]="village.id">
+                    {{ village.Village }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field fxFlex="10" class="pr-4">
+                <mat-label>ZIP</mat-label>
+                <input matInput formControlName="zip" [(ngModel)]="filtre_gerer_pges.zip" readonly>
+                <mat-error>Zip obligatoire!</mat-error>
+              </mat-form-field>
+              <mat-form-field fxFlex="10" class="pr-4">
+                <mat-label>Vague</mat-label>
+                <input matInput formControlName="vague" [(ngModel)]="filtre_gerer_pges.vague" readonly>
+                <mat-error>vague obligatoire!</mat-error>
+              </mat-form-field>
+            </div>
+            <div>
+              <button mat-raised-button class="button_vert" [disabled]="filtre.invalid" (click)="get_pges()"
+                style="margin-left: 5px;">
+                <mat-label> ACTUALISER </mat-label>
+              </button>
+              <button mat-raised-button class="button_vert" [disabled]="filtre.invalid" (click)="export_excel()"
+                style="margin-left: 5px;">
+                <mat-label> EXPORTER EN EXCEL </mat-label>
+              </button>
+            </div>
+          </form>
+        </div>
+        <div class="mat-card mat-elevation-z4 m-4">
+          <div class="package-type h-44 primary-50 header primary" fxLayout="row" fxLayoutAlign="space-between center">
+            <div class="p-12">
+              <!-- <span class="border-right mr-2" style="color: #0eaf3b;">Actions</span> -->
+            </div>
+            <div class="p-12">
+              <!-- <span class="border-right mr-2" style="color: #0eaf3b;">CONSULTANT</span> -->
+            </div>
+            <div class="p-12">
+              <input type="text" style="
+                          padding: 8px;
+                          margin: 15px auto;
+                          width: 100%;
+                          color: #353a48;
+                          border: 1px solid #babdc5;
+                      " placeholder="Rechercher..." [(ngModel)]="search_pges" />
+            </div>
+          </div>
+          <ngx-datatable class="material" [rows]="allPges | filter: search_pges" [columnMode]="'force'"
+            [headerHeight]="48" [footerHeight]="56" [rowHeight]="'auto'" [scrollbarH]="true" [reorderable]=""
+            [selectionType]="'checkbox'" [limit]="10" [selected]="selected" [selectionType]="'single'"
+            (select)="on_select_pges($event)">
+            <ngx-datatable-column name="Bureau d'étude" prop="bureauetude">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                {{ row.bureauetude }}
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Référence contrat" prop="ref_contrat">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                {{ row.ref_contrat }}
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Montant total" prop="montant_total">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                {{ row.montant_total }}
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Description environnementale" prop="description_env">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                {{ row.description_env }}
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Composante zone susceptible" prop="composante_zone_susce">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                {{ row.composante_zone_susce }}
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Problèmes environnementaux" prop="probleme_env">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                {{ row.probleme_env }}
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Mésures envisagées" prop="mesure_envisage">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                {{ row.mesure_envisage }}
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Date d’établissement" prop="date_etablissement">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                {{ row.date_etablissement }}
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Nom & prénoms auteur" prop="nom_prenom_etablissement">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                {{ row.nom_prenom_etablissement }}
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Nom & prénoms validateur" prop="nom_prenom_validation">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                {{ row.nom_prenom_validation }}
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Date visa UGP" prop="date_visa_ugp">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                {{ row.date_visa_ugp }}
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Responsable UGP" prop="nom_prenom_ugp">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                {{ row.nom_prenom_ugp }}
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="observation" prop="observation">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                {{ row.observation }}
+              </ng-template>
+            </ngx-datatable-column>
+          </ngx-datatable>
+        </div>
+      </div>
+    </mat-tab>
+    <!---FIN PGES --->
+    <!---debut phases PGES --->
+    <mat-tab label="PHASES PGES">
+      <div class="tab-content p-2">
+      </div>
+    </mat-tab>
+    <!---fin phases PGES --->
+  </mat-tab-group>
+</div>
+
+<ng-template #aucun_pges_pour_village>
+
+  <mat-dialog-content>
+    <div matDialogTitle>Aucun PGES pour ce village</div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button matDialogClose color="primary" (click)="closeDialog()">
+      Fermer
+    </button>
+  </mat-dialog-actions>
+</ng-template>

@@ -1,0 +1,243 @@
+<div class="page-layout carded fullwidth inner-scroll">
+  <div class="header primary p-4 h-24" fxLayout="row" fxLayoutAlign="start center">
+    <div fxLayout="column" fxLayoutAlign="center start">
+      <div fxLayout="row" fxLayoutAlign="start center" style="margin-top: 0px !important; padding-top: 0px !important">
+        <mat-icon class="s-18" style="color: #0eaf3b">home</mat-icon>
+        <mat-icon class="s-18" style="color: #0eaf3b">chevron_right</mat-icon>
+        <span style="color: #0eaf3b">Mesure d'accompagnement</span>
+        <mat-icon class="s-18" style="color: #0eaf3b">chevron_right</mat-icon>
+        <span style="color: #0eaf3b">Titre</span>
+        <mat-icon class="s-18" style="color: #0eaf3b">chevron_right</mat-icon>
+        <span style="color: #0eaf3b">Sous titre</span>
+      </div>
+    </div>
+  </div>
+  <!--END HEADER-->
+  <!-- MESSAGE ALERT SECTION -->
+  <div *ngIf="show_hide_message" class="p-4">
+    <mat-card class="mb-4" [ngClass]="{
+      'success-message': messageType === 'success',
+      'error-message': messageType === 'error',
+      'warning-message': messageType === 'warning'
+    }">
+      <mat-card-content>
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+          <mat-icon *ngIf="messageType === 'success'" color="primary">check_circle</mat-icon>
+          <mat-icon *ngIf="messageType === 'error'" color="warn">error</mat-icon>
+          <mat-icon *ngIf="messageType === 'warning'" color="accent">warning</mat-icon>
+          <span>{{ message }}</span>
+          <button mat-icon-button (click)="hideMessage()" class="ml-auto">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <!-- / MESSAGE ALERT SECTION -->
+  <!-- CONTENT CARD -->
+  <div class="content-p2">
+    <mat-tab-group>
+      <mat-tab label="Livrable encadrement">
+        <!-- FILTER FORM -->
+        <div class="content p-24" fusePerfectScrollbar>
+          <div>
+            <form action="">
+              <form [formGroup]="filtreForm" fxLayout="column">
+                <div fxLayout="row">
+                  <mat-form-field appearance="fill" class="pr-4" fxFlex="50%">
+                    <mat-label>Ile</mat-label>
+                    <mat-select formControlName="ile_id" (selectionChange)="onSelectIle($event)">
+                      <mat-option *ngFor="let item of ileData$ | async" [value]="item.id">
+                        {{ item.Ile }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <mat-form-field appearance="fill" class="pr-4" fxFlex="50%">
+                    <mat-label>Prefecture</mat-label>
+                    <mat-select formControlName="prefecture_id" (selectionChange)="onSelectPrefecture($event)">
+                      <mat-option *ngFor="
+                                                                let item of filtered_prefecture$ | async
+                                                            " [value]="item.id">
+                        {{ item.Region }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <mat-form-field appearance="fill" class="pr-4" fxFlex="50%">
+                    <mat-label>Commune</mat-label>
+                    <mat-select formControlName="commune_id" (selectionChange)="onSelectCommune($event)">
+                      <mat-option *ngFor="let item of filtered_commune$ | async" [value]="item.id">
+                        {{ item.Commune }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
+                  <button mat-raised-button color="primary" (click)="filterData()">
+                    Actualiser
+                  </button>
+                </div>
+              </form>
+            </form>
+          </div>
+        </div>
+        <!-- / FILTER FORM -->
+        <!-- DIVIDER AND STATE LOADING -->
+        <mat-divider [inset]="true"></mat-divider>
+        <mat-progress-bar *ngIf="isLoading$ | async" mode="indeterminate"></mat-progress-bar>
+        <!-- / DIVIDER AND STATE LOADING -->
+        <div class="mat-card mat-elevation-z4 m-4" fxLayoutGap="10px" fxLayout="column">
+          <div class="package-type primary h-44" fxLayout="row" fxLayoutAlign="space-between center">
+            <!--action button-->
+            <div class="p-12">
+              <span class="border-right mr-2" style="color: #0eaf3b">Actions</span>
+              <button mat-button mat-icon-button color="fuse-navy" class="m-4" (click)="toggleForm()"
+                *ngIf="create_livrable_button">
+                <mat-icon>add_circle_outline</mat-icon>
+              </button>
+              <button mat-button mat-icon-button color="fuse-navy" class="m-4" *ngIf="edit_livrable_button"
+                (click)="toggleForm(true)">
+                <mat-icon>edit_outline</mat-icon>
+              </button>
+              <button mat-button mat-icon-button color="fuse-navy" class="m-4" *ngIf="delete_livrable_button">
+                <mat-icon>delete_outline</mat-icon>
+              </button>
+              <button mat-button mat-raised-button color="fuse-navy">
+                <mat-icon slot="start">get_app</mat-icon>
+                <label>EXPORTER EN EXCEL</label>
+              </button>
+            </div>
+            <!--action button-->
+            <!--titre-->
+            <div class="">
+              <span class="border-right mr-2" style="color: #0eaf3b; text-transform: uppercase">Livrable
+                encadrement</span>
+            </div>
+            <!--titre-->
+            <!--search bar-->
+            <div class="p-12">
+              <fieldset class="field-container" appearance="outline">
+                <input type="text" placeholder="Rechercher" class="field" [(ngModel)]="search" />
+                <div class="icons-container">
+                  <mat-icon class="icon-search"></mat-icon>
+                  <div class="icon-close">
+                    <div class="x-up"></div>
+                    <div class="x-down"></div>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+          </div>
+          <!--- LIVRABLE ONG FORM -->
+
+          <div *ngIf="show_hide_form">
+            <form (ngSubmit)="createlivrable()" [formGroup]="livrableEncadrementForm" fxLayout="column">
+              <div fxLayout="row" fxLayoutAlign="start center" class="mb-4">
+
+                <mat-form-field appearance="fill" class="pr-4" fxFlex="50%">
+                  <mat-label>ONG d'encadrement utilisé</mat-label>
+                  <mat-select (selectionChange)="onSelectOngEncadrement($event)" formControlName="id_agex">
+                    <mat-option *ngFor="let item of agentExData$ | async" [value]="item.id">
+                      {{ item.identifiant_agex }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="pr-4" fxFlex="50%">
+                  <mat-label>Contrat AGEX</mat-label>
+                  <mat-select>
+                    <mat-option *ngFor="let item of filteredContratAgex$ | async" [value]="item.id">
+                      {{ item.objet_contrat }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="pr-4" fxFlex="50%">
+                  <mat-label>Date d'edition</mat-label>
+                  <input type="date" matInput formControlName="date_edition">
+                  <mat-error>Date d'edition obligatoire</mat-error>
+                </mat-form-field>
+              </div>
+              <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+                <mat-form-field appearance="fill" class="pr-4" fxFlex="50%">
+                  <mat-label>Mission del'ONG</mat-label>
+                  <input type="text" matInput formControlName="mission">
+                  <mat-error>Mission obligatoire</mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="pr-4" fxFlex="50%">
+                  <mat-label>Methodologie</mat-label>
+                  <input type="text" matInput formControlName="methodologie">
+                  <mat-error>Methodologie obligatoire</mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="pr-4" fxFlex="50%">
+                  <mat-label>Outil de travail</mat-label>
+                  <input type="text" matInput formControlName="outil_travail">
+                  <mat-error>Outil de travail obligatoire</mat-error>
+                </mat-form-field>
+              </div>
+              <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
+                <button mat-raised-button color="accent" type="submit" [disabled]="isLoading$ | async"
+                  (click)="is_edit_mode ? updatelivrable() : createlivrable()">
+                  <mat-icon *ngIf="isLoading$ | async">hourglass_empty</mat-icon>
+                  {{ is_edit_mode ? "Modifier" : "Enregistrer" }}
+                </button>
+
+                <button mat-raised-button color="primary" type="button" (click)="toggleForm()">
+                  Annuler
+                </button>
+              </div>
+            </form>
+          </div>
+          <!--- / LIVRABLE ONG FORM -->
+          <!--DATATABLE-->
+          <div>
+
+            <ngx-datatable class="material" [columnMode]="'force'" [rows]="livrableData$ | async" [headerHeight]="48"
+              [footerHeight]="50" [rowHeight]="'auto'" limit="10" [reorderable]="true" [selected]="selected_livrable"
+              [selectionType]="'single'" (select)="onSelectLivrable($event)">
+              <ngx-datatable-column name="ONG d'encadrement">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <strong><em>Nom AGEX</em></strong> : {{ row.agex?.Nom }} <br>
+                  <strong><em>Téléphone</em></strong> : {{ row.agex?.numero_phone_contact }} <br>
+                  <strong><em>Adresse</em></strong> : {{ row.agex?.adresse_agex }}
+                </ng-template>
+              </ngx-datatable-column>
+
+              <ngx-datatable-column name="Contrat">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <strong><em>Contrat N°</em></strong> : {{ row.contrat_agex?.numero_contrat }}
+                  <strong><em>Date de signature</em></strong> : {{ row.contrat_agex?.date_signature }}
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Date d'edition">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  {{ row.date_edition }}
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Mission de l'ONG">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  {{ row.mission }}
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Methodologie">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  {{ row.methodologie }}
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Outils de travail">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  {{ row.outil_travail }}
+                </ng-template>
+              </ngx-datatable-column>
+              <!-- <ngx-datatable-column name="Planning par Groupe de Formation">
+                                  <ng-template let-row="row" ngx-datatable-cell-template>
+                                    {{ row.planning_groupe_formation?.nom }}
+                                  </ng-template>
+                                </ngx-datatable-column> -->
+              <!-- Autres colonnes ici -->
+            </ngx-datatable>
+          </div>
+          <!--DATATABLE-->
+        </div>
+      </mat-tab>
+      <mat-tab label="Village d'intervention"></mat-tab>
+    </mat-tab-group>
+  </div>
+</div>

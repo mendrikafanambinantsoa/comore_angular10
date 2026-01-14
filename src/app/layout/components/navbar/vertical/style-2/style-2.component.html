@@ -1,0 +1,14 @@
+<div class="navbar-header">
+    <div class="logo">
+        <img src="assets/images/logos/logo_comore.png" class="logo-icon">
+        <span class="logo-text">PFSS</span>
+    </div>
+
+    <button mat-icon-button (click)="toggleSidebarFolded()" fxHide.lt-lg>
+        <mat-icon>menu</mat-icon>
+    </button>
+</div>
+
+<div class="navbar-content" fusePerfectScrollbar>
+    <fuse-navigation layout="vertical" class="material2"></fuse-navigation>
+</div>

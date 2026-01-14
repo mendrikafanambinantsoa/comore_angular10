@@ -1,0 +1,212 @@
+<div class="page-layout simple fullwidth" fxLayout="column" style="background-color: #fff !important;">
+  <div class="header primary p-4 h-24" fxLayout="row" fxLayoutAlign="start center">
+    <div fxLayout="column" fxLayoutAlign="center start">
+      <div fxLayout="row" fxLayoutAlign="start center" style="margin-top: 0px !important; padding-top: 0px !important;">
+        <mat-icon class="s-18" style="color: #0eaf3b;">home</mat-icon>
+        <mat-icon class="s-18" style="color: #0eaf3b;">chevron_right</mat-icon>
+        <span style="color: #0eaf3b;">Administration</span>
+        <mat-icon class="s-18" style="color: #0eaf3b;">chevron_right</mat-icon>
+        <span style="color: #0eaf3b;">Donnees de base</span>
+        <mat-icon class="s-18" style="color: #0eaf3b;">chevron_right</mat-icon>
+        <span style="color: #0eaf3b;">Formation Ml et Outil de Communication</span>
+      </div>
+    </div>
+  </div>
+  <div class="content">
+    <div class="tab-content p-2">
+      <div class="mat-card mat-elevation-z4  m-4">
+        <div class="package-type h-44 primary-50 header primary" fxLayout="row" fxLayoutAlign="space-between center">
+          <!--Button-->
+          <div class="p-12">
+            <span class="border-right mr-2" style="color: #0eaf3b;">Type d'outil de communication</span>
+            <button mat-button mat-icon-button color="fuse-navy" (click)="ajoutNouveauOutils()" class="m-4">
+              <mat-icon>add_circle_outline</mat-icon>
+            </button>
+            <button mat-button mat-icon-button color="fuse-navy" (click)="modifierOutils()" class="m-4" *ngIf="buttonModifierOutil">
+              <mat-icon>edit_outline</mat-icon>
+            </button>
+            <button mat-button mat-icon-button color="fuse-navy" (click)="supprimerOutils()" *ngIf="buttonSupprimerOutil">
+              <mat-icon>delete_outline</mat-icon>
+            </button>
+            <button mat-button mat-raised-button color="fuse-navy">
+              <mat-icon>get_app</mat-icon>
+              <label>EXPORTER EN EXCEL</label>
+            </button>
+          </div>
+          <!--Button-->
+          <!--Titre-->
+          <div class="p-12">
+            <span class="border-right mr-2" style="color: #0eaf3b;">FORMATION ML/PL OUTIL DE COMMUNICATION</span>
+          </div>
+          <!--Titre-->
+          <!--Search bar outils communication-->
+          <div class="p-12">
+            <fieldset class="field-container" appearance="outline">
+              <input type="text" placeholder="Rechercher" class="field" [(ngModel)]="searchOutils" />
+              <div class="icons-container">
+                <mat-icon class="icon-search"></mat-icon>
+                <div class="icon-close" (click)="searchOutils = ''">
+                  <div class="x-up"></div>
+                  <div class="x-down"></div>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+          <!--Search bar outils communication-->
+        </div>
+        <div class="column">
+          <!--Formulaire outils communication-->
+          <div class="p-4" *ngIf="formulaireOutilsDeCommunication" fxLayoutAlign="center">
+            <form [formGroup]="FormulaireOutilsDeCommunication">
+              <mat-form-field appearance="fill" class="m-4">
+                <mat-label>
+                  Code
+                </mat-label>
+                <input matInput type="text" formControlName="code" [(ngModel)]="outils.code">
+                <mat-error>
+                  Veillez resseigner ce champ
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field appearance="fill" class="m-4">
+                <mat-label>
+                  Descirption
+                </mat-label>
+                <input matInput type="text" formControlName="description" [(ngModel)]="outils.description">
+                <mat-error>
+                  Veillez resseigner ce champ
+                </mat-error>
+              </mat-form-field>
+              <div fxLayoutAlign="center">
+                <button mat-raised-button color="accent" style="margin-right: 10px;"
+                  (click)="ajoutOutils(outils, 0)" [disabled]="FormulaireOutilsDeCommunication.invalid">Enregistrer</button>
+                <button mat-raised-button color="primary" (click)="annulerOutils()">Annuler</button>
+              </div>
+            </form>
+          </div>
+          <!--Formulaire outils communication-->
+          <!--Datatable outils communication-->
+          <ngx-datatable class="material" [columnMode]="'force'" [headerHeight]="48" [footerHeight]="50"
+            [rowHeight]="'auto'" limit="10" [selected]="selected" [selectionType]="'single'"
+            [rows]="row_outils_de_communication | filter: searchOutils" [limit]="5" (select)="onSelectOutils($event)" [reorderable]="true">
+            <ngx-datatable-column name="Code">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                {{row.code}}
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Description">
+              <ng-template let-row="row">
+                {{row.description}}
+              </ng-template>
+            </ngx-datatable-column>
+          </ngx-datatable>
+          <!--Datatable outils communication-->
+        </div>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="tab-content p-2">
+      <div class="mat-card mat-elevation-z4  m-4">
+        <div class="package-type h-44 primary-50 header primary" fxLayout="row" fxLayoutAlign="space-between center">
+          <div class="p-12">
+            <span class="border-right mr-2" style="color: #0eaf3b;">Detail d'outil de communication</span>
+            <button mat-button mat-icon-button color="fuse-navy" class="m-4" (click)="ajoutNouveauDetails()" *ngIf="buttonAjoutDetail">
+              <mat-icon>add_circle_outline</mat-icon>
+            </button>
+            <button mat-button mat-icon-button color="fuse-navy" (click)="modifierDetails()" class="m-4" *ngIf="buttonModifierDetail">
+              <mat-icon>edit_outline</mat-icon>
+            </button>
+            <button mat-button mat-icon-button color="fuse-navy" (click)="supprimerDetails()" *ngIf="buttonSupprimerDetail">
+              <mat-icon>delete_outline</mat-icon>
+            </button>
+          </div>
+          <!--Search bar  detail outils communication-->
+          <div class="p-12">
+            <fieldset class="field-container" appearance="outline">
+              <input type="text" placeholder="Rechercher" class="field" [(ngModel)]="searchDetails" />
+              <div class="icons-container">
+                <mat-icon class="icon-search"></mat-icon>
+                <div class="icon-close" (click)="searchDetails = ''">
+                  <div class="x-up"></div>
+                  <div class="x-down"></div>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+          <!--Search bar detail outils communication-->
+        </div>
+        <div class="column">
+          <!--Formulaire detail outils communication-->
+          <div class="p-4">
+            <div class="p-4" *ngIf="formulaireDetailsOutilsDeCommunication" fxLayoutAlign="center">
+              <form [formGroup]="FormulaireDetailOutilsDeCommunication">
+                <mat-form-field appearance="fill" class="m-4">
+                  <mat-label>
+                    Code
+                  </mat-label>
+                  <input matInput type="text" formControlName="code" [(ngModel)]="detail.code">
+                  <mat-error>
+                    Veillez resseigner ce champ
+                  </mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="m-4">
+                  <mat-label>
+                    Descirption
+                  </mat-label>
+                  <input matInput type="text" formControlName="description" [(ngModel)]="detail.description">
+                  <mat-error>
+                    Veillez resseigner ce champ
+                  </mat-error>
+                </mat-form-field>
+                <div fxLayoutAlign="center">
+                  <button mat-raised-button color="accent" style="margin-right: 10px;"
+                    (click)="ajoutDetails(detail,0)" [disabled]="FormulaireDetailOutilsDeCommunication.invalid">Enregistrer</button>
+                  <button mat-raised-button color="primary" (click)="annulerDetails()">Annuler</button>
+                </div>
+              </form>
+            </div>
+          </div>
+          <!--Formulaire detail outils communication-->
+          <ngx-datatable class="material" [columnMode]="'force'" [headerHeight]="48" [footerHeight]="50"
+            [rowHeight]="'auto'" limit="10" [selected]="selected" [selectionType]="'single'"
+            [rows]="row_details_outils_de_communication | filter: searchDetails" [limit]="5"
+            (select)="onSelectDetails($event)" [reorderable]="true">
+            <ngx-datatable-column name="Code">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                {{row.code}}
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Description">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                {{row.description}}
+              </ng-template>
+            </ngx-datatable-column>
+          </ngx-datatable>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-template #suppressionDialog>
+    <!-- <h2 matDialogTitle>Etes-vous sûr de supprimer cet enregistrement ?</h2> -->
+    <mat-dialog-content>
+      <div matDialogTitle>
+        Voulez vous vraiement supprimer cet enregistrement?
+      </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-button matDialogClose color="primary" (click)="confirmationSuppressionOutils()">Ok</button>
+      <button mat-button matDialogClose color="primary" (click)="closeDialog()">Fermer</button>
+    </mat-dialog-actions>
+  </ng-template>
+  <ng-template #suppressionDialog1>
+    <!-- <h2 matDialogTitle>Etes-vous sûr de supprimer cet enregistrement ?</h2> -->
+    <mat-dialog-content>
+      <div matDialogTitle>
+        Voulez vous vraiement supprimer cet enregistrement?
+      </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-button matDialogClose color="primary" (click)="confirmationSuppressionDetails()">Ok</button>
+      <button mat-button matDialogClose color="primary" (click)="closeDialog()">Fermer</button>
+    </mat-dialog-actions>
+  </ng-template>
+</div>

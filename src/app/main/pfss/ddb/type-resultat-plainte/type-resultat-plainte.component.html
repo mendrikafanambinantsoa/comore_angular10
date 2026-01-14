@@ -1,0 +1,259 @@
+<div class="page-layout simple fullwidth" fxLayout="column">
+    <div class="header primary p-4 h-24" fxLayout="row" fxLayoutAlign="start center">
+        <div fxLayout="column" fxLayoutAlign="center start">
+            <div fxLayout="row" fxLayoutAlign="start center"
+                style="margin-top: 0px !important; padding-top: 0px !important;">
+                <mat-icon class="s-18" style="color: #0eaf3b;">home</mat-icon>
+                <mat-icon class="s-18" style="color: #0eaf3b;">chevron_right</mat-icon>
+                <span style="color: #0eaf3b;">Données de base</span>
+                <mat-icon class="s-18" style="color: #0eaf3b;">chevron_right</mat-icon>
+                <span style="color: #0eaf3b;">Type de plainte</span>
+            </div>
+        </div>
+    </div>
+    <mat-tab-group>
+        <!-- debut TYPE DE PLAINTE -->
+        <mat-tab label="TYPE DE PLAINTE">
+            <div class="content p-2">
+                <div class="mat-card mat-elevation-z4  m-4">
+                    <div class="package-type primary h-44" fxLayout="row" fxLayoutAlign="space-between center">
+                        <span class="p-12 coleur_vert">Actions
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Ajouter"
+                            (click)="AjouterTypePlainte()"
+                                *ngIf="!this.new_item_type_plainte && !this.editing_type_plainte[this.index_selected_type_plainte]">
+                                <mat-icon matTooltip="Ajouter" class="coleur_vert">add_circle_outline</mat-icon>
+                            </button>
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Modifier"
+                             matTooltip="Modifier" (click)="ModifierTypePlainte()"
+                                *ngIf="item_selected_type_plainte.length > 0 && !this.editing_type_plainte[this.index_selected_type_plainte]">
+                                <mat-icon matTooltip="Modifier" class="coleur_vert">edit</mat-icon>
+                            </button>
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Supprimer"
+                            matTooltip="Supprimer" (click)="supprimerTypePlainte()"
+                                *ngIf="item_selected_type_plainte.length > 0 && !this.editing_type_plainte[this.index_selected_type_plainte]">
+                                <mat-icon matTooltip="Supprimer" class="coleur_vert">delete</mat-icon>
+                            </button>
+
+
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Enregistrer"
+                            *ngIf="this.editing_type_plainte[this.index_selected_type_plainte]" (click)="save_in_base_type_plainte(0)">
+                                <mat-icon matTooltip="Enregistrer" class="coleur_vert">save</mat-icon>
+                            </button>
+
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Annuler"
+                            (click)="annulerTypePlainte()"
+                                *ngIf="item_selected_type_plainte.length > 0 && this.editing_type_plainte[this.index_selected_type_plainte]">
+                                <mat-icon matTooltip="Annuler" class="coleur_vert">cancel</mat-icon>
+                            </button>
+                            <button mat-stroked-button style="color: #0eaf3b;">
+                                <mat-icon>get_app</mat-icon>
+                                EXPORTER EN EXCEL 
+                            </button>
+                        </span>
+                        <span class="p-12 coleur_vert">TYPE DE PLAINTE</span>
+                        <span class="p-12"><input type="text"
+                                style="padding:8px;margin:15px auto;width:100%;color:#353A48;"
+                                placeholder="Rechercher..." [(ngModel)]="search_type_plainte"/></span>
+
+                    </div>
+                    <div>
+                        <ngx-datatable class="material" [rows]="rows_type_plainte | filter: search_type_plainte"
+                            [columnMode]="'force'" [headerHeight]="48"
+                            [footerHeight]="56" [rowHeight]="'auto'" [scrollbarH]="true" [reorderable]=""
+                            [selectionType]="'checkbox'" [limit]="10" [selected]="item_selected_type_plainte"
+                            [selectionType]="'single'" (select)="onSelectTypePlainte($event)">
+                            <ngx-datatable-column name="Code" prop="Code">
+                                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value"
+                                    let-row="row">
+                                    <span *ngIf="!editing_type_plainte[rowIndex]">{{ value }}</span>
+                                    <input *ngIf="editing_type_plainte[rowIndex]" type="text"
+                                        (change)="updateValueTypePlainte($event, 'Code', rowIndex)" [value]="value" />
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Libellé" prop="TypePlainte">
+                                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value"
+                                    let-row="row">
+                                    <span *ngIf="!editing_type_plainte[rowIndex]">{{ value }}</span>
+                                    <input *ngIf="editing_type_plainte[rowIndex]" type="text"
+                                        (change)="updateValueTypePlainte($event, 'TypePlainte', rowIndex)" [value]="value" />
+                                </ng-template>
+                            </ngx-datatable-column>
+                        </ngx-datatable>
+                    </div>
+                </div>
+            </div>
+        </mat-tab>
+        <!-- fin TYPE DE PLAINTE -->
+
+        <!-- debut RÉSULTAT PLAINTE -->
+        <mat-tab label="RÉSULTAT PLAINTE">
+            <div class="content p-2">
+                <div class="mat-card mat-elevation-z4  m-4">
+                    <div class="package-type primary h-44" fxLayout="row" fxLayoutAlign="space-between center">
+                        <span class="p-12 coleur_vert">Actions
+                            <!-- <button mat-button (click)="modifier()">Basic</button> -->
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Ajouter"
+                            (click)="AjouterResultatPlainte()"
+                                *ngIf="!this.new_item_resultat_plainte && !this.editing_resultat_plainte[this.index_selected_resultat_plainte]">
+                                <mat-icon matTooltip="Ajouter" class="coleur_vert">add_circle_outline</mat-icon>
+                            </button>
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Modifier"
+                            atTooltip="Modifier" (click)="ModifierResultatPlainte()"
+                                *ngIf="item_selected_resultat_plainte.length > 0 && !this.editing_resultat_plainte[this.index_selected_resultat_plainte]">
+                                <mat-icon matTooltip="Modifier" class="coleur_vert">edit</mat-icon>
+                            </button>
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Supprimer"
+                             matTooltip="Supprimer" (click)="supprimerResultatPlainte()"
+                                *ngIf="item_selected_resultat_plainte.length > 0 && !this.editing_resultat_plainte[this.index_selected_resultat_plainte]">
+                                <mat-icon matTooltip="Supprimer" class="coleur_vert">delete</mat-icon>
+                            </button>
+
+
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Enregistrer"
+                            *ngIf="this.editing_resultat_plainte[this.index_selected_resultat_plainte]" (click)="save_in_base_resultat_plainte(0)">
+                                <mat-icon matTooltip="Enregistrer" class="coleur_vert">save</mat-icon>
+                            </button>
+
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Annuler"
+                             (click)="annulerResultatPlainte()"
+                                *ngIf="item_selected_resultat_plainte.length > 0 && this.editing_resultat_plainte[this.index_selected_resultat_plainte]">
+                                <mat-icon matTooltip="Annuler" class="coleur_vert">cancel</mat-icon>
+                            </button>
+                            <button mat-stroked-button style="color: #0eaf3b;">
+                                <mat-icon>get_app</mat-icon>
+                                EXPORTER EN EXCEL 
+                            </button>
+                        </span>
+                        <span class="p-12 coleur_vert">RÉSULTAT PLAINTE</span>
+                        <span class="p-12"><input type="text"
+                                style="padding:8px;margin:15px auto;width:100%;color:#353A48;"
+                                placeholder="Rechercher..." [(ngModel)]="search_resultat_plainte"/></span>
+                    </div>
+                    <div>
+                        <ngx-datatable class="material" [rows]="rows_resultat_plainte | filter: search_resultat_plainte"
+                            [columnMode]="'force'" [headerHeight]="48"
+                            [footerHeight]="56" [rowHeight]="'auto'" [scrollbarH]="true" [reorderable]=""
+                            [selectionType]="'checkbox'" [limit]="10" [selected]="item_selected_resultat_plainte"
+                            [selectionType]="'single'" (select)="onSelectResultatPlainte($event)">
+                            <ngx-datatable-column name="Code" prop="code">
+                                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value"
+                                    let-row="row">
+                                    <span *ngIf="!editing_resultat_plainte[rowIndex]">{{ value }}</span>
+                                    <input *ngIf="editing_resultat_plainte[rowIndex]" type="text"
+                                        (change)="updateValueResultatPlainte($event, 'code', rowIndex)" [value]="value" />
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Libellé" prop="libelle">
+                                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value"
+                                    let-row="row">
+                                    <span *ngIf="!editing_resultat_plainte[rowIndex]">{{ value }}</span>
+                                    <input *ngIf="editing_resultat_plainte[rowIndex]" type="text"
+                                        (change)="updateValueResultatPlainte($event, 'libelle', rowIndex)" [value]="value" />
+                                </ng-template>
+                            </ngx-datatable-column>
+                        </ngx-datatable>
+                    </div>
+                </div>
+            </div>
+        </mat-tab>
+        <!-- fin RÉSULTAT PLAINTE -->
+
+        <!-- debut RESPONSABLE ENREGISTREMENT PLAINTES -->
+        <mat-tab label="RESPONSABLE ENREGISTREMENT PLAINTES">
+            <div class="content p-2">
+                <div class="mat-card mat-elevation-z4  m-4">
+                    <div class="package-type primary h-44" fxLayout="row" fxLayoutAlign="space-between center">
+                        <span class="p-12 coleur_vert">Actions
+                            <!-- <button mat-button (click)="modifier()">Basic</button> -->
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Ajouter"
+                            (click)="AjouterResponsablePlainte()"
+                            *ngIf="!this.new_item_responsable_plainte && !this.editing_responsable_plainte[this.index_selected_responsable_plainte]">
+                                <mat-icon matTooltip="Ajouter" class="coleur_vert">add_circle_outline</mat-icon>
+                            </button>
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Modifier"
+                            matTooltip="Modifier" (click)="ModifierResponsablePlainte()"
+                            *ngIf="item_selected_responsable_plainte.length > 0 && !this.editing_responsable_plainte[this.index_selected_responsable_plainte]">
+                                <mat-icon matTooltip="Modifier" class="coleur_vert">edit</mat-icon>
+                            </button>
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Supprimer"
+                            matTooltip="Supprimer" (click)="supprimerResponsablePlainte()"
+                                *ngIf="item_selected_responsable_plainte.length > 0 && !this.editing_responsable_plainte[this.index_selected_responsable_plainte]">
+                                <mat-icon matTooltip="Supprimer" class="coleur_vert">delete</mat-icon>
+                            </button>
+
+
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Enregistrer"
+                            *ngIf="this.editing_responsable_plainte[this.index_selected_responsable_plainte]" (click)="save_in_base_responsable_plainte(0)">
+                                <mat-icon matTooltip="Enregistrer" class="coleur_vert">save</mat-icon>
+                            </button>
+
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Annuler"
+                            (click)="annulerResponsablePlainte()"
+                                *ngIf="item_selected_responsable_plainte.length > 0 && this.editing_responsable_plainte[this.index_selected_responsable_plainte]">
+                                <mat-icon matTooltip="Annuler" class="coleur_vert">cancel</mat-icon>
+                            </button>
+                            <button mat-stroked-button style="color: #0eaf3b;">
+                                <mat-icon>get_app</mat-icon>
+                                EXPORTER EN EXCEL 
+                            </button>
+                        </span>
+                        <span class="p-12 coleur_vert">RESPONSABLE ENREGISTREMENT PLAINTES</span>
+                        <span class="p-12"><input type="text"
+                                style="padding:8px;margin:15px auto;width:100%;color:#353A48;"
+                                placeholder="Rechercher..." [(ngModel)]="search_responsable_plainte"/></span>
+
+                    </div>
+                    <div>
+                        <ngx-datatable class="material" [rows]="rows_responsable_plainte | filter: search_responsable_plainte"
+                            [columnMode]="'force'" [headerHeight]="48"
+                            [footerHeight]="56" [rowHeight]="'auto'" [scrollbarH]="true" [reorderable]=""
+                            [selectionType]="'checkbox'" [limit]="10" [selected]="item_selected_responsable_plainte"
+                            [selectionType]="'single'" (select)="onSelectResponsablePlainte($event)">
+                            <ngx-datatable-column name="Responsable" prop="description">
+                                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value"
+                                    let-row="row">
+                                    <span *ngIf="!editing_responsable_plainte[rowIndex]">{{ value }}</span>
+                                    <input *ngIf="editing_responsable_plainte[rowIndex]" type="text"
+                                        (change)="updateValueResponsablePlainte($event, 'description', rowIndex)" [value]="value" />
+                                </ng-template>
+                            </ngx-datatable-column>
+                        </ngx-datatable>
+                    </div>
+                </div>
+            </div>
+            <!-- fin responsable enregistrement plainte -->
+        </mat-tab>
+    </mat-tab-group>
+    <ng-template #suppression_dialog_type_plainte>
+        <h2 matDialogTitle>Etes-vous sûr de supprimer cet enregistrement ?</h2>
+        <mat-dialog-content>
+
+        </mat-dialog-content>
+        <mat-dialog-actions align="end">
+            <button mat-button matDialogClose style="color: red;" (click)="suppressionConfirmerTypePlainte()">OUI</button>
+            <button mat-button matDialogClose (click)="suppressionAnnuler()" color="primary">NON</button>
+        </mat-dialog-actions>
+    </ng-template>
+
+    <ng-template #suppression_dialog_resultat_plainte>
+        <h2 matDialogTitle>Etes-vous sûr de supprimer cet enregistrement ?</h2>
+        <mat-dialog-content>
+
+        </mat-dialog-content>
+        <mat-dialog-actions align="end">
+            <button mat-button matDialogClose style="color: red;" (click)="suppressionConfirmerResultatPlainte()">OUI</button>
+            <button mat-button matDialogClose (click)="suppressionAnnuler()" color="primary">NON</button>
+        </mat-dialog-actions>
+    </ng-template>
+
+    <ng-template #suppression_dialog_responsable_plainte>
+        <h2 matDialogTitle>Etes-vous sûr de supprimer cet enregistrement ?</h2>
+        <mat-dialog-content>
+
+        </mat-dialog-content>
+        <mat-dialog-actions align="end">
+            <button mat-button matDialogClose style="color: red;" (click)="suppressionConfirmerResponsablePlainte()">OUI</button>
+            <button mat-button matDialogClose (click)="suppressionAnnuler()" color="primary">NON</button>
+        </mat-dialog-actions>
+    </ng-template>
+</div>

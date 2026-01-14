@@ -1,0 +1,324 @@
+<div class="page-layout simple fullwidth" fxLayout="column">
+    <div class="header primary p-4 h-24" fxLayout="row" fxLayoutAlign="start center">
+        <div fxLayout="column" fxLayoutAlign="center start">
+            <div fxLayout="row" fxLayoutAlign="start center"
+                style="margin-top: 0px !important; padding-top: 0px !important;">
+                <mat-icon class="s-18" style="color: #0eaf3b;">home</mat-icon>
+                <mat-icon class="s-18" style="color: #0eaf3b;">chevron_right</mat-icon>
+                <span style="color: #0eaf3b;">Plaintes</span>
+            </div>
+        </div>
+    </div>
+
+    <mat-tab-group>
+        <mat-tab label="LISTE DES PLAINTES">
+            <div class="tab-content p-2">
+                <div style="margin-left: 5px; margin-top: 5px">
+                    <button button mat-raised-button class="button_vert" *ngIf="plainte_preselectionne.village_id"
+                        (click)="ajouter_plainte();getMenageByVillage(plainte_preselectionne.village_id)">
+                        NOUVEAU
+                    </button>
+                    <button button mat-raised-button class="button_modifier" style="margin-left: 5px"
+                        *ngIf="show_btn_ajout"
+                        (click)="modifier_plainte();getMenageByVillage(plainte_preselectionne.village_id)">
+                        MODIFIER
+                    </button>
+                    <button button mat-raised-button class="button_supprimer" style="margin-left: 5px"
+                        *ngIf="show_btn_ajout" (click)="supprimer()">
+                        SUPPRIMER
+                    </button>
+                    <button button mat-raised-button color="primary" style="margin-left: 5px"
+                        *ngIf="plainte_preselectionne.village_id">
+                        EXPORTER EN EXCEL
+                    </button>
+                </div>
+                <div style="margin-left: 5px; margin-top: 5px">
+                    <form [formGroup]="form_filtre_par_village">
+                        <mat-form-field fxFlex="15" class="pr-4">
+                            <mat-label>Ile</mat-label>
+                            <mat-select formControlName="id_ile" [(ngModel)]="plainte_preselectionne.id_ile"
+                                (selectionChange)="filtre_region()">
+                                <mat-option *ngFor="let ile of all_ile" [value]="ile.id">
+                                    {{ ile.Ile }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="15" class="pr-4">
+                            <mat-label>Préfecture</mat-label>
+                            <mat-select formControlName="id_region" [(ngModel)]="plainte_preselectionne.id_region"
+                                [disabled]="!plainte_preselectionne.id_ile" (selectionChange)="filtre_commune()">
+                                <mat-option *ngFor="let region of all_region" [value]="region.id">
+                                    {{ region.Region }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="15" class="pr-4">
+                            <mat-label>Commune</mat-label>
+                            <mat-select formControlName="id_commune" [(ngModel)]="plainte_preselectionne.id_commune"
+                                [disabled]="!plainte_preselectionne.id_region" (selectionChange)="filtre_village();">
+                                <mat-option *ngFor="let commune of all_commune" [value]="commune.id">
+                                    {{ commune.Commune }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="15" class="pr-4">
+                            <mat-label>Village</mat-label>
+                            <mat-select formControlName="village_id" [(ngModel)]="plainte_preselectionne.village_id"
+                                [disabled]="!plainte_preselectionne.id_commune">
+                                <mat-option *ngFor="let village of all_village" [value]="village.id">
+                                    {{ village.Village }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <div fxLayout="row" fxLayoutAlign="center center">
+                            <button mat-raised-button class="button_vert" [disabled]="form_filtre_par_village.invalid"
+                                (click)="filtrePlainteByVillage()" style="margin-left: 5px;"
+                                *ngIf="afficher_btn_actualiser" [disabled]="form_filtre_par_village.invalid">
+                                <mat-label> ACTUALISER </mat-label>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <fieldset *ngIf="affichage_masque">
+                    <form [formGroup]="form_plainte_preselectionne">
+                        <div fxLayout="row wrap" fxLayoutAlign="start start">
+                            <mat-form-field fxFlex="15" class="pr-4">
+                                <mat-label>Sous_projet</mat-label>
+                                <mat-select formControlName="id_sous_projet"
+                                    [(ngModel)]="plainte_preselectionne.id_sous_projet">
+                                    <mat-option *ngFor="let sous_projet of all_sous_projet" [value]="sous_projet.id">
+                                        {{ sous_projet.code }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error>Île obligatoire!</mat-error>
+                            </mat-form-field>
+                            <mat-form-field fxFlex="15" class="pr-4">
+                                <mat-label>Ménage</mat-label>
+                                <mat-select formControlName="menage_id" [(ngModel)]="plainte_preselectionne.menage_id">
+                                    <mat-option *ngFor="let menage of all_menage" [value]="menage.id">
+                                        {{menage.numero_recepisse}} - {{menage.nom_chef_menage}}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error>Ménage obligatoire!</mat-error>
+                            </mat-form-field>
+                            <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                <mat-label>Nom plaignant</mat-label>
+                                <input matInput formControlName="nomplaignant"
+                                    [(ngModel)]="plainte_preselectionne.nomplaignant">
+                                <mat-error>Nom plaignant obligatoire!</mat-error>
+                            </mat-form-field>
+                            <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                <mat-label>Responsable</mat-label>
+                                <input matInput formControlName="responsableenregistrement"
+                                    [(ngModel)]="plainte_preselectionne.responsableenregistrement">
+                                <mat-error>Nom plaignant obligatoire!</mat-error>
+                            </mat-form-field>
+                            <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                <mat-label>Adresse plaignant</mat-label>
+                                <input matInput formControlName="adresseplaignant"
+                                    [(ngModel)]="plainte_preselectionne.adresseplaignant">
+                                <mat-error>Adresse plaignant obligatoire!</mat-error>
+                            </mat-form-field>
+                            <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                <mat-label>Téléphone</mat-label>
+                                <input matInput formControlName="telephone" type="number"
+                                    [(ngModel)]="plainte_preselectionne.telephone">
+                                <mat-error>téléphone obligatoire!</mat-error>
+                            </mat-form-field>
+                            <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                <mat-label>Objet</mat-label>
+                                <input matInput formControlName="Objet" [(ngModel)]="plainte_preselectionne.Objet">
+                                <mat-error>Objet obligatoire!</mat-error>
+                            </mat-form-field>
+                            <mat-form-field fxFlex="15" class="pr-4">
+                                <mat-label>Type plainte</mat-label>
+                                <mat-select formControlName="typeplainte_id"
+                                    [(ngModel)]="plainte_preselectionne.typeplainte_id">
+                                    <mat-option *ngFor="let type_plainte of all_type_plainte" [value]="type_plainte.id">
+                                        {{ type_plainte.Code }}-{{type_plainte.TypePlainte}}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error>Type plainte obligatoire!</mat-error>
+                            </mat-form-field>
+                            <mat-form-field fxFlex="15" class="pr-4">
+                                <mat-label>Tranche</mat-label>
+                                <mat-select formControlName="tranche_id"
+                                    [(ngModel)]="plainte_preselectionne.tranche_id">
+                                    <mat-option *ngFor="let phase of all_phase" [value]="phase.id">
+                                        {{ phase.Phase }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error>Tranche obligatoire!</mat-error>
+                            </mat-form-field>
+                            <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                <mat-label>Date dépot</mat-label>
+                                <input matInput formControlName="datedepot" type="date"
+                                    [(ngModel)]="plainte_preselectionne.datedepot">
+                                <mat-error>Date obligatoire!</mat-error>
+                            </mat-form-field>
+                            <mat-form-field fxFlex="15" class="pr-4">
+                                <mat-label>Responsable enregistrement</mat-label>
+                                <mat-select formControlName="id_responsable_enregistrement"
+                                    [(ngModel)]="plainte_preselectionne.id_responsable_enregistrement">
+                                    <mat-option *ngFor="let responsable of all_responsable_reg_plainte"
+                                        [value]="responsable.id">
+                                        {{ responsable.description }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error>Responsable obligatoire!</mat-error>
+                            </mat-form-field>
+                            <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                <mat-label>Mesure prise</mat-label>
+                                <input matInput formControlName="mesureprise"
+                                    [(ngModel)]="plainte_preselectionne.mesureprise">
+                                <mat-error>Mesure prise obligatoire!</mat-error>
+                            </mat-form-field>
+                            <mat-form-field fxFlex="15" class="pr-4">
+                                <mat-label>Statut</mat-label>
+                                <mat-select formControlName="statut" [(ngModel)]="plainte_preselectionne.statut">
+                                    <mat-option *ngFor="let resultat_plainte of all_resultat_plainte"
+                                        [value]="resultat_plainte.id">
+                                        {{ resultat_plainte.code }}-{{resultat_plainte.libelle}}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error>Status obligatoire!</mat-error>
+                            </mat-form-field>
+                            <mat-form-field fxFlex="calc(20% - 16px)" class="pr-4">
+                                <mat-label>Date résolution</mat-label>
+                                <input matInput formControlName="dateresolution" type="date"
+                                    [(ngModel)]="plainte_preselectionne.dateresolution">
+                                <mat-error>Date obligatoire!</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div fxLayoutAlign="center">
+                            <button mat-raised-button color="primary" style="margin-right: 10px"
+                                (click)="save_plainte_preselectionne(plainte_preselectionne, 0)"
+                                [disabled]="form_plainte_preselectionne.invalid">
+                                <mat-label> ENREGISTRER </mat-label>
+                            </button>
+                            <button mat-raised-button color="primary" (click)="hideAffichageMasque()">
+                                <mat-label> ANNULER </mat-label>
+                            </button>
+                        </div>
+                    </form>
+                </fieldset>
+                <div class="mat-card mat-elevation-z4 m-4">
+                    <div class="package-type h-44 primary-50 header primary" fxLayout="row"
+                        fxLayoutAlign="space-between center">
+                        <div class="p-12">
+                            <!-- <span class="border-right mr-2" style="color: #0eaf3b;">Actions</span> -->
+                        </div>
+                        <div class="p-12">
+                            <!-- <span class="border-right mr-2" style="color: #0eaf3b;">CONSULTANT</span> -->
+                        </div>
+                        <div class="p-12">
+                            <input type="text" style="
+                          padding: 8px;
+                          margin: 15px auto;
+                          width: 100%;
+                          color: #353a48;
+                          border: 1px solid #babdc5;
+                      " placeholder="Rechercher..." [(ngModel)]="search_plainte" />
+                        </div>
+                    </div>
+                    <!--Datatable-->
+                    <ngx-datatable class="material" [columnMode]="'force'" [headerHeight]="48" [footerHeight]="50"
+                        [rowHeight]="'auto'" limit="10" [selectionType]="'single'"
+                        [rows]="all_plainte | filter: search_plainte"
+                        (select)="on_select_plainte_preselectionne($event)" [selectionType]="'single'" [limit]="10">
+                        <ngx-datatable-column name="Découpage adm">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                {{row.ile}} / {{row.region}}
+                                {{row.commune}} / {{row.village}}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Object">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                {{ row.Objet }}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Responsable">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                {{ row.responsableenregistrement }}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Date dépot">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                {{ row.datedepot }}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Nom">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                {{ row.nomplaignant }}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Addresse">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                {{ row.adresseplaignant }}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Téléphone">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                {{ row.telephone }}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Mesure prise">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                {{ row.mesureprise }}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Résultat">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                {{Resultat}}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Date résolution">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                {{row.dateresolution}}
+                            </ng-template>
+                        </ngx-datatable-column>
+                    </ngx-datatable>
+                </div>
+            </div>
+        </mat-tab>
+    </mat-tab-group>
+</div>
+
+<!-- DIALOG PLAINTE -->
+<ng-template #aucun_plainte_preselectionne_par_village>
+    <mat-dialog-content>
+        <div matDialogTitle>Aucun plainte preselectionne dans le village</div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button mat-button matDialogClose color="primary" (click)="closeDialog()">
+            Fermer
+        </button>
+    </mat-dialog-actions>
+</ng-template>
+<!-- DIALOG PLAINTE -->
+<ng-template #suppression_plainte_preselectionne>
+    <mat-dialog-content>
+        <div matDialogTitle>
+            Etes-vous sûr de supprimer cet enregistrement ?
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button mat-button matDialogClose color="primary" (click)="closeDialog()">
+            ANNULER
+        </button>
+        <button mat-button matDialogClose color="primary" (click)="confirm_supprimer_plainte_preselectionne()">
+            OK
+        </button>
+    </mat-dialog-actions>
+</ng-template>
+<!-- DIALOG MENAGE -->
+<ng-template #aucun_menage_preselectionne_par_village>
+    <mat-dialog-content>
+        <div matDialogTitle>Aucun menage preselectionne dans le village</div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button mat-button matDialogClose color="primary" (click)="closeDialog()">
+            Fermer
+        </button>
+    </mat-dialog-actions>
+</ng-template>
