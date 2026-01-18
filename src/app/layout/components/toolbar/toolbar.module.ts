@@ -8,6 +8,8 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
+import { MatDividerModule } from '@angular/material/divider';
+
 
 import { FuseSearchBarModule, FuseShortcutsModule } from '@fuse/components';
 import { FuseSharedModule } from '@fuse/shared.module';
@@ -22,6 +24,7 @@ import { ToolbarComponent } from 'app/layout/components/toolbar/toolbar.componen
         RouterModule,
         MatButtonModule,
         MatIconModule,
+        MatDividerModule,
         MatMenuModule,
         MatToolbarModule,
         MatBadgeModule,

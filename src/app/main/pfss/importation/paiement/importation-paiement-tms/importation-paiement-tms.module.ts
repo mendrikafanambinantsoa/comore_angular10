@@ -26,16 +26,26 @@ const routes: Routes = [
         path: "importation/paiement/tms/premier-paiement",
         component: ImportTmsPaiement1Component,
         canActivate: [AuthGuard],
+        data: {
+            breadcrumb: 'Importation / Paiement / Tms / Premier paiement'
+        }
     },
+
     {
         path: "importation/paiement/tms/deuxieme-paiement",
         component: ImportTmsPaiement2Component,
         canActivate: [AuthGuard],
+        data: {
+            breadcrumb: 'Importation / Paiement / Tms / Deuxieme paiement'
+        }
     },
     {
         path: "importation/paiement/tms/troisieme-paiement",
         component: ImportTmsPaiement3Component,
         canActivate: [AuthGuard],
+        data: {
+            breadcrumb: 'Importation / Paiement / Tms / Troisieme paiement'
+        }
     },
 ];
 

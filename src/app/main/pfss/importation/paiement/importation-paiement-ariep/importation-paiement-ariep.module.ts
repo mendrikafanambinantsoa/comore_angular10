@@ -26,21 +26,33 @@ const routes: Routes = [
         path: "importation/paiement/ariep/premier-paiement",
         component: ImportAriepPaiement1Component,
         canActivate: [AuthGuard],
+        data: {
+            breadcrumb: 'Importation / Paiement / Ariep / Premier paiement'
+        }
     },
     {
         path: "importation/paiement/ariep/deuxieme-paiement",
         component: ImportAriepPaiement2Component,
         canActivate: [AuthGuard],
+        data: {
+            breadcrumb: 'Importation / Paiement / Ariep / Deuxieme paiement'
+        }
     },
     {
         path: "importation/paiement/ariep/troisieme-paiement",
         component: ImportAriepPaiement3Component,
         canActivate: [AuthGuard],
+        data: {
+            breadcrumb: 'Importation / Paiement / Ariep / Troisieme paiement'
+        }
     },
     {
         path: "importation/paiement/ariep/quatrieme-paiement",
         component: ImportAriepPaiement4Component,
         canActivate: [AuthGuard],
+        data: {
+            breadcrumb: 'Importation / Paiement / Ariep / Quatrieme paiement'
+        }
     },
 ];
 

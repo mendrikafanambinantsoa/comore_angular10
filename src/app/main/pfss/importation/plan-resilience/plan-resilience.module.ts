@@ -23,6 +23,9 @@ const routes: Routes = [
         path: "importation/plan-de-resilience",
         component: ImportPlanResilienceComponent,
         canActivate: [AuthGuard],
+        data: {
+            breadcrumb: 'Importation / Plan de resilience'
+        }
     },
 ];
 

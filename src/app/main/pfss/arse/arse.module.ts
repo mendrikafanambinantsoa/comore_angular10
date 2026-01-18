@@ -31,31 +31,49 @@ const routes: Routes = [
         path: "arse/menage-inscrit-arse",
         component: MenageInscritArseComponent,
         canActivate: [AuthGuard],
+        data: {
+            breadcrumb: 'Arse / Menage inscrit arse'
+        }
     },
     {
         path: "ariep/menage-preselectionne-ariep",
         component: MenagePreselectionneArseComponent,
         canActivate: [AuthGuard],
+        data: {
+            breadcrumb: 'Ariep / Menage preselection ariep'
+        }
     },
     {
         path: "ariep/menage-beneficiaire-ariep",
         component: MenageBeneficiaireArseComponent,
         canActivate: [AuthGuard],
+        data: {
+            breadcrumb: 'Ariep / Menage beneficiaire ariep'
+        }
     },
     {
         path: "ariep/carte-beneficiaire",
         component: CarteBeneficiaireComponent,
         canActivate: [AuthGuard],
+        data: {
+            breadcrumb: 'Ariep / Carte beneficiaire'
+        }
     },
     {
         path: "ariep/gerer-mpd",
         component: ArseGererMpdComponent,
         canActivate: [AuthGuard],
+        data: {
+            breadcrumb: 'Ariep / Gerer mpd'
+        }
     },
     {
         path: "ariep/contrat_agep",
         component: ContratAgepComponent,
         canActivate: [AuthGuard],
+        data: {
+            breadcrumb: 'Ariep / Contrat Agep'
+        }
     },
 ];
 

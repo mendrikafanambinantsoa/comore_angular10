@@ -23,6 +23,9 @@ const routes: Routes = [
         path: "agex",
         component: AgexComponent,
         canActivate: [AuthGuard],
+        data: {
+            breadcrumb: 'Agex'
+        }
     },
 ];
 

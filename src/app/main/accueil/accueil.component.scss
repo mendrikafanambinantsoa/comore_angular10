@@ -1,7 +1,100 @@
 .img_acceuil {
-    height: 600px !important;
+height: 600px !important;
   width: 600px !important;
   display: flex;
   align-items: center;
   justify-content: center
+}
+
+.page-layout{
+    display: none;
+}
+
+.page-layout.simple.fullwidth {
+    background-color: #F0ECF6 !important;
+    border-radius: 20px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+// Styles modernisés pour l'élément header breadcrumb
+.header.primary.h-24 {
+    background: linear-gradient(135deg, #151B23 0%, #1a2332 50%, #1f2942 100%) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    // box-shadow: 0 2px 8px rgba(21, 27, 35, 0.3) !important;
+    position: relative;
+    overflow: hidden;
+    padding: 20px !important;
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 50%, rgba(255, 255, 255, 0.1) 100%);
+    }
+    
+    .mat-icon {
+        color: #e2e8f0 !important;
+        font-size: 20px !important;
+        width: 20px !important;
+        height: 20px !important;
+        transition: all 0.3s ease !important;
+        cursor: pointer;
+        
+        &:hover {
+            transform: scale(1.1) !important;
+            color: #ffffff !important;
+        }
+    }
+    
+    span {
+        cursor: pointer;
+        color: #e2e8f0 !important;
+        font-weight: 500 !important;
+        font-size: 14px !important;
+        transition: all 0.3s ease !important;
+        padding: 4px 8px !important;
+        border-radius: 6px !important;
+        
+        &:hover {
+            color: #ffffff !important;
+            background-color: rgba(255, 255, 255, 0.1) !important;
+        }
+    }
+    
+    div[fxLayout="row"] {
+        margin-top: 0px !important;
+        padding-top: 0px !important;
+        align-items: center !important;
+        gap: 4px !important;
+        
+        .mat-icon {
+            margin: 0 2px !important;
+        }
+    }
+    
+    // Animation subtile au chargement
+    animation: slideDown 0.4s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+// Effet de survol pour les conteneurs
+.page-layout.simple.fullwidth {
+    background-color: #fff !important;
+    
+    .header.primary.p-4.h-24:hover {
+        background: linear-gradient(135deg, #1a2332 0%, #1f2942 50%, #242f52 100%) !important;
+        box-shadow: 0 4px 12px rgba(21, 27, 35, 0.4) !important;
+    }
 }

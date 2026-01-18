@@ -15,7 +15,7 @@ export const navigation: FuseNavigation[] = [
         title: "Administration du système",
         //translate: 'NAV.SAMPLE.TITLE',
         type: "collapsable",
-        icon: "security",
+        icon: "admin_panel_settings",
 
         children: [
             {
@@ -23,7 +23,7 @@ export const navigation: FuseNavigation[] = [
                 title: "Gestion Utilisateurs",
                 //translate: 'NAV.SAMPLE.TITLE',
                 type: "item",
-                icon: "person",
+                icon: "people",
                 url: "administration/utilisateur",
             },
             {
@@ -31,7 +31,7 @@ export const navigation: FuseNavigation[] = [
                 title: "Données de Base",
                 //translate: 'NAV.SAMPLE.TITLE',
                 type: "collapsable",
-                icon: "person",
+                icon: "database",
 
                 children: [
                     {
@@ -39,7 +39,7 @@ export const navigation: FuseNavigation[] = [
                         title: "Composante",
                         //translate: 'NAV.SAMPLE.TITLE',
                         type: "item",
-                        icon: "person",
+                        icon: "category",
                         url: "donnees-de-base/composante",
                     },
                     {
@@ -47,7 +47,7 @@ export const navigation: FuseNavigation[] = [
                         title: "Découpage administratif",
                         //translate: 'NAV.SAMPLE.TITLE',
                         type: "item",
-                        icon: "person",
+                        icon: "location_on",
                         url: "donnees-de-base/decoupage-administratif",
                     },
                     {
@@ -55,7 +55,7 @@ export const navigation: FuseNavigation[] = [
                         title: "Type de l'activité, ARSE, ACT",
                         //translate: 'NAV.SAMPLE.TITLE',
                         type: "item",
-                        icon: "person",
+                        icon: "work",
                         url: "donnees-de-base/type-activite-arse-act",
                     },
                     {
@@ -63,7 +63,7 @@ export const navigation: FuseNavigation[] = [
                         title: "AGEX/AGEP/CPS",
                         //translate: 'NAV.SAMPLE.TITLE',
                         type: "item",
-                        icon: "person",
+                        icon: "business",
                         url: "donnees-de-base/agex-agep-cps",
                     },
                     {
@@ -71,7 +71,7 @@ export const navigation: FuseNavigation[] = [
                         title: "Type/Résultat Plainte",
                         //translate: 'NAV.SAMPLE.TITLE',
                         type: "item",
-                        icon: "person",
+                        icon: "feedback",
                         url: "donnees-de-base/type-resultat-plainte",
                     },
                     {
@@ -79,7 +79,7 @@ export const navigation: FuseNavigation[] = [
                         title: "Questionnaire ménage",
                         //translate: 'NAV.SAMPLE.TITLE',
                         type: "item",
-                        icon: "person",
+                        icon: "family_restroom",
                         url: "donnees-de-base/questionnaire-menage",
                     },
                     {
@@ -95,7 +95,7 @@ export const navigation: FuseNavigation[] = [
                         title: "Gérer PAC",
                         //translate: 'NAV.SAMPLE.TITLE',
                         type: "item",
-                        icon: "person",
+                        icon: "account_balance",
                         url: "donnees-de-base/gerer-pac",
                     },
                     {
@@ -103,7 +103,7 @@ export const navigation: FuseNavigation[] = [
                         title: "Consultant",
                         //translate: 'NAV.SAMPLE.TITLE',
                         type: "item",
-                        icon: "person",
+                        icon: "engineering",
                         url: "donnees-de-base/consultant",
                     },
                     {
@@ -111,7 +111,7 @@ export const navigation: FuseNavigation[] = [
                         title: "Milieu/Vague/ZIP",
                         //translate: 'NAV.SAMPLE.TITLE',
                         type: "item",
-                        icon: "person",
+                        icon: "map",
                         url: "donnees-de-base/milieu-vague-zip",
                     },
                     {
@@ -119,7 +119,7 @@ export const navigation: FuseNavigation[] = [
                         title: "Plan action réinstallation",
                         //translate: 'NAV.SAMPLE.TITLE',
                         type: "item",
-                        icon: "person",
+                        icon: "assignment",
                         url: "donnees-de-base/plan-action-reinstallation",
                     },
                     {
@@ -127,7 +127,7 @@ export const navigation: FuseNavigation[] = [
                         title: "Phase execution et année",
                         //translate: 'NAV.SAMPLE.TITLE',
                         type: "item",
-                        icon: "person",
+                        icon: "schedule",
                         url: "donnees-de-base/phase-execution-et-annee",
                     },
                     {
@@ -135,7 +135,7 @@ export const navigation: FuseNavigation[] = [
                         title: "Lien de parenté",
                         //translate: 'NAV.SAMPLE.TITLE',
                         type: "item",
-                        icon: "person",
+                        icon: "group",
                         url: "donnees-de-base/lien-parente",
                     },
                     {
@@ -143,7 +143,7 @@ export const navigation: FuseNavigation[] = [
                         title: "Formation ML Outil de comm",
                         //translate: 'NAV.SAMPLE.TITLE',
                         type: "item",
-                        icon: "person",
+                        icon: "school",
                         url: "donnees-de-base/formation",
                     },
                 ],
@@ -157,34 +157,34 @@ export const navigation: FuseNavigation[] = [
         id: "tms",
         title: "TMS",
         type: "collapsable",
-        icon: "home",
+        icon: "assignment",
         children: [
             {
                 id: "inscrit",
                 title: "Ménage inscrit",
                 type: "item",
-                icon: "person",
+                icon: "family_restroom",
                 url: "/tms/menage-inscrit-tms",
             },
             {
                 id: "selectionne",
                 title: "Ménage préselectionné",
                 type: "item",
-                icon: "person",
+                icon: "check_circle",
                 url: "/tmnc/menage-preselectionne-tmnc",
             },
             {
                 id: "beneficiaire",
                 title: "Ménage bénéficiaire",
                 type: "item",
-                icon: "person",
+                icon: "star",
                 url: "/tms/menage-beneficiaire-tms",
             },
             {
                 id: "carte",
                 title: "Carte bénéficiaire",
                 type: "item",
-                icon: "person",
+                icon: "credit_card",
                 url: "/tmnc/carte-beneficiaire",
             },
             // {
@@ -198,7 +198,7 @@ export const navigation: FuseNavigation[] = [
                 id: "agep",
                 title: "Gérer AGEP",
                 type: "item",
-                icon: "person",
+                icon: "business",
                 url: "/tms/contrat_agep",
             },
         ],
@@ -209,34 +209,34 @@ export const navigation: FuseNavigation[] = [
         id: "ariep",
         title: "ARIEP",
         type: "collapsable",
-        icon: "home",
+        icon: "assignment",
         children: [
             {
                 id: "inscrit",
                 title: "Ménage Inscrit",
                 type: "item",
-                icon: "person",
+                icon: "family_restroom",
                 url: "/produit",
             },
             {
                 id: "preselectionne",
                 title: "Ménage présélectionné",
                 type: "item",
-                icon: "person",
+                icon: "check_circle",
                 url: "/ariep/menage-preselectionne-ariep",
             },
             {
                 id: "beneficiaire",
                 title: "Menage bénéficiaire",
                 type: "item",
-                icon: "person",
+                icon: "star",
                 url: "/ariep/menage-beneficiaire-ariep",
             },
             {
                 id: "carte",
                 title: "Carte bénéficiaire",
                 type: "item",
-                icon: "person",
+                icon: "credit_card",
                 url: "/ariep/carte-beneficiaire",
             },
             {

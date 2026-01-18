@@ -25,11 +25,17 @@ const routes: Routes = [
         path: "suivi-activite/ariep/etat-paiement/premier-paiement",
         component: ExportFicheEtatPaiementComponent,
         canActivate: [AuthGuard],
+        data: {
+            breadcrumb: 'Suivi activite / Ariep / Etat paiement / Premier paiement'
+        }
     },
     {
         path: "suivi-activite/ariep/etat-paiement/deuxieme-paiement",
         component: ExportFicheEtatPresenceComponent,
         canActivate: [AuthGuard],
+        data: {
+            breadcrumb: 'Suivi activite / Ariep / Etat paiement / Deuxieme paiement'
+        }
     },
 ];
 

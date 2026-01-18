@@ -19,7 +19,10 @@ const routes: Routes = [
   {
     path: "tableau-de-bord/indicateur",
     component: IndicateurComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    data: {
+      breadcrumb: 'Tableau de bord / Indicateur'
+    }
   }
 ]
 

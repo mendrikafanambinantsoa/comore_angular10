@@ -22,7 +22,7 @@ const routes: Routes = [
         canActivate: [AuthGuard],
         data: {
             title: "Livrable Ong Encadrement",
-            breadcrumb: "Livrable Ong Encadrement",
+            breadcrumb: "Macc / Ariep / Livrable Ong Encadrement",
             type: "ARIEP",
         },
     },

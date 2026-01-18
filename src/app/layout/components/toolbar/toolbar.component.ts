@@ -5,6 +5,7 @@ import { Subject } from 'rxjs';
 import { takeUntil, filter } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 import * as _ from 'lodash';
+import { BreadcrumbService, Breadcrumb } from '../../../_services/breadcrumb.service';
 
 import { FuseConfigService } from '@fuse/services/config.service';
 import { FuseSidebarService } from '@fuse/components/sidebar/sidebar.service';
@@ -20,10 +21,10 @@ import { AuthenticationService } from '../../../_services/authentification.servi
 })
 export class ToolbarComponent implements OnInit, OnDestroy {
     // Configuration Fuse
-    horizontalNavbar: boolean;
-    rightNavbar: boolean;
-    hiddenNavbar: boolean;
-    
+    horizontalNavbar: boolean = false;
+    rightNavbar: boolean = false;
+    hiddenNavbar: boolean = false;
+    breadcrumbs: Breadcrumb[] = [];
     // Navigation et langues
     languages: any;
     navigation: any;
@@ -40,6 +41,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
      * Constructor
      */
     constructor(
+        private breadcrumbService: BreadcrumbService,
         private _fuseConfigService: FuseConfigService,
         private _fuseSidebarService: FuseSidebarService,
         private _translateService: TranslateService,
@@ -110,7 +112,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
         // Subscribe to the config changes
         this._fuseConfigService.config
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((settings) => {
+            .subscribe((settings: any) => {
                 this.horizontalNavbar = settings.layout.navbar.position === 'top';
                 this.rightNavbar = settings.layout.navbar.position === 'right';
                 this.hiddenNavbar = settings.layout.navbar.hidden === true;
@@ -118,6 +120,11 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
         // Set the selected language from default languages
         this.selectedLanguage = _.find(this.languages, { id: this._translateService.currentLang });
+        this.breadcrumbService.breadcrumbs$
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe(breadcrumbs => {
+        this.breadcrumbs = breadcrumbs;
+      });
     }
 
     /**
@@ -128,6 +135,9 @@ export class ToolbarComponent implements OnInit, OnDestroy {
         this._unsubscribeAll.next();
         this._unsubscribeAll.complete();
     }
+    navigateToBreadcrumb(url: string): void {
+        this.router.navigate([url]);
+    }
 
     // -----------------------------------------------------------------------------------------------------
     // @ Public methods
@@ -136,7 +146,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     /**
      * Toggle sidebar open
      */
-    toggleSidebarOpen(key): void {
+    toggleSidebarOpen(key: string): void {
         this._fuseSidebarService.getSidebar(key).toggleOpen();
     }
 
@@ -157,7 +167,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     /**
      * Set the language
      */
-    setLanguage(lang): void {
+    setLanguage(lang: any): void {
         // Set the selected language for the toolbar
         this.selectedLanguage = lang;
 

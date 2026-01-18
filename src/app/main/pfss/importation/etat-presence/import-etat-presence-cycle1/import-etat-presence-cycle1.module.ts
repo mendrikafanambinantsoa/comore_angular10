@@ -1,3 +1,4 @@
+import { Breadcrumb } from './../../../../../_services/breadcrumb.service';
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { ImportEtatPresenceCycle1Presence1Component } from "./import-etat-presence-cycle1-presence1/import-etat-presence-cycle1-presence1.component";
@@ -23,11 +24,17 @@ const routes: Routes = [
         path: "importation/etat-presence/cycle1/etat-presence1",
         component: ImportEtatPresenceCycle1Presence1Component,
         canActivate: [AuthGuard],
+        data: { 
+            breadcrumb: 'Importation / Etat de presence / Cycle1 / Etat de presence 1'
+        }
     },
     {
         path: "importation/etat-presence/cycle1/etat-presence2",
         component: ImportEtatPresenceCycle1Presence2Component,
         canActivate: [AuthGuard],
+        data: { 
+            breadcrumb: 'Importation / Etat de presence / Cycle1 / Etat de presence 2'
+        }
     }
 ];
 @NgModule({

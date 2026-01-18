@@ -25,11 +25,17 @@ const routes: Routes = [
         path: "importation/etat-presence/cycle2/etat-presence1",
         component: ImportEtatPresenceCycle2Presence1Component,
         canActivate: [AuthGuard],
+        data: { 
+            breadcrumb: 'Importation / Etat de presence / Cycle2 / Etat de presence 1'
+        }
     },
     {
         path: "importation/etat-presence/cycle2/etat-presence2",
         component: ImportEtatPresenceCycle2Presence2Component,
         canActivate: [AuthGuard],
+        data: { 
+            breadcrumb: 'Importation / Etat de presence / Cycle2 / Etat de presence 2'
+        }
     },
 ];
 

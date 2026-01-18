@@ -22,6 +22,9 @@ const routes: Routes = [
         path: "plainte",
         component: PlainteComponent,
         canActivate: [AuthGuard],
+        data: {
+            breadcrumb: 'Plainte'
+        }
     },
 ];
 

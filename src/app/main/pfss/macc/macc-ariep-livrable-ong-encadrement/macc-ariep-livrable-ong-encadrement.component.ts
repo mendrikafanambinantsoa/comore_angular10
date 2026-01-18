@@ -8,6 +8,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { MessageDialogComponent } from "../macc-sensibilisation-menage/message-dialog.component";
 import { ConfirmDialogComponent } from "../../indicateur/confirmation-dialog.component";
 
+
 enum Message {
     ERROR = "Une erreur est survenue lors de la récupération des données",
     SUCCESS = "Les données ont été récupérées avec succès",
@@ -24,6 +25,7 @@ export class MaccAriepLivrableOngEncadrementComponent
 {
     title: string = "";
     breadcrumb_title = "";
+
 
     search = "";
 

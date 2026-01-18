@@ -24,7 +24,7 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: {
       title: "Sensibilisation Menage",
-      breadcrumb: "Sensibilisation Menage",
+      breadcrumb: "Macc / Actr / Sensibilisation Menage",
       type: 'ACTR'
     }
   },

@@ -25,6 +25,9 @@ const routes: Routes = [
         path: "importation/etat-presence/etat-présence-3",
         component: ImportEtatPresencePresence3Component,
         canActivate: [AuthGuard],
+        data: {
+            breadcrumb: 'Importation / Etat presence / Etat presence 3'
+        }
     }
 ];
 

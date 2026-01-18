@@ -28,11 +28,17 @@ const routes: Routes = [
         path: "suivi-activite/actr/troisieme-paiement/export-fiche-de-presence",
         component: ExportFicheEtatPresencePaiement3Component,
         canActivate: [AuthGuard],
+        data: {
+            breadcrumb: 'Suivi activite / Actr / Troisieme paiement / Export fiche de presence'
+        }
     },
     {
         path: "suivi-activite/actr/troisieme-paiement/enregistrer-etat-de-presence",
         component: ImportEtatPresencePaiement3Component,
         canActivate: [AuthGuard],
+        data: {
+            breadcrumb: 'Suivi activite / Actr / Troisieme paiement / Enregistrer etat de presence'
+        }
     },
     // {
     //     path: "suivi-activite/actr/troisieme-paiement/export-fiche-etat-de-paiement",

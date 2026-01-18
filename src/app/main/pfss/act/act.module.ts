@@ -32,41 +32,65 @@ const routes: Routes = [
         path: "act/menage-inscrit-act",
         component: MenageInscritActComponent,
         canActivate: [AuthGuard],
+        data: {
+            breadcrumb: 'Act / Menage inscrit act'
+        }
     },
     {
         path: "actr/menage-preselectionne-actr",
         component: MenagePreselectionneActComponent,
         canActivate: [AuthGuard],
+        data: {
+            breadcrumb: 'Actr / preselection  actr'
+        }
     },
     {
         path: "actr/menage-beneficiaire-actr",
         component: MenageBeneficiaireActComponent,
         canActivate: [AuthGuard],
+        data: {
+            breadcrumb: 'Actr / Menage beneficiaire actr'
+        }
     },
     {
         path: "actr/carte-beneficiaire",
         component: CarteBeneficiaireComponent,
         canActivate: [AuthGuard],
+        data: {
+            breadcrumb: 'Actr / Carte beneficiaire'
+        }
     },
     {
         path: "actr/fiche-travailleur",
         component: FicheTravailleurComponent,
         canActivate: [AuthGuard],
+        data: {
+            breadcrumb: 'Act / Fiche travailleur'
+        }
     },
     {
         path: "actr/gerer-mpd",
         component: ActGererMpdComponent,
         canActivate: [AuthGuard],
+        data: {
+            breadcrumb: 'Actr / Gerer mpd'
+        }
     },
     {
         path: "actr/contrat_agep",
         component: ContratAgepComponent,
         canActivate: [AuthGuard],
+        data: {
+            breadcrumb: 'Actr / Contrat Aget'
+        }
     },
     {
         path: "act/gerer_pges",
         component: GererPgesComponent,
         canActivate: [AuthGuard],
+        data: {
+            breadcrumb: 'Act / Gerer Pages'
+        }
     },
 ];
 @NgModule({

@@ -24,11 +24,17 @@ const routes: Routes = [
         path: "importation/paiement/actr/cycle1/premier-paiement",
         component: ImportationPaiementActrCycle1PremierPaiementComponent,
         canActivate: [AuthGuard],
+        data: {
+            breadcrumb: 'Importation / Paiement / Actr / Cycle 1 / Premier paiement'
+        }
     },
     {
         path: "importation/paiement/actr/cycle1/deuxieme-paiement",
         component: ImportationPaiementActrCycle1DeuxiemePaiementComponent,
         canActivate: [AuthGuard],
+        data: {
+            breadcrumb: 'Importation / Paiement / Actr / Cycle 1 / Deuxieme paiement'
+        }
     },
 ];
 

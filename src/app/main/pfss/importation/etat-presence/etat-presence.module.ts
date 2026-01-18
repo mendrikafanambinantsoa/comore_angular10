@@ -1,3 +1,4 @@
+import { Breadcrumb } from './../../../../_services/breadcrumb.service';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ImportEtatPresencePresence3Component } from './import-etat-presence-presence3/import-etat-presence-presence3.component';
@@ -11,6 +12,9 @@ const routes: Routes = [
         path: "importation/etat-presence/etat-présence-3",
         component: ImportEtatPresencePresence3Component,
         canActivate: [AuthGuard],
+        data:{
+          breadcrumb:'Importation / Etat de presence / Etat de présence 3 '
+        }
     }
 ]
 

@@ -1,7 +1,8 @@
-<div class="navbar-top">
+<!-- Section supérieure fixe (logo + boutons) -->
+<div class="navbar-top-fixed">
 
     <div class="logo">
-        <img class="logo-icon" src="assets/images/logos/logo_comore.png">
+        <img class="logo-icon" src="assets/images/logos/logo_comore.png" alt="Logo Comore">
         <span class="logo-text">PFSS</span>
     </div>
 
@@ -11,7 +12,7 @@
             mat-icon-button
             class="toggle-sidebar-folded"
             (click)="toggleSidebarFolded()"
-            fxHide.lt-lg>
+            fxHide.gt-sm>
             <mat-icon>menu</mat-icon>
         </button>
 
@@ -27,6 +28,7 @@
 
 </div>
 
+<!-- Section inférieure scrollable (navigation) -->
 <div class="navbar-scroll-container"
      fusePerfectScrollbar
      [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">

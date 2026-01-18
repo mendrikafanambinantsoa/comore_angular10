@@ -8,10 +8,16 @@ import { TranslateModule } from '@ngx-translate/core';
 import { FuseSharedModule } from '@fuse/shared.module';
 
 import { AuthGuard } from '../../_helpers/auth.guard';
+
 const routes = [
   {
-      path     : 'accueil',
-      component: AccueilComponent, canActivate: [AuthGuard] 
+    path: 'accueil',
+    component: AccueilComponent,
+    canActivate: [AuthGuard],
+    data: { 
+      breadcrumb: 'Accueil',
+      icon: 'home' 
+    }
   }
 ];
 
@@ -20,14 +26,12 @@ const routes = [
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
-
     TranslateModule,
-
     FuseSharedModule,
     MatIconModule
   ],
-  exports     : [
-      AccueilComponent
+  exports: [
+    AccueilComponent
   ]
 })
 export class AccueilModule { }

@@ -25,16 +25,25 @@ const routes: Routes = [
         path: "importation/menage/inscription-menage",
         component: InscriptionMenageComponent,
         canActivate: [AuthGuard],
+        data: {
+            breadcrumb: 'Importation / Menage / Inscription menage'
+        }
     },
     {
         path: "importation/menage/info-recepteur",
         component: InfoRecepteurComponent,
         canActivate: [AuthGuard],
+        data: {
+            breadcrumb: 'Importation / Menage / Info recepteur'
+        }
     },
     {
         path: "importation/menage/maj-beneficiaire",
         component: MajBeneficiaireComponent,
         canActivate: [AuthGuard],
+        data: {
+            breadcrumb: 'Importation / Menage / Maj beneficiaire'
+        }
     },
 ];
 

@@ -23,6 +23,9 @@ const routes: Routes = [
         path: "importation/fiche-profilage",
         component: ImportFicheProfilageOrientationComponent,
         canActivate: [AuthGuard],
+        data: {
+            breadcrumb: 'Importation / Fiche profilage'
+        }
     }
 ]
 @NgModule({

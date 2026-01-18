@@ -1,7 +1,7 @@
-<!-- toolbar.component.html - Compatible Angular 10 -->
+<!-- toolbar.component.html - Version optimisée avec breadcrumb -->
 
 <!-- Toolbar horizontal en haut -->
-<mat-toolbar class="pfss-toolbar">
+<mat-toolbar class="pfss-toolbar custom-toolbar-bg">
   
   <!-- Left Section: Logo mobile -->
   <div class="toolbar-left" fxHide.gt-md>
@@ -14,9 +14,29 @@
     <span class="toolbar-app">PFSS</span>
   </div>
 
-  <!-- Center Section: Title -->
+  <!-- Center Section: Breadcrumb seulement -->
   <div class="toolbar-center" fxHide.lt-lg>
-    <span class="toolbar-title">Projet de Filets Sociaux de Sécurité</span>
+    <div class="breadcrumb-container">
+      <!-- Breadcrumb -->
+      <nav class="breadcrumb-nav" *ngIf="breadcrumbs && breadcrumbs.length > 0">
+        <ng-container *ngFor="let breadcrumb of breadcrumbs; let last = last">
+          <button 
+            mat-button 
+            class="breadcrumb-item"
+            [class.breadcrumb-active]="last"
+            [disabled]="last"
+            (click)="!last && navigateToBreadcrumb(breadcrumb.url)">
+            <mat-icon *ngIf="breadcrumb.icon" class="breadcrumb-icon">
+              {{ breadcrumb.icon }}
+            </mat-icon>
+            <span>{{ breadcrumb.label }}</span>
+          </button>
+          <mat-icon *ngIf="!last" class="breadcrumb-separator">
+            chevron_right
+          </mat-icon>
+        </ng-container>
+      </nav>
+    </div>
   </div>
 
   <!-- Spacer -->
@@ -67,7 +87,6 @@
     </div>
   </div>
 
-
   <mat-divider></mat-divider>
 
   <!-- Profile Section Title -->
@@ -83,8 +102,6 @@
     </div>
     <mat-icon class="menu-item-arrow">chevron_right</mat-icon>
   </button>
-  
-  
 
   <mat-divider></mat-divider>
 

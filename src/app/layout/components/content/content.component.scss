@@ -3,11 +3,18 @@ content {
     display: flex;
     z-index: 1;
     flex: 1 0 auto;
+    overflow: hidden;
+    background-color: red !important;
+
 
     > *:not(router-outlet) {
-        display: flex;
+        
+        background-color: #F0ECF6;
+        padding-right: 10px;
         flex: 1 0 auto;
         width: 100%;
         min-width: 100%;
+        background-color: #fff;
+        
     }
 }

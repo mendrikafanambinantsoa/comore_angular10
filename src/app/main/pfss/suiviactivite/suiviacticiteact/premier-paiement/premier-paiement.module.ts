@@ -27,17 +27,23 @@ const routes: Routes = [
         path: "suivi-activite/actr/premier-paiement/export-fiche-de-presence",
         component: ExportFicheEtatPresenceComponent,
         canActivate: [AuthGuard],
+        data: {
+            breadcrumb: 'Suivi activite /Actr / Premier paiement / Export fiche de presence'
+        }
     },
     {
         path: "suivi-activite/actr/premier-paiement/enregistrer-etat-de-presence",
         component: ImportEtatPresenceComponent,
         canActivate: [AuthGuard],
+        data: {
+            breadcrumb: 'Suivi activite /Actr / Premier paiement / Enregistre etat de presence'
+        }
     },
     {
         path: "suivi-activite/actr/premier-paiement/export-fiche-etat-de-paiement",
         component: ExportFicheEtatPaiementComponent,
         canActivate: [AuthGuard],
-        data: { titre: "Premier Paiement", etape_id: 4, enable_tabs: true },
+        data: { titre: "Premier Paiement", etape_id: 4, enable_tabs: true,breadcrumb: 'Suivi activite / Actr / Premier paiement / Export fiche etat de paiement' },
     },
     {
         path: "suivi-activite/actr/deuxieme-paiement/export-fiche-etat-de-paiement",
@@ -45,14 +51,14 @@ const routes: Routes = [
         canActivate: [AuthGuard],
         data: {
             titre: "Deuxième paiement",
-            etape_id: 5,
+            etape_id: 5,breadcrumb: 'Suivi activite / Actr / Deuxieme paiement / Export fiche etat de paiement'
         },
     },
     {
         path: "suivi-activite/actr/troisieme-paiement/export-fiche-etat-de-paiement",
         component: ExportFicheEtatPaiementComponent,
         canActivate: [AuthGuard],
-        data: { titre: "Troisième paiement", etape_id: 12 },
+        data: { titre: "Troisième paiement", etape_id: 12 ,breadcrumb: 'Suivi activite / Actr / Troisieme paiement / Export fiche etat de paiement'},
     },
     //enregistrer etat paiement
     {
@@ -62,6 +68,7 @@ const routes: Routes = [
          data: {
             titre: "Premier paiement",
             etape_id: 4,
+            breadcrumb: 'Suivi activite / Actr / Premier paiement / Enregistrer etat de paiement'
         },
     },
     {
@@ -71,6 +78,7 @@ const routes: Routes = [
          data: {
             titre: "Deuxième paiement",
             etape_id: 5,
+            breadcrumb: 'Suivi activite / Actr / Deuxieme paiement / Enregistrer etat de paiement'
         },
     },
     {
@@ -80,6 +88,7 @@ const routes: Routes = [
          data: {
             titre: "Troisième paiement",
             etape_id: 12,
+            breadcrumb: 'Suivi activite / Actr / Troisieme paiement / Enregistrer etat de paiement'
         },
     }
 ];

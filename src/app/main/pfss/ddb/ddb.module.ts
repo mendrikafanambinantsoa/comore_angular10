@@ -34,59 +34,101 @@ import { MatSelectModule } from '@angular/material/select';
 const routes: Routes = [
     {
         path: 'donnees-de-base/composante',
-        component: ComposanteComponent, canActivate:[AuthGuard]
+        component: ComposanteComponent, canActivate:[AuthGuard],
+        data: {
+            breadcrumb: 'Donnees de base / Composante'
+        }
     },
     {
         path: 'donnees-de-base/decoupage-administratif',
-        component: DecoupageAdministratifComponent, canActivate:[AuthGuard]
+        component: DecoupageAdministratifComponent, canActivate:[AuthGuard],
+        data: {
+            breadcrumb: 'Donnees de base / Decoupage administratif'
+        }
     },
     {
         path: 'donnees-de-base/type-activite-arse-act',
-        component: TypeActiviteArseActComponent, canActivate: [AuthGuard]
+        component: TypeActiviteArseActComponent, canActivate: [AuthGuard],
+        data: {
+            breadcrumb: 'Donnees de base / Type activite Arse act'
+        }
     },
     {
         path: 'donnees-de-base/agex-agep-cps',
-        component: AgexAgepCpsComponent, canActivate: [AuthGuard]
+        component: AgexAgepCpsComponent, canActivate: [AuthGuard],
+        data: {
+            breadcrumb: 'Donnees de base / Agex Agep Cps'
+        }
     },
     {
         path: 'donnees-de-base/type-resultat-plainte',
-        component: TypeResultatPlainteComponent, canActivate: [AuthGuard]
+        component: TypeResultatPlainteComponent, canActivate: [AuthGuard],
+        data: {
+            breadcrumb: 'Donnees de base / Type resultat plainte'
+        }
     },
     {
         path: 'donnees-de-base/questionnaire-menage',
-        component: QuestionnaireMenageComponent, canActivate: [AuthGuard]
+        component: QuestionnaireMenageComponent, canActivate: [AuthGuard],
+        data: {
+            breadcrumb: 'Donnees de base / Questionnaire menage'
+        }
     },
     {
         path: 'donnees-de-base/questionnaire-individu',
-        component: QuestionnaireIndividuComponent, canActivate: [AuthGuard]
+        component: QuestionnaireIndividuComponent, canActivate: [AuthGuard],
+        data: {
+            breadcrumb: 'Donnees de base / Questionnaire individu'
+        }
     },
     {
         path: 'donnees-de-base/gerer-pac',
-        component: GererPacComponent, canActivate: [AuthGuard]
+        component: GererPacComponent, canActivate: [AuthGuard],
+        data: {
+            breadcrumb: 'Donnees de base / Gerer parc'
+        }
     },
     {
         path: 'donnees-de-base/consultant',
-        component: ConsultantComponent, canActivate: [AuthGuard]
+        component: ConsultantComponent, canActivate: [AuthGuard],
+        data: {
+            breadcrumb: 'Donnees de base / Consultant'
+        }
     },
     {
         path: 'donnees-de-base/milieu-vague-zip',
-        component: MilieuVagueZipComponent, canActivate: [AuthGuard]
+        component: MilieuVagueZipComponent, canActivate: [AuthGuard],
+        data: {
+            breadcrumb: 'Donnees de base / Milieu vague zip'
+        }
     },
     {
         path: 'donnees-de-base/plan-action-reinstallation',
-        component: PlanActionReinstallationComponent, canActivate: [AuthGuard]
+        component: PlanActionReinstallationComponent, canActivate: [AuthGuard],
+        data: {
+            breadcrumb: 'Donnees de base / Plan action reinstallation'
+        }
     },
     {
         path: 'donnees-de-base/phase-execution-et-annee',
-        component: PhaseExecutionEtAnneeComponent, canActivate: [AuthGuard]
+        component: PhaseExecutionEtAnneeComponent, canActivate: [AuthGuard],
+        data: {
+            breadcrumb: 'Donnees de base / Phase execution et annee '
+        }
     },
     {
         path: 'donnees-de-base/lien-parente',
-        component: LienParenteComponent, canActivate: [AuthGuard]
+        component: LienParenteComponent, canActivate: [AuthGuard],
+        data: {
+            breadcrumb: 'Donnees de base / Lien parente'
+        }
     },
     {
       path: 'donnees-de-base/formation',
-      component: FormationMlOutilComComponent, canActivate:[AuthGuard]
+      component: FormationMlOutilComComponent, canActivate:[AuthGuard],
+        data: {
+            breadcrumb: 'Donnees de base / Formation'
+        }
     }
     
 ]
