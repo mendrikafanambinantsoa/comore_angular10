@@ -3,18 +3,42 @@ content {
     display: flex;
     z-index: 1;
     flex: 1 0 auto;
-    overflow: hidden;
-    background-color: red !important;
-
+    overflow: hidden; // Parent NON scrollable
 
     > *:not(router-outlet) {
-        
-        background-color: #F0ECF6;
-        padding-right: 10px;
         flex: 1 0 auto;
         width: 100%;
         min-width: 100%;
-        background-color: #fff;
+        padding-right: 8px;
+        overflow: hidden; // Empêche le scroll sur l'enfant direct
+        background-color: #F0ECF6;
+    }
+}
+
+.mat-tab-group {
+    width: 100%;
+    height: 568px; // Prend toute la hauteur du parent
+    margin: 0;
+    padding: 30px;
+    overflow-y: auto; // Lui SEUL est scrollable verticalement
+    overflow-x: hidden; // Pas de scroll horizontal
+    background-color: #fff;
+    
+    // Pour un effet visuel clair du scroll
+    &::-webkit-scrollbar {
+        width: 8px;
+    }
+    
+    &::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 4px;
         
+        &:hover {
+            background: #555;
+        }
     }
 }
